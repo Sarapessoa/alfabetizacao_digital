@@ -247,7 +247,6 @@ export const data = {
       tips: [
         "Desligue imediatamente, não converse.",
         "O banco nunca pede sua senha por telefone.",
-        "Ligue de volta usando o número atrás do seu cartão.",
       ],
     },
     {
