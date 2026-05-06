@@ -1,11 +1,27 @@
 import { data } from "./data.js";
 
 export const dataHandler = {
-  renderTutoriais() {
+  // Lógica de pesquisa para os Aplicativos
+  searchTutoriais(query) {
+    const searchTerm = query.toLowerCase().trim();
+    const filteredList = data.apps.filter(
+      (appItem) =>
+        appItem.name.toLowerCase().includes(searchTerm) ||
+        appItem.desc.toLowerCase().includes(searchTerm)
+    );
+    this.renderTutoriais(filteredList);
+  },
+
+  renderTutoriais(list = data.apps) {
     const container = document.getElementById("tutoriais-list");
     if (!container) return;
 
-    container.innerHTML = data.apps
+    if (list.length === 0) {
+      container.innerHTML = `<p class="text-center text-muted mt-lg" style="font-size: 16px;">Nenhum aplicativo encontrado com esse nome.</p>`;
+      return;
+    }
+
+    container.innerHTML = list
       .map(
         (appItem) => `
             <div class="card card-interactive" onclick="app.openTutorial('${appItem.id}')" style="display: flex; gap: 16px; align-items: center;">
@@ -96,19 +112,34 @@ export const dataHandler = {
 
   renderGlossario() {},
 
-    renderGolpes() {
-        const container = document.getElementById("golpes-grid");
-        if (!container) return;
+  // Lógica de pesquisa para os Golpes
+  searchGolpes(query) {
+    const searchTerm = query.toLowerCase().trim();
+    const filteredList = data.golpes.filter(
+      (golpe) =>
+        golpe.name.toLowerCase().includes(searchTerm) ||
+        golpe.alert.toLowerCase().includes(searchTerm)
+    );
+    this.renderGolpes(filteredList);
+  },
 
-        // Forçamos o contêiner a ser uma coluna única com bom espaçamento (ideal para mobile)
-        container.className = "flex-col";
+  renderGolpes(list = data.golpes) {
+    const container = document.getElementById("golpes-grid");
+    if (!container) return;
 
-        container.innerHTML = data.golpes
-            .map(
-                (golpe) => `
+    // Forçamos o contêiner a ser uma coluna única
+    container.className = "flex-col";
+
+    if (list.length === 0) {
+      container.innerHTML = `<p class="text-center text-muted mt-lg" style="font-size: 16px;">Nenhum golpe encontrado com essa palavra.</p>`;
+      return;
+    }
+
+    container.innerHTML = list
+      .map(
+        (golpe) => `
             <div class="card" style="padding: 0; border: 2px solid #ef4444; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 6px rgba(0,0,0,0.1); margin-bottom: 32px;">
 
-                <!-- Cabeçalho Destacado Vermelho -->
                 <div style="background-color: #ef4444; color: white; padding: 16px; display: flex; align-items: center; gap: 12px;">
                     <span class="material-symbols-outlined" style="font-size: 32px;">security_update_warning</span>
                     <h3 style="margin: 0; font-size: 20px; line-height: 1.2;">${golpe.name}</h3>
@@ -119,7 +150,6 @@ export const dataHandler = {
                         <strong>Atenção:</strong> ${golpe.alert}
                     </p>
 
-                    <!-- Bloco de Alerta (O que os golpistas dizem) -->
                     <div style="background-color: #fef2f2; border-left: 5px solid #ef4444; padding: 16px; border-radius: 6px; margin-bottom: 20px;">
                         <strong style="color: #991b1b; display: flex; align-items: center; gap: 8px; font-size: 16px; margin-bottom: 12px;">
                             <span class="material-symbols-outlined">record_voice_over</span>
@@ -135,7 +165,6 @@ export const dataHandler = {
                         </ul>
                     </div>
 
-                    <!-- Bloco de Proteção (O que o idoso deve fazer) -->
                     <div style="background-color: #f0fdf4; border-left: 5px solid #22c55e; padding: 16px; border-radius: 6px;">
                         <strong style="color: #166534; display: flex; align-items: center; gap: 8px; font-size: 16px; margin-bottom: 12px;">
                             <span class="material-symbols-outlined">verified_user</span>
@@ -153,9 +182,9 @@ export const dataHandler = {
                 </div>
             </div>
         `,
-            )
-            .join("");
-    },
+      )
+      .join("");
+  },
 
   openTutorial(appId) {
     const appData = data.apps.find((a) => a.id === appId);
