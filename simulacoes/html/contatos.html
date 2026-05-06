@@ -1,0 +1,78 @@
+<div id="sim-contatos-view" class="view-overlay cnt-theme">
+  <div class="sim-coach-lou">
+    <div id="cnt-instruction">
+      <strong id="cnt-step-label">Passo 1:</strong>
+      <span id="cnt-step-text"
+        >Esta é sua agenda. Toque no botão de "+" (mais) no canto inferior para
+        adicionar alguém novo.</span
+      >
+    </div>
+    <button
+      class="btn-close-sim"
+      onclick="app.closeSimulation('sim-contatos-view')"
+    >
+      <span class="material-symbols-outlined">close</span> Sair
+    </button>
+  </div>
+
+  <div id="cnt-list-screen" class="cnt-screen flex-col">
+    <div class="cnt-header">
+      <span class="material-symbols-outlined text-white" style="font-size: 28px"
+        >menu</span
+      >
+      <span class="cnt-title">Contatos</span>
+      <span class="material-symbols-outlined text-white" style="font-size: 28px"
+        >search</span
+      >
+    </div>
+
+    <div class="cnt-scroll-area">
+      <div class="cnt-item">
+        <div class="cnt-avatar bg-blue">F</div>
+        <span>Filho</span>
+      </div>
+      <div class="cnt-item">
+        <div class="cnt-avatar bg-green">M</div>
+        <span>Médico (Dr. João)</span>
+      </div>
+    </div>
+
+    <div class="cnt-fab" onclick="app.openAddContato()">
+      <span class="material-symbols-outlined">add</span>
+    </div>
+  </div>
+
+  <div id="cnt-add-screen" class="cnt-screen flex-col hidden">
+    <div class="cnt-header flex-between">
+      <button class="btn-icon text-white" onclick="app.closeAddContato()">
+        <span class="material-symbols-outlined">close</span>
+      </button>
+      <span class="cnt-title">Criar contato</span>
+      <button class="cnt-save-btn" onclick="app.saveContato()">Salvar</button>
+    </div>
+
+    <div class="cnt-form-area">
+      <div class="cnt-avatar-large bg-gray">
+        <span
+          class="material-symbols-outlined"
+          style="font-size: 40px; color: white"
+          >person</span
+        >
+      </div>
+
+      <div class="cnt-input-group">
+        <span class="material-symbols-outlined text-muted">person</span>
+        <input type="text" id="cnt-input-name" placeholder="Nome (Ex: Neto)" />
+      </div>
+
+      <div class="cnt-input-group">
+        <span class="material-symbols-outlined text-muted">call</span>
+        <input
+          type="tel"
+          id="cnt-input-phone"
+          placeholder="Telefone (Ex: 99999-9999)"
+        />
+      </div>
+    </div>
+  </div>
+</div>

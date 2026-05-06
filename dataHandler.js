@@ -42,26 +42,75 @@ export const dataHandler = {
   },
 
   openGlossarioCategory(category) {
-    let filteredList = [];
-    let title = "";
-
     if (category === "all") {
-      filteredList = data.glossario;
-      title = "Todos os Símbolos";
+      document.getElementById("glossario-category-title").innerText =
+        "Todos os Símbolos";
+      const basic = data.glossario.filter((item) => item.category === "basic");
+      const navigation = data.glossario.filter(
+        (item) => item.category === "navigation",
+      );
+      const security = data.glossario.filter(
+        (item) => item.category === "security",
+      );
+      const social = data.glossario.filter(
+        (item) => item.category === "social",
+      );
+      let groupedHTML = "";
+      const titleStyle =
+        "margin: 24px 0 12px; color: #374151; font-size: 18px; border-bottom: 2px solid #e5e7eb; padding-bottom: 4px;";
+
+      if (basic.length > 0) {
+        groupedHTML += `<h4 style="${titleStyle}">Símbolos Básicos</h4>`;
+        groupedHTML += this.generateGlossarioHTML(basic);
+      }
+      if (navigation.length > 0) {
+        groupedHTML += `<h4 style="${titleStyle}">Navegação</h4>`;
+        groupedHTML += this.generateGlossarioHTML(navigation);
+      }
+      if (security.length > 0) {
+        groupedHTML += `<h4 style="${titleStyle}">Segurança e Proteção</h4>`;
+        groupedHTML += this.generateGlossarioHTML(security);
+      }
+      if (social.length > 0) {
+        groupedHTML += `<h4 style="${titleStyle}">Redes Sociais</h4>`;
+        groupedHTML += this.generateGlossarioHTML(social);
+      }
+
+      document.getElementById("glossario-category-content").innerHTML =
+        groupedHTML;
+      document
+        .getElementById("glossario-detail-view")
+        .classList.remove("hidden");
     } else {
-      filteredList = data.glossario.filter(
+      const filteredList = data.glossario.filter(
         (item) => item.category === category,
       );
-      title =
-        category === "basic"
-          ? "Parte 1: Símbolos Básicos"
-          : "Parte 2: Redes Sociais";
-    }
+      let title = "";
 
-    document.getElementById("glossario-category-title").innerText = title;
-    document.getElementById("glossario-category-content").innerHTML =
-      this.generateGlossarioHTML(filteredList);
-    document.getElementById("glossario-detail-view").classList.remove("hidden");
+      switch (category) {
+        case "basic":
+          title = "Símbolos Básicos";
+          break;
+        case "social":
+          title = "Comunicação e Redes Sociais";
+          break;
+        case "navigation":
+          title = "Navegação (Como se mover no celular)";
+          break;
+        case "security":
+          title = "Segurança e Proteção";
+          break;
+        default:
+          title = "Glossário";
+      }
+
+      document.getElementById("glossario-category-title").innerText = title;
+      document.getElementById("glossario-category-content").innerHTML =
+        this.generateGlossarioHTML(filteredList);
+      document
+        .getElementById("glossario-detail-view")
+        .classList.remove("hidden");
+    }
   },
 
   closeGlossarioCategory() {
@@ -141,7 +190,7 @@ export const dataHandler = {
     content.innerHTML = `
             <div class="card mb-lg" style="border-left: 4px solid #3b82f6;">
                 <h3 style="color: #1e3a8a; margin-bottom: 8px;">Conectando ao que Você Conhece</h3>
-                <p><strong>Tecnologia Antiga:</strong> ${appData.oldTech}</p>
+                <p><strong>Comparação:</strong> ${appData.oldTech}</p>
                 <p style="margin-top: 8px;">${appData.tutorial || "Tutorial detalhado em construção."}</p>
             </div>
             

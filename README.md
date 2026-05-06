@@ -8,7 +8,7 @@
   - [2. Justificativa e Impacto](#2-justificativa-e-impacto)
   - [3. Metodologia: Alfabetização Computacional Assistida (ACA)](#3-metodologia-alfabetização-computacional-assistida-aca)
   - [4. Tecnologias e Acessibilidade](#4-tecnologias-e-acessibilidade)
-    - [4.1 Estratégias de design aplicadas:](#41-estratégias-de-design-aplicadas)
+    - [4.1 Estratégias de design aplicadas](#41-estratégias-de-design-aplicadas)
   - [5. Equipe (Discentes)](#5-equipe-discentes)
 
 ## 1. Sobre o Projeto
@@ -31,7 +31,7 @@ O desenvolvimento prioriza a Acessibilidade Web (W3C/WCAG 2.1) e o Design Centra
 | Tecnologia | Motivação                | Descrição de uso                                                                 |
 |------------|--------------------------|----------------------------------------------------------------------------------|
 | HTML5      | Estrutura semântica      | Conteúdo compreensível para tecnologias assistivas                               |
-| CSS3       | Estilização e Constraste | Cores de alto contraste e fontes amplas para compensar perdas de acuidade visual |
+| CSS3       | Estilização e Contraste | Cores de alto contraste e fontes amplas para compensar perdas de acuidade visual |
 | JavaScript | Interatividade           | Feedback imediato para confirmar ações ou orientar desvios.                      |
 
 ### 4.1 Estratégias de design aplicadas

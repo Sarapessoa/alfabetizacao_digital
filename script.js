@@ -1,21 +1,23 @@
 import { dataHandler } from "./dataHandler.js";
 import { simulationEngine } from "./simulationEngine.js";
-import { email } from "./simulacoes/js/email.js";
 import { google } from "./simulacoes/js/google.js";
 import { instagram } from "./simulacoes/js/instagram.js";
-import { telefone } from "./simulacoes/js/telefone.js";
-import { uber } from "./simulacoes/js/uber.js";
 import { youtube } from "./simulacoes/js/youtube.js";
+import { galeria } from "./simulacoes/js/galeria.js";
+import { configuracoes } from "./simulacoes/js/configuracoes.js";
+import { whatsapp } from "./simulacoes/js/whatsapp.js";
+import { contatos } from "./simulacoes/js/contatos.js";
 
 const app = {
   ...dataHandler,
   ...simulationEngine,
   ...youtube,
-  ...uber,
   ...instagram,
-  ...email,
   ...google,
-  ...telefone,
+  ...galeria,
+  ...configuracoes,
+  ...whatsapp,
+  ...contatos,
   /* Data vai pro data.js */
   login(isBypass = false) {
     const emailInput = document.getElementById("login-email");

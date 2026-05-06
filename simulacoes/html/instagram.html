@@ -1,0 +1,407 @@
+<div id="sim-instagram-view" class="view-overlay ig-theme">
+  <div class="sim-coach-lou">
+    <div id="ig-instruction">
+      <strong id="ig-step-label">Passo 1:</strong>
+      <span id="ig-step-text"
+        >Bem-vindo ao Instagram! Role para baixo para ver a foto ou toque no
+        Coração para curtir.</span
+      >
+    </div>
+    <button
+      class="btn-close-sim"
+      onclick="app.closeSimulation('sim-instagram-view')"
+    >
+      <span class="material-symbols-outlined">close</span> Sair
+    </button>
+  </div>
+
+  <div id="ig-home-screen" class="ig-screen flex-col">
+    <div class="ig-header">
+      <h2 class="ig-logo">Instagram</h2>
+      <div class="ig-header-icons">
+        <span class="material-symbols-outlined">favorite</span>
+        <span class="material-symbols-outlined">send</span>
+      </div>
+    </div>
+
+    <div class="ig-scroll-area">
+      <div class="ig-stories-container">
+        <div class="ig-story" onclick="app.igFakeStory('Seu Perfil')">
+          <div class="ig-story-ring my-story">
+            <span class="material-symbols-outlined">add</span>
+          </div>
+          <span>Seu story</span>
+        </div>
+        <div class="ig-story" onclick="app.igFakeStory('Neta Maria')">
+          <div class="ig-story-ring active-story">
+            <img src="https://picsum.photos/id/1011/50/50" alt="Story Neta" />
+          </div>
+          <span>Neta Maria</span>
+        </div>
+        <div class="ig-story" onclick="app.igFakeStory('Receitas Vovó')">
+          <div class="ig-story-ring active-story">
+            <img
+              src="https://picsum.photos/id/1062/50/50"
+              alt="Story Receitas"
+            />
+          </div>
+          <span>Receitas...</span>
+        </div>
+      </div>
+
+      <div class="ig-post">
+        <div class="ig-post-header">
+          <img
+            src="https://picsum.photos/id/1011/40/40"
+            class="ig-avatar"
+            alt="Avatar Neta"
+          />
+          <span class="ig-username">Neta Maria</span>
+          <span class="material-symbols-outlined" style="margin-left: auto"
+            >more_vert</span
+          >
+        </div>
+
+        <img
+          src="https://picsum.photos/id/1025/600/600"
+          class="ig-post-img"
+          alt="Foto principal do post"
+        />
+
+        <div class="ig-post-actions">
+          <div class="ig-action-left">
+            <span
+              class="material-symbols-outlined ig-icon"
+              id="ig-heart-btn"
+              onclick="app.igToggleLike(this)"
+              >favorite</span
+            >
+            <span
+              class="material-symbols-outlined ig-icon"
+              onclick="app.igOpenComments()"
+              >chat_bubble</span
+            >
+            <span
+              class="material-symbols-outlined ig-icon"
+              onclick="app.igFakeShare()"
+              >send</span
+            >
+          </div>
+          <span class="material-symbols-outlined ig-icon">bookmark</span>
+        </div>
+
+        <div class="ig-post-likes">
+          <span id="ig-like-count">14</span> curtidas
+        </div>
+
+        <div class="ig-post-caption">
+          <span class="ig-username">Neta Maria</span> Passeio maravilhoso hoje
+          no parque! ☀️🌳
+        </div>
+
+        <div class="ig-post-comments-link" onclick="app.igOpenComments()">
+          Ver todos os 5 comentários
+        </div>
+      </div>
+    </div>
+
+    <div class="ig-bottom-nav">
+      <span
+        class="material-symbols-outlined ig-nav-active"
+        onclick="app.igCloseReels()"
+        >home</span
+      >
+      <span class="material-symbols-outlined">search</span>
+      <span class="material-symbols-outlined">add_box</span>
+      <span class="material-symbols-outlined" onclick="app.igOpenReels()"
+        >movie</span
+      >
+      <div
+        class="ig-avatar-small bg-gray"
+        onclick="app.igOpenProfile()"
+        style="cursor: pointer"
+      >
+        <span
+          class="material-symbols-outlined"
+          style="font-size: 18px; color: white"
+          >person</span
+        >
+      </div>
+    </div>
+  </div>
+
+  <div id="ig-comments-screen" class="ig-screen flex-col hidden">
+    <div class="ig-comments-header flex-between">
+      <button class="btn-icon" onclick="app.igCloseComments()">
+        <span class="material-symbols-outlined">arrow_back</span>
+      </button>
+      <h3 style="margin: 0; font-size: 16px">Comentários</h3>
+      <span class="material-symbols-outlined">send</span>
+    </div>
+
+    <div class="ig-scroll-area" style="padding: 16px">
+      <div class="ig-comment-item">
+        <img
+          src="https://picsum.photos/id/1012/40/40"
+          class="ig-avatar"
+          alt="Avatar Tia Joana"
+        />
+        <div class="ig-comment-content">
+          <p>
+            <strong>Tia Joana</strong> Que lugar lindo! Aproveite bastante,
+            querida.
+          </p>
+          <span class="ig-comment-time">Há 2h</span>
+        </div>
+        <span
+          class="material-symbols-outlined"
+          style="font-size: 14px; color: #737373"
+          >favorite</span
+        >
+      </div>
+      <div class="ig-comment-item">
+        <img
+          src="https://picsum.photos/id/1005/40/40"
+          class="ig-avatar"
+          alt="Avatar Amiga Silva"
+        />
+        <div class="ig-comment-content">
+          <p>
+            <strong>Amiga Silva</strong> Que saudade de você! Vamos marcar algo.
+          </p>
+          <span class="ig-comment-time">Há 5h</span>
+        </div>
+        <span
+          class="material-symbols-outlined"
+          style="font-size: 14px; color: #737373"
+          >favorite</span
+        >
+      </div>
+    </div>
+
+    <div class="ig-comment-input-area">
+      <div class="ig-avatar-small bg-gray" style="margin-right: 12px"></div>
+      <input
+        type="text"
+        placeholder="Adicione um comentário..."
+        onclick="app.igFakeTypeComment()"
+      />
+      <span
+        style="color: #0095f6; font-weight: bold; cursor: pointer"
+        onclick="app.igFakeTypeComment()"
+        >Publicar</span
+      >
+    </div>
+  </div>
+
+  <div id="ig-reels-screen" class="ig-screen flex-col hidden">
+    <div class="ig-reels-container">
+      <div class="ig-reels-header">
+        <span>Reels</span>
+        <span class="material-symbols-outlined">photo_camera</span>
+      </div>
+
+      <div class="ig-reels-video-mock">
+        <div class="ig-reels-side-actions">
+          <div class="ig-reels-action">
+            <span
+              class="material-symbols-outlined"
+              onclick="app.igToggleLike(this)"
+              >favorite</span
+            >
+            <span>1.2k</span>
+          </div>
+          <div class="ig-reels-action">
+            <span
+              class="material-symbols-outlined"
+              onclick="app.igOpenComments()"
+              >chat_bubble</span
+            >
+            <span>45</span>
+          </div>
+          <div class="ig-reels-action">
+            <span class="material-symbols-outlined" onclick="app.igFakeShare()"
+              >send</span
+            >
+          </div>
+          <div class="ig-reels-action">
+            <span class="material-symbols-outlined">more_vert</span>
+          </div>
+        </div>
+
+        <div class="ig-reels-info">
+          <div class="ig-reels-user">
+            <div class="ig-avatar-small bg-blue"></div>
+            <strong>Neto Especialista</strong>
+            <button class="ig-reels-follow">Seguir</button>
+          </div>
+          <p>Aprenda a fazer essa receita em 1 minuto! 👨‍🍳 #receitas #dica</p>
+          <div class="ig-reels-audio">
+            <span class="material-symbols-outlined">music_note</span>
+            <span>Áudio original - Receitas Incríveis</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="ig-bottom-nav ig-nav-dark">
+        <span class="material-symbols-outlined" onclick="app.igCloseReels()"
+          >home</span
+        >
+        <span class="material-symbols-outlined">search</span>
+        <span class="material-symbols-outlined">add_box</span>
+        <span class="material-symbols-outlined ig-nav-active">movie</span>
+        <div
+          class="ig-avatar-small bg-gray"
+          onclick="app.igOpenProfile()"
+          style="cursor: pointer"
+        >
+          <span
+            class="material-symbols-outlined"
+            style="font-size: 18px; color: white"
+            >person</span
+          >
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="ig-profile-screen" class="ig-screen flex-col hidden">
+    <div class="ig-profile-header">
+      <div class="ig-username-header">
+        <strong>seu_nome_aqui</strong>
+        <span class="material-symbols-outlined">expand_more</span>
+      </div>
+      <div class="ig-header-icons">
+        <span class="material-symbols-outlined">add_box</span>
+        <span class="material-symbols-outlined">menu</span>
+      </div>
+    </div>
+
+    <div class="ig-scroll-area">
+      <div class="ig-profile-top">
+        <div class="ig-profile-avatar-container">
+          <div class="ig-avatar-large bg-gray">
+            <span
+              class="material-symbols-outlined"
+              style="font-size: 40px; color: white"
+              >person</span
+            >
+          </div>
+        </div>
+        <div class="ig-profile-stats">
+          <div class="ig-stat-item"><strong>12</strong><span>Posts</span></div>
+          <div class="ig-stat-item">
+            <strong>150</strong><span>Seguidores</span>
+          </div>
+          <div class="ig-stat-item">
+            <strong>200</strong><span>Seguindo</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="ig-profile-bio">
+        <strong>Seu Nome</strong>
+        <p>
+          Aprendendo a usar o Instagram no Projeto Alfabetização Digital! 📱✨
+        </p>
+      </div>
+
+      <div class="ig-profile-buttons">
+        <button
+          class="ig-btn-secondary"
+          onclick="alert('Aqui você poderia mudar sua foto ou nome.')"
+        >
+          Editar perfil
+        </button>
+        <button
+          class="ig-btn-secondary"
+          onclick="alert('Aqui você enviaria seu perfil para um amigo.')"
+        >
+          Compartilhar perfil
+        </button>
+      </div>
+
+      <div class="ig-profile-tabs">
+        <div class="ig-p-tab active">
+          <span class="material-symbols-outlined">grid_on</span>
+        </div>
+        <div class="ig-p-tab">
+          <span class="material-symbols-outlined">movie</span>
+        </div>
+        <div class="ig-p-tab">
+          <span class="material-symbols-outlined">assignment_ind</span>
+        </div>
+      </div>
+
+      <div class="ig-photo-grid">
+        <div class="ig-grid-item" onclick="app.igCloseProfile()"></div>
+        <div
+          class="ig-grid-item"
+          style="
+            background-image: url(&quot;https://picsum.photos/id/1011/200/200&quot;);
+          "
+        ></div>
+        <div
+          class="ig-grid-item"
+          style="
+            background-image: url(&quot;https://picsum.photos/id/1062/200/200&quot;);
+          "
+        ></div>
+        <div
+          class="ig-grid-item"
+          style="
+            background-image: url(&quot;https://picsum.photos/id/1025/200/200&quot;);
+          "
+        ></div>
+        <div
+          class="ig-grid-item"
+          style="
+            background-image: url(&quot;https://picsum.photos/id/1043/200/200&quot;);
+          "
+        ></div>
+        <div
+          class="ig-grid-item"
+          style="
+            background-image: url(&quot;https://picsum.photos/id/1035/200/200&quot;);
+          "
+        ></div>
+        <div
+          class="ig-grid-item"
+          style="
+            background-image: url(&quot;https://picsum.photos/id/1050/200/200&quot;);
+          "
+        ></div>
+        <div
+          class="ig-grid-item"
+          style="
+            background-image: url(&quot;https://picsum.photos/id/1020/200/200&quot;);
+          "
+        ></div>
+        <div
+          class="ig-grid-item"
+          style="
+            background-image: url(&quot;https://picsum.photos/id/1015/200/200&quot;);
+          "
+        ></div>
+      </div>
+    </div>
+
+    <div class="ig-bottom-nav">
+      <span class="material-symbols-outlined" onclick="app.igCloseProfile()"
+        >home</span
+      >
+      <span class="material-symbols-outlined">search</span>
+      <span class="material-symbols-outlined">add_box</span>
+      <span class="material-symbols-outlined" onclick="app.igOpenReels()"
+        >movie</span
+      >
+      <div class="ig-avatar-small bg-gray" style="border: 2px solid black">
+        <span
+          class="material-symbols-outlined"
+          style="font-size: 18px; color: black"
+          >person</span
+        >
+      </div>
+    </div>
+  </div>
+</div>
