@@ -96,37 +96,67 @@ export const dataHandler = {
 
   renderGlossario() {},
 
-  renderGolpes() {
-    const container = document.getElementById("golpes-grid");
-    if (!container) return;
+    renderGolpes() {
+        const container = document.getElementById("golpes-grid");
+        if (!container) return;
 
-    container.innerHTML = data.golpes
-      .map(
-        (golpe) => `
-            <div class="card" style="border-top: 4px solid #ef4444;">
-                <h3 style="display: flex; align-items: center; gap: 8px; color: #ef4444; margin-bottom: 8px;">
-                    <span class="material-symbols-outlined">warning</span> ${golpe.name}
-                </h3>
-                <p class="mb-md"><strong>Alerta:</strong> ${golpe.alert}</p>
-                
-                <div style="background: #fef2f2; padding: 12px; border-radius: 8px; margin-bottom: 12px;">
-                    <strong style="color: #991b1b; display: block; margin-bottom: 8px;">Cuidado com frases como:</strong>
-                    <ul style="color: #b91c1c; font-size: 14px; padding-left: 20px;">
-                        ${golpe.exemplos.map((exemplo) => `<li>${exemplo}</li>`).join("")}
-                    </ul>
+        // Forçamos o contêiner a ser uma coluna única com bom espaçamento (ideal para mobile)
+        container.className = "flex-col";
+
+        container.innerHTML = data.golpes
+            .map(
+                (golpe) => `
+            <div class="card" style="padding: 0; border: 2px solid #ef4444; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 6px rgba(0,0,0,0.1); margin-bottom: 32px;">
+
+                <!-- Cabeçalho Destacado Vermelho -->
+                <div style="background-color: #ef4444; color: white; padding: 16px; display: flex; align-items: center; gap: 12px;">
+                    <span class="material-symbols-outlined" style="font-size: 32px;">security_update_warning</span>
+                    <h3 style="margin: 0; font-size: 20px; line-height: 1.2;">${golpe.name}</h3>
                 </div>
 
-                <div style="background: #f0fdf4; padding: 12px; border-radius: 8px;">
-                    <strong style="color: #166534; display: block; margin-bottom: 8px;">✓ O Que Fazer:</strong>
-                    <ul style="color: #15803d; font-size: 14px; padding-left: 20px;">
-                        ${golpe.tips.map((tip) => `<li>${tip}</li>`).join("")}
-                    </ul>
+                <div style="padding: 20px;">
+                    <p style="font-size: 16px; color: #374151; margin-bottom: 20px; line-height: 1.5;">
+                        <strong>Atenção:</strong> ${golpe.alert}
+                    </p>
+
+                    <!-- Bloco de Alerta (O que os golpistas dizem) -->
+                    <div style="background-color: #fef2f2; border-left: 5px solid #ef4444; padding: 16px; border-radius: 6px; margin-bottom: 20px;">
+                        <strong style="color: #991b1b; display: flex; align-items: center; gap: 8px; font-size: 16px; margin-bottom: 12px;">
+                            <span class="material-symbols-outlined">record_voice_over</span>
+                            Frases suspeitas (Desconfie):
+                        </strong>
+                        <ul style="color: #b91c1c; font-size: 15px; padding: 0; margin: 0; list-style: none; display: flex; flex-direction: column; gap: 10px;">
+                            ${golpe.exemplos.map((exemplo) => `
+                                <li style="display: flex; gap: 8px; align-items: flex-start;">
+                                    <span class="material-symbols-outlined" style="font-size: 20px; flex-shrink: 0;">close</span>
+                                    <span style="line-height: 1.4;">${exemplo}</span>
+                                </li>
+                            `).join("")}
+                        </ul>
+                    </div>
+
+                    <!-- Bloco de Proteção (O que o idoso deve fazer) -->
+                    <div style="background-color: #f0fdf4; border-left: 5px solid #22c55e; padding: 16px; border-radius: 6px;">
+                        <strong style="color: #166534; display: flex; align-items: center; gap: 8px; font-size: 16px; margin-bottom: 12px;">
+                            <span class="material-symbols-outlined">verified_user</span>
+                            Como se proteger:
+                        </strong>
+                        <ul style="color: #15803d; font-size: 15px; padding: 0; margin: 0; list-style: none; display: flex; flex-direction: column; gap: 10px;">
+                            ${golpe.tips.map((tip) => `
+                                <li style="display: flex; gap: 8px; align-items: flex-start;">
+                                    <span class="material-symbols-outlined" style="font-size: 20px; flex-shrink: 0;">check</span>
+                                    <span style="line-height: 1.4;">${tip}</span>
+                                </li>
+                            `).join("")}
+                        </ul>
+                    </div>
                 </div>
             </div>
         `,
-      )
-      .join("");
-  },
+            )
+            .join("");
+    },
+
   openTutorial(appId) {
     const appData = data.apps.find((a) => a.id === appId);
     if (!appData) return;
@@ -144,11 +174,11 @@ export const dataHandler = {
                 <p><strong>Tecnologia Antiga:</strong> ${appData.oldTech}</p>
                 <p style="margin-top: 8px;">${appData.tutorial || "Tutorial detalhado em construção."}</p>
             </div>
-            
+
             <h2 class="mb-md">Passo a Passo</h2>
             <div class="card mb-md">
                 <h3 class="flex-center gap-sm mb-md">
-                  <span style="background: ${appData.color}; color: white; width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 14px;">1</span> 
+                  <span style="background: ${appData.color}; color: white; width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 14px;">1</span>
                   Abra o Aplicativo
                 </h3>
                 <p>Procure o ícone na sua tela inicial e toque no botão abaixo para começar.</p>
