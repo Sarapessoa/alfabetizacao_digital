@@ -15,50 +15,36 @@ export const youtube = {
   },
 
   openYoutubeVideo() {
-    // 1. Pega os elementos
     const feed = document.getElementById("yt-feed-scroll");
     const player = document.getElementById("yt-video-player-screen");
     const header = document.querySelector(".yt-header");
     const chips = document.querySelector(".yt-chips-container");
     const bottomNav = document.getElementById("yt-bottom-nav-bar");
-
-    // 2. Oculta o feed e mostra o vídeo
     if (feed && player) {
       feed.classList.add("hidden");
       player.classList.remove("hidden");
     }
-
-    // 3. Oculta os menus extras para focar no vídeo
     if (header) header.classList.add("hidden");
     if (chips) chips.classList.add("hidden");
     if (bottomNav) bottomNav.classList.add("hidden");
-
-    // 4. Atualiza os passos do professor
     document.getElementById("yt-step-label").innerText = "Passo 2:";
     document.getElementById("yt-step-text").innerText =
       "Você está assistindo! Experimente dar um 'Joinha' ou 'Compartilhar' abaixo.";
   },
 
   closeYoutubeVideo() {
-    // 1. Pega os elementos
     const feed = document.getElementById("yt-feed-scroll");
     const player = document.getElementById("yt-video-player-screen");
     const header = document.querySelector(".yt-header");
     const chips = document.querySelector(".yt-chips-container");
     const bottomNav = document.getElementById("yt-bottom-nav-bar");
-
-    // 2. Oculta o vídeo e mostra o feed de volta
     if (feed && player) {
       player.classList.add("hidden");
       feed.classList.remove("hidden");
     }
-
-    // 3. Mostra os menus extras de volta
     if (header) header.classList.remove("hidden");
     if (chips) chips.classList.remove("hidden");
     if (bottomNav) bottomNav.classList.remove("hidden");
-
-    // 4. Atualiza os passos do professor
     document.getElementById("yt-step-label").innerText = "Passo 1:";
     document.getElementById("yt-step-text").innerText =
       "Toque na imagem do vídeo para começar a assistir.";
@@ -73,7 +59,7 @@ export const youtube = {
       icon.style.color = "inherit";
     } else {
       icon.style.fontVariationSettings = "'FILL' 1";
-      icon.style.color = "#2563eb"; // Cor azul do curtir
+      icon.style.color = "#2563eb";
       alert(
         "Você deu um 'Joinha'!\n\nIsso é como dar um elogio ao criador do vídeo. Ajuda o YouTube a entender que esse vídeo é bom e deve ser mostrado para mais pessoas.",
       );
