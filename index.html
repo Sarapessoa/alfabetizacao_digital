@@ -34,26 +34,22 @@
         <p class="text-muted mb-md">
           Entre para continuar sua jornada de aprendizado
         </p>
-
         <div class="input-group">
           <label
             >Endereço de Email
             <span
               class="material-symbols-outlined help-icon"
-              title="Seu endereço eletrônico, ex: nome@email.com"
+              title="Seu endereço eletrônico"
               >help</span
-            >
-          </label>
+            ></label
+          >
           <input
             type="email"
             id="login-email"
             placeholder="seunome@email.com"
           />
-          <span id="email-error" class="error-msg hidden"
-            >Email inválido! Lembre-se do @ e do final.</span
-          >
+          <span id="email-error" class="error-msg hidden">Email inválido!</span>
         </div>
-
         <div class="input-group">
           <label
             >Senha
@@ -61,18 +57,17 @@
               class="material-symbols-outlined help-icon"
               title="Seu código secreto"
               >help</span
-            >
-          </label>
+            ></label
+          >
           <input
             type="password"
             id="login-password"
             placeholder="Digite sua senha"
           />
           <span id="password-error" class="error-msg hidden"
-            >Senha inválida! Mínimo 6 dígitos.</span
+            >Mínimo 6 dígitos.</span
           >
         </div>
-
         <button class="btn btn-primary w-full btn-large" onclick="app.login()">
           Entrar
         </button>
@@ -90,7 +85,9 @@
             <span class="material-symbols-outlined">logout</span> Sair
           </button>
         </div>
-        <p class="text-muted mb-md">Escolha um dos caminhos abaixo:</p>
+        <p class="text-muted mb-md">
+          Escolha um dos caminhos abaixo para começar:
+        </p>
 
         <div class="nav-guide-list">
           <div class="guide-item" onclick="app.switchTab('tab-tutoriais')">
@@ -99,7 +96,7 @@
               <div class="guide-text">
                 <span class="guide-title">Aplicativos</span>
                 <span class="guide-subtitle"
-                  >Aprenda a usar telefone, YouTube e outros</span
+                  >Aprenda a usar YouTube, WhatsApp e outros</span
                 >
               </div>
             </div>
@@ -114,7 +111,7 @@
               <div class="guide-text">
                 <span class="guide-title">Glossário Digital</span>
                 <span class="guide-subtitle"
-                  >Entendendo símbolos e palavras</span
+                  >Entenda os símbolos e palavras online</span
                 >
               </div>
             </div>
@@ -140,8 +137,8 @@
         <div class="card bg-solid-blue text-white mt-lg">
           <h3>💡 Dica do dia!</h3>
           <p>
-            Não tenha medo de explorar! A maioria das ações pode ser desfeita
-            com o botão voltar.
+            Não tenha medo de explorar! Você não pode quebrar seu telefone
+            tocando por aí. Quase tudo pode ser desfeito com o botão voltar.
           </p>
         </div>
       </main>
@@ -153,15 +150,20 @@
             <span class="material-symbols-outlined">logout</span> Sair
           </button>
         </div>
+        <p class="text-muted mb-md">
+          Escolha um aplicativo para aprender a usá-lo passo a passo.
+        </p>
+
         <div class="search-container mb-lg">
           <span class="material-symbols-outlined search-icon">search</span>
           <input
             type="text"
             id="tutoriais-search"
-            placeholder="Qual app quer aprender?"
+            placeholder="Qual aplicativo você quer aprender?"
             onkeyup="app.searchTutoriais(this.value)"
           />
         </div>
+
         <div id="tutoriais-list" class="flex-col gap-md"></div>
       </main>
 
@@ -194,12 +196,10 @@
               >
               <div class="guide-text">
                 <span class="guide-title">Todos os Símbolos</span>
-                <span class="guide-subtitle">Dicionário completo de A a Z</span>
               </div>
             </div>
             <span class="material-symbols-outlined arrow">chevron_right</span>
           </div>
-
           <div class="guide-item" onclick="app.openGlossarioCategory('basic')">
             <div class="guide-content">
               <span class="material-symbols-outlined icon-bg-green"
@@ -207,12 +207,10 @@
               >
               <div class="guide-text">
                 <span class="guide-title">Parte 1: Básicos</span>
-                <span class="guide-subtitle">Símbolos do próprio celular</span>
               </div>
             </div>
             <span class="material-symbols-outlined arrow">chevron_right</span>
           </div>
-
           <div
             class="guide-item"
             onclick="app.openGlossarioCategory('navigation')"
@@ -223,12 +221,10 @@
               >
               <div class="guide-text">
                 <span class="guide-title">Parte 2: Navegação</span>
-                <span class="guide-subtitle">Como se mover na tela</span>
               </div>
             </div>
             <span class="material-symbols-outlined arrow">chevron_right</span>
           </div>
-
           <div class="guide-item" onclick="app.openGlossarioCategory('social')">
             <div class="guide-content">
               <span class="material-symbols-outlined icon-bg-red"
@@ -236,14 +232,10 @@
               >
               <div class="guide-text">
                 <span class="guide-title">Parte 3: Redes Sociais</span>
-                <span class="guide-subtitle"
-                  >Curtir, compartilhar e perfis</span
-                >
               </div>
             </div>
             <span class="material-symbols-outlined arrow">chevron_right</span>
           </div>
-
           <div
             class="guide-item"
             onclick="app.openGlossarioCategory('security')"
@@ -254,9 +246,6 @@
               >
               <div class="guide-text">
                 <span class="guide-title">Parte 4: Segurança</span>
-                <span class="guide-subtitle"
-                  >Senhas e proteção contra golpes</span
-                >
               </div>
             </div>
             <span class="material-symbols-outlined arrow">chevron_right</span>
@@ -268,8 +257,9 @@
         <div class="card bg-solid-blue text-white mt-lg">
           <h3>💡 Dica do dia!</h3>
           <p>
-            Não tenha medo de explorar! A maioria das ações pode ser desfeita
-            com o botão voltar.
+            Os ícones são como placas de trânsito: uma vez que você aprende o
+            que um significa, ele geralmente funciona do mesmo jeito em todos os
+            apps!
           </p>
         </div>
       </main>
@@ -277,22 +267,46 @@
       <main id="tab-golpes" class="tab-content screen-padding">
         <div class="header-main">
           <h2 class="title" style="color: #dc2626">
-            <span class="material-symbols-outlined">gpp_bad</span> Prevenção
+            <span class="material-symbols-outlined">gpp_bad</span> Segurança
           </h2>
           <button class="btn-logout" onclick="app.logout()">
             <span class="material-symbols-outlined">logout</span> Sair
           </button>
         </div>
+
+        <div
+          class="alert bg-danger-light text-danger-dark mb-lg"
+          style="
+            border-left: 4px solid #b91c1c;
+            padding: 12px;
+            border-radius: 4px;
+          "
+        >
+          <strong>Regra de Ouro:</strong> Bancos nunca pedem senhas por telefone
+          ou mensagem.
+        </div>
+
         <div class="search-container mb-lg">
           <span class="material-symbols-outlined search-icon">search</span>
           <input
             type="text"
             id="golpes-search"
-            placeholder="Pesquisar golpe..."
+            placeholder="Pesquisar por um golpe..."
             onkeyup="app.searchGolpes(this.value)"
           />
         </div>
+
         <div id="golpes-grid" class="flex-col gap-lg"></div>
+
+        <div class="spacer-lg"></div>
+
+        <div class="card bg-solid-blue text-white mt-lg">
+          <h3>💡 Lembre-se</h3>
+          <p>
+            Na dúvida, não clique. Chame alguém de confiança para olhar a
+            mensagem com você.
+          </p>
+        </div>
       </main>
 
       <nav class="bottom-nav">
@@ -320,9 +334,12 @@
     <div id="tutorial-detail-view" class="view-overlay hidden">
       <div class="detail-header" id="detail-header">
         <button class="btn-back" onclick="app.closeTutorial()">
-          <span class="material-symbols-outlined">arrow_back</span>
+          <span class="material-symbols-outlined">arrow_back</span> Voltar
         </button>
-        <h1 id="detail-title">Nome do App</h1>
+        <div class="detail-title-group">
+          <div class="icon-circle bg-white" id="detail-icon"></div>
+          <h1 id="detail-title">Nome do App</h1>
+        </div>
       </div>
       <div class="screen-padding" id="detail-content"></div>
     </div>
@@ -330,9 +347,14 @@
     <div id="glossario-detail-view" class="view-overlay hidden">
       <div class="detail-header bg-solid-blue">
         <button class="btn-back" onclick="app.closeGlossarioCategory()">
-          <span class="material-symbols-outlined">arrow_back</span>
+          <span class="material-symbols-outlined">arrow_back</span> Voltar
         </button>
-        <h1 id="glossario-category-title">Categoria</h1>
+        <h1
+          id="glossario-category-title"
+          style="margin-top: 16px; font-size: 24px"
+        >
+          Categoria
+        </h1>
       </div>
       <div class="screen-padding" id="glossario-category-content"></div>
     </div>
@@ -340,9 +362,12 @@
     <div id="golpe-detail-view" class="view-overlay hidden">
       <div class="detail-header">
         <button class="btn-back" onclick="app.closeGolpe()">
-          <span class="material-symbols-outlined">arrow_back</span>
+          <span class="material-symbols-outlined">arrow_back</span> Voltar
         </button>
-        <h1 id="golpe-title">Detalhes do Golpe</h1>
+        <div class="detail-title-group">
+          <div class="icon-circle bg-white" id="golpe-icon"></div>
+          <h1 id="golpe-title">Título</h1>
+        </div>
       </div>
       <div class="screen-padding" id="golpe-content"></div>
     </div>
@@ -364,7 +389,7 @@
         class="material-symbols-outlined"
         style="font-size: 80px"
       ></span>
-      <h1 id="splash-name" style="margin-top: 16px"></h1>
+      <h1 id="splash-name" style="margin-top: 16px; font-size: 32px"></h1>
     </div>
 
     <div id="simulation-container"></div>
