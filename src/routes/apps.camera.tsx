@@ -136,7 +136,7 @@ function CameraSimulation() {
         className="h-2 w-full rounded-full bg-muted overflow-hidden"
       >
         <div
-          className="h-full bg-accent transition-all duration-500"
+          className="h-full bg-[oklch(0.50_0.17_195)] transition-all duration-500"
           style={{ width: `${((isDone ? steps.length : currentStep) / steps.length) * 100}%` }}
         />
       </div>
@@ -204,9 +204,9 @@ function CameraSimulation() {
   // ----- Intro splash -----
   if (stage === "intro") {
     return (
-      <main className="min-h-screen bg-accent flex flex-col items-center justify-center text-accent-foreground">
+      <main className="min-h-screen bg-[oklch(0.50_0.17_195)] flex flex-col items-center justify-center text-white">
         <div className="flex flex-col items-center gap-4 animate-pulse">
-          <div className="size-24 rounded-full bg-accent-foreground text-accent flex items-center justify-center shadow-2xl">
+          <div className="size-24 rounded-full bg-white text-[oklch(0.50_0.17_195)] flex items-center justify-center shadow-2xl">
             <Camera className="size-12" strokeWidth={2.6} />
           </div>
           <h1 className="text-4xl font-extrabold tracking-tight">Câmera</h1>
@@ -217,13 +217,13 @@ function CameraSimulation() {
 
   // ----- Header bar (shared) -----
   const headerBar = (
-    <header className="bg-accent text-accent-foreground px-5 pt-5 pb-6">
+    <header className="bg-[oklch(0.50_0.17_195)] text-white px-5 pt-5 pb-6">
       <div className="w-full max-w-md mx-auto flex flex-col gap-4">
         <div className="flex items-center justify-between gap-2">
           <Link
             to="/apps"
             aria-label="Voltar para aplicativos"
-            className="inline-flex items-center gap-2 h-11 px-3 rounded-2xl text-base font-bold hover:bg-accent-foreground/10 transition"
+            className="inline-flex items-center gap-2 h-11 px-3 rounded-2xl text-base font-bold hover:bg-white/10 transition"
           >
             <ArrowLeft className="size-5" />
             Voltar
@@ -234,7 +234,7 @@ function CameraSimulation() {
               type="button"
               onClick={handleSpeak}
               aria-label={speaking ? "Parar leitura" : "Ouvir"}
-              className="inline-flex items-center gap-2 h-11 px-3 rounded-full bg-accent-foreground text-accent text-base font-bold hover:opacity-90 transition"
+              className="inline-flex items-center gap-2 h-11 px-3 rounded-full bg-white text-[oklch(0.50_0.17_195)] text-base font-bold hover:opacity-90 transition"
             >
               {speaking ? <Square className="size-5" /> : <Volume2 className="size-5" />}
               {speaking ? "Parar" : "Ouvir"}
@@ -259,15 +259,15 @@ function CameraSimulation() {
         {headerBar}
         <div className="w-full max-w-md mx-auto flex-1 flex flex-col gap-6 px-5 py-6">
           <section
-            className={`rounded-2xl bg-card p-5 border-l-8 border-l-accent shadow-md ${
+            className={`rounded-2xl bg-card p-5 border-l-8 border-l-[oklch(0.50_0.17_195)] shadow-md ${
               a11y ? "border-2 border-foreground" : "border border-border"
             }`}
           >
-            <h2 className={`font-extrabold text-accent ${a11y ? "text-2xl" : "text-xl"}`}>
+            <h2 className={`font-extrabold text-[oklch(0.50_0.17_195)] ${a11y ? "text-2xl" : "text-xl"}`}>
               O que é parecido?
             </h2>
             <div
-              className={`mt-3 inline-flex items-center gap-2 rounded-full bg-accent/10 text-accent px-3 py-1.5 font-extrabold ${
+              className={`mt-3 inline-flex items-center gap-2 rounded-full bg-[oklch(0.50_0.17_195)]/10 text-[oklch(0.50_0.17_195)] px-3 py-1.5 font-extrabold ${
                 a11y ? "text-lg" : "text-base"
               }`}
             >
@@ -279,8 +279,8 @@ function CameraSimulation() {
                 a11y ? "text-xl text-foreground" : "text-lg text-muted-foreground"
               }`}
             >
-              É como ter uma <strong className="text-accent">câmera</strong> para tirar fotos e
-              um <strong className="text-accent">álbum</strong> que guarda todas as suas
+              É como ter uma <strong className="text-[oklch(0.50_0.17_195)]">câmera</strong> para tirar fotos e
+              um <strong className="text-[oklch(0.50_0.17_195)]">álbum</strong> que guarda todas as suas
               lembranças, tudo dentro do celular.
             </p>
           </section>
@@ -305,7 +305,7 @@ function CameraSimulation() {
               className="h-2.5 w-full rounded-full bg-muted overflow-hidden mb-4"
             >
               <div
-                className="h-full bg-accent transition-all duration-500"
+                className="h-full bg-[oklch(0.50_0.17_195)] transition-all duration-500"
                 style={{ width: `${(currentStep / steps.length) * 100}%` }}
               />
             </div>
@@ -339,7 +339,7 @@ function CameraSimulation() {
                     key={s.n}
                     className={`rounded-2xl p-4 transition ${
                       active
-                        ? "bg-accent/5 border-2 border-accent"
+                        ? "bg-[oklch(0.50_0.17_195)]/5 border-2 border-[oklch(0.50_0.17_195)]"
                         : done
                           ? "bg-success/5 border border-success/40"
                           : a11y
@@ -353,7 +353,7 @@ function CameraSimulation() {
                           done
                             ? "bg-success text-white"
                             : active
-                              ? "bg-accent text-accent-foreground ring-4 ring-accent/25"
+                              ? "bg-[oklch(0.50_0.17_195)] text-white ring-4 ring-[oklch(0.50_0.17_195)]/25"
                               : "bg-muted text-muted-foreground"
                         }`}
                       >
@@ -377,7 +377,7 @@ function CameraSimulation() {
           <button
             type="button"
             onClick={() => setStage("intro")}
-            className="inline-flex items-center justify-center gap-2 w-full h-16 rounded-2xl bg-accent text-accent-foreground text-xl font-extrabold shadow-lg shadow-accent/30 hover:bg-accent/90 active:scale-[0.99] transition"
+            className="inline-flex items-center justify-center gap-2 w-full h-16 rounded-2xl bg-[oklch(0.50_0.17_195)] text-white text-xl font-extrabold shadow-lg shadow-[oklch(0.50_0.17_195)]/30 hover:bg-[oklch(0.50_0.17_195)]/90 active:scale-[0.99] transition"
           >
             <Camera className="size-6" />
             Iniciar Simulação Prática
@@ -421,7 +421,7 @@ function CameraSimulation() {
             <button
               type="button"
               onClick={() => navigate({ to: "/apps" })}
-              className="h-14 rounded-2xl bg-accent text-accent-foreground text-lg font-extrabold hover:bg-accent/90 transition"
+              className="h-14 rounded-2xl bg-[oklch(0.50_0.17_195)] text-white text-lg font-extrabold hover:bg-[oklch(0.50_0.17_195)]/90 transition"
             >
               Ver outros aplicativos
             </button>
@@ -447,7 +447,7 @@ function CameraSimulation() {
     <main className="min-h-screen bg-background flex flex-col">
       {/* Instruction bar */}
       <div className="sticky top-0 z-20 shadow-md">
-        <div className="bg-accent text-white">
+        <div className="bg-[oklch(0.50_0.17_195)] text-white">
           <div className="w-full max-w-md mx-auto px-4 py-2.5 flex items-center gap-2">
             <p className={`flex-1 leading-snug font-semibold min-w-0 ${a11y ? "text-base" : "text-sm"}`}>
               {tip}
@@ -477,7 +477,7 @@ function CameraSimulation() {
                 <div key={s.n} className="flex items-center gap-3 flex-1 last:flex-none">
                   <div className="flex items-center gap-1.5 shrink-0">
                     <span className={`size-6 rounded-full inline-flex items-center justify-center text-xs font-extrabold transition ${
-                      done ? "bg-success text-white" : active ? "bg-accent text-white" : "bg-muted text-muted-foreground"
+                      done ? "bg-success text-white" : active ? "bg-[oklch(0.50_0.17_195)] text-white" : "bg-muted text-muted-foreground"
                     }`}>
                       {done ? <CheckCircle2 className="size-3.5" /> : s.n}
                     </span>
@@ -550,7 +550,7 @@ function CameraSimulation() {
             className="w-full max-w-md rounded-3xl bg-card border-2 border-border shadow-2xl p-6 flex flex-col gap-3"
             onClick={(e) => e.stopPropagation()}
           >
-            <div className="flex items-center gap-2 text-accent">
+            <div className="flex items-center gap-2 text-[oklch(0.50_0.17_195)]">
               <Sparkles className="size-6" />
               <h3 id="exp-title" className={`font-extrabold ${a11y ? "text-2xl" : "text-xl"}`}>
                 {dialog.title}
@@ -562,7 +562,7 @@ function CameraSimulation() {
             <button
               type="button"
               onClick={() => setDialog(null)}
-              className="mt-2 h-12 rounded-full bg-accent text-accent-foreground text-base font-extrabold hover:bg-accent/90 transition"
+              className="mt-2 h-12 rounded-full bg-[oklch(0.50_0.17_195)] text-white text-base font-extrabold hover:bg-[oklch(0.50_0.17_195)]/90 transition"
             >
               OK, entendi
             </button>
@@ -721,7 +721,7 @@ function SimGallery({
               type="button"
               onClick={() => onPickAlbum(a)}
               className={`flex flex-col items-start gap-2 rounded-2xl p-2 text-left transition ${
-                isFirst ? "animate-pulse-ring bg-accent/5" : "hover:bg-muted"
+                isFirst ? "animate-pulse-ring bg-[oklch(0.50_0.17_195)]/5" : "hover:bg-muted"
               }`}
             >
               <div
@@ -736,7 +736,7 @@ function SimGallery({
                   loading="lazy"
                 />
                 {isFirst && (
-                  <span className="absolute bottom-2 left-2 inline-flex items-center gap-1 bg-accent text-white text-xs font-extrabold px-2 py-1 rounded-full shadow z-10">
+                  <span className="absolute bottom-2 left-2 inline-flex items-center gap-1 bg-[oklch(0.50_0.17_195)] text-white text-xs font-extrabold px-2 py-1 rounded-full shadow z-10">
                     Toque aqui
                   </span>
                 )}
@@ -806,7 +806,7 @@ function SimAlbum({
                 loading="lazy"
               />
               {isFirst && (
-                <span className="absolute bottom-1 left-1 right-1 bg-accent text-white text-[10px] font-extrabold px-1 py-0.5 rounded-full text-center z-10">
+                <span className="absolute bottom-1 left-1 right-1 bg-[oklch(0.50_0.17_195)] text-white text-[10px] font-extrabold px-1 py-0.5 rounded-full text-center z-10">
                   Toque aqui
                 </span>
               )}

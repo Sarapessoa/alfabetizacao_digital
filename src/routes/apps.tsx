@@ -36,7 +36,7 @@ export const Route = createFileRoute("/apps")({
   }),
 });
 
-type Tone = "primary" | "accent" | "destructive" | "success" | "warning" | "info" | "pink";
+type Tone = "primary" | "accent" | "destructive" | "success" | "warning" | "info" | "pink" | "teal";
 
 type AppItem = {
   name: string;
@@ -84,7 +84,7 @@ const apps: AppItem[] = [
     analogyIcon: Album,
     description: "Tire fotos e veja todas as suas lembranças guardadas.",
     icon: Camera,
-    tone: "warning",
+    tone: "teal",
     to: "/apps/camera",
   },
   {
@@ -137,6 +137,7 @@ const toneStyles: Record<Tone, { bg: string; text: string }> = {
   warning: { bg: "bg-[oklch(0.78_0.16_75)]", text: "text-white" },
   info: { bg: "bg-[oklch(0.55_0.18_240)]", text: "text-white" },
   pink: { bg: "bg-[oklch(0.62_0.20_355)]", text: "text-white" },
+  teal: { bg: "bg-[oklch(0.50_0.17_195)]", text: "text-white" },
 };
 
 function AppsPage() {
