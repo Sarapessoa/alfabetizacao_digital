@@ -210,13 +210,15 @@ function AppsPage() {
     <main className="min-h-screen bg-background flex flex-col items-center px-5 py-6 pb-28">
       <div className="w-full max-w-md flex flex-col gap-6">
         <PageHeader
-          title="Aplicativos"
           speaking={speaking}
           onSpeakToggle={speaking ? stopSpeaking : readScreen}
         />
 
         {/* Title */}
         <div>
+          <h1 className={`font-extrabold text-foreground tracking-tight ${a11y ? "text-4xl" : "text-3xl"}`}>
+            Aplicativos
+          </h1>
           <p
             className={`mt-1 leading-snug font-medium ${
               a11y ? "text-xl text-foreground" : "text-lg text-muted-foreground"

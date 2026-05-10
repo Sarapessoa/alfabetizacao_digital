@@ -532,7 +532,6 @@ function GlossarioPage() {
     <main className="min-h-screen bg-background flex flex-col items-center px-5 py-6 pb-28">
       <div className="w-full max-w-md flex flex-col gap-6">
         <PageHeader
-          title={!showingList ? "Glossário" : undefined}
           onBack={showingList ? () => { setCategory(null); setQuery(""); window.scrollTo(0, 0); } : undefined}
           backLabel="Voltar para as categorias"
           speaking={speaking}

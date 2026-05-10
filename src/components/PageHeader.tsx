@@ -1,9 +1,9 @@
-import { ArrowLeft, Volume2, Square } from "lucide-react";
-import { A11yToggle, useA11y } from "../lib/a11y";
+import { ArrowLeft, LogOut, Volume2, Square } from "lucide-react";
+import { Link } from "@tanstack/react-router";
+import { A11yToggle } from "../lib/a11y";
 import { useScrolled } from "../lib/use-scrolled";
 
 type Props = {
-  title?: string;
   onBack?: () => void;
   backLabel?: string;
   speaking: boolean;
@@ -12,14 +12,12 @@ type Props = {
 };
 
 export function PageHeader({
-  title,
   onBack,
   backLabel = "Voltar",
   speaking,
   onSpeakToggle,
   speakLabel = "Ouvir",
 }: Props) {
-  const { enabled: a11y } = useA11y();
   const scrolled = useScrolled();
 
   return (
@@ -29,7 +27,7 @@ export function PageHeader({
         scrolled ? "shadow-lg shadow-foreground/10 border-b border-border" : ""
       }`}
     >
-      <div className="w-100 flex items-center justify-between">
+      <div className="max-w-md w-full flex items-center justify-between">
         {onBack ? (
           <button
             type="button"
@@ -40,11 +38,12 @@ export function PageHeader({
             <ArrowLeft className="size-5" /> Voltar
           </button>
         ) : (
-          <span
-            className={`font-extrabold text-foreground tracking-tight ${a11y ? "text-2xl" : "text-xl"}`}
+          <Link
+            to="/home"
+            className="inline-flex items-center gap-2 h-12 px-4 rounded-2xl border-2 border-border bg-card text-foreground text-base font-bold hover:bg-muted transition"
           >
-            {title}
-          </span>
+            <LogOut className="size-5" /> Sair
+          </Link>
         )}
         <div className="flex items-center gap-2">
           <A11yToggle />

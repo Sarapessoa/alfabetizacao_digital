@@ -394,7 +394,6 @@ function SegurancaPage() {
     <main className="min-h-screen bg-background flex flex-col items-center px-5 py-6 pb-28">
       <div className="w-full max-w-md flex flex-col gap-6">
         <PageHeader
-          title="Segurança"
           speaking={speaking}
           onSpeakToggle={speaking ? stopSpeaking : readScreen}
         />
