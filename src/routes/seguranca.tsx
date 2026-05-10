@@ -322,11 +322,11 @@ function SegurancaPage() {
           </SectionCard>
 
           {/* Signals */}
-          <SectionCard a11y={a11y} title="Sinais de alerta" tone="danger" icon={AlertTriangle}>
+          <SectionCard a11y={a11y} title="Sinais de alerta" tone="warning" icon={AlertTriangle}>
             <ul className="flex flex-col gap-3">
               {openScam.signals.map((s, i) => (
                 <li key={i} className="flex items-start gap-3">
-                  <XCircle className="size-6 shrink-0 text-destructive mt-0.5" strokeWidth={2.4} />
+                  <XCircle className="size-6 shrink-0 text-yellow-600 mt-0.5" strokeWidth={2.4} />
                   <span className={`leading-snug text-foreground ${a11y ? "text-xl font-medium" : "text-lg"}`}>{s}</span>
                 </li>
               ))}
@@ -539,7 +539,7 @@ function SectionCard({
 }: {
   a11y: boolean;
   title: string;
-  tone: "neutral" | "danger" | "success";
+  tone: "neutral" | "danger" | "success" | "warning";
   icon?: IconCmp;
   children: React.ReactNode;
 }) {
@@ -549,20 +549,33 @@ function SectionCard({
       ? "bg-destructive/5 border-2 border-destructive/30"
       : tone === "success"
         ? "bg-success/10 border-2 border-success/30"
-        : "bg-card border-2 border-border/60 shadow-[0_4px_20px_-10px_rgba(0,0,0,0.1)]";
+        : tone === "warning"
+          ? "bg-yellow-500/10 border-2 border-yellow-500/30"
+          : "bg-card border-2 border-border/60 shadow-[0_4px_20px_-10px_rgba(0,0,0,0.1)]";
+
   const titleColor = a11y
     ? "text-foreground"
     : tone === "danger"
       ? "text-destructive"
       : tone === "success"
         ? "text-success"
-        : "text-foreground";
+        : tone === "warning"
+          ? "text-yellow-600"
+          : "text-foreground";
+
   return (
     <section className={`rounded-2xl p-5 ${toneClass}`}>
       <div className="flex items-center gap-2 mb-3">
         {Icon && <Icon className={`size-6 ${titleColor}`} strokeWidth={2.4} />}
-        <h2 className={`font-extrabold ${a11y ? "text-2xl" : "text-xl"} ${titleColor}`}>{title}</h2>
+        <h2
+          className={`font-extrabold ${
+            a11y ? "text-2xl" : "text-xl"
+          } ${titleColor}`}
+        >
+          {title}
+        </h2>
       </div>
+
       {children}
     </section>
   );
