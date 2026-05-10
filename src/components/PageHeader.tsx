@@ -39,7 +39,7 @@ export function PageHeader({
           </button>
         ) : (
           <Link
-            to="/home"
+            to="/"
             className="inline-flex items-center gap-2 h-12 px-4 rounded-2xl border-2 border-border bg-card text-foreground text-base font-bold hover:bg-muted transition"
           >
             <LogOut className="size-5" /> Sair
