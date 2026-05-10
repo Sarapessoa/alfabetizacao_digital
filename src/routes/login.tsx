@@ -74,7 +74,7 @@ function LoginPage() {
             Ajudante Tech
           </h1>
           <p className="text-xl text-muted-foreground font-medium">
-            Que bom te ver! 👋
+            Que bom te ver!
           </p>
           <div className="mt-2 flex items-center gap-2">
             <A11yToggle />
@@ -97,10 +97,10 @@ function LoginPage() {
         >
           <div className="flex flex-col gap-1">
             <h2 id="login-title" className="text-3xl font-bold text-card-foreground">
-              Vamos começar
+              Bem-vinda de volta
             </h2>
             <p className="text-lg text-muted-foreground">
-              Digite seu e-mail para entrar.
+              Vamos continuar juntas, no seu ritmo.
             </p>
           </div>
 
