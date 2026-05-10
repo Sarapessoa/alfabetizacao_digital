@@ -105,12 +105,12 @@ function ContatosSimulation() {
           : 2;
 
   const Stepper = (
-    <div className="w-full max-w-md mx-auto px-5 pt-4 pb-2">
-      <div className="flex items-center justify-between gap-2 mb-2">
-        <p className={`font-extrabold ${a11y ? "text-base" : "text-sm"}`}>
-          {isDone ? "Simulação concluída" : `Etapa ${currentStep} de ${steps.length}`}
+    <div className="w-full max-w-md mx-auto px-5 py-3">
+      <div className="flex items-center justify-between mb-1.5">
+        <p className={`font-extrabold ${a11y ? "text-sm" : "text-xs"}`}>
+          {isDone ? "Simulação concluída! 🎉" : `Etapa ${Math.min(completedCount + 1, steps.length)} de ${steps.length}`}
         </p>
-        <p className={`text-muted-foreground font-medium ${a11y ? "text-base" : "text-xs"}`}>
+        <p className={`text-muted-foreground font-medium ${a11y ? "text-sm" : "text-xs"}`}>
           {isDone ? "100%" : `${Math.round((completedCount / steps.length) * 100)}%`}
         </p>
       </div>
@@ -120,49 +120,16 @@ function ContatosSimulation() {
         aria-valuemax={steps.length}
         aria-valuenow={isDone ? steps.length : completedCount}
         aria-label="Progresso da simulação"
-        className="h-2.5 w-full rounded-full bg-muted overflow-hidden"
+        className="h-2 w-full rounded-full bg-muted overflow-hidden"
       >
         <div
-          className="h-full bg-info transition-all duration-500"
+          className="h-full transition-all duration-500"
           style={{
-            width: `${((isDone ? steps.length : completedCount) / steps.length) * 100}%`,
+            width: `${(completedCount / steps.length) * 100}%`,
             backgroundColor: "oklch(0.55 0.18 240)",
           }}
         />
       </div>
-      <ol className="mt-3 grid grid-cols-2 gap-2">
-        {steps.map((s) => {
-          const isStepDone = isDone || done[s.key];
-          const active = !isDone && !done[s.key] && nextTask === s.key;
-          return (
-            <li key={s.n} className="flex flex-col items-center gap-1 text-center">
-              <span
-                className={`size-7 rounded-full inline-flex items-center justify-center text-xs font-extrabold transition ${
-                  isStepDone
-                    ? "bg-success text-white"
-                    : active
-                      ? "text-white ring-4"
-                      : "bg-muted text-muted-foreground"
-                }`}
-                style={
-                  active && !isStepDone
-                    ? { backgroundColor: "oklch(0.55 0.18 240)", boxShadow: "0 0 0 4px oklch(0.55 0.18 240 / 0.25)" }
-                    : undefined
-                }
-              >
-                {isStepDone ? <CheckCircle2 className="size-4" /> : s.n}
-              </span>
-              <span
-                className={`leading-tight font-bold ${
-                  active ? "text-foreground" : "text-muted-foreground"
-                } ${a11y ? "text-sm" : "text-xs"}`}
-              >
-                {s.label}
-              </span>
-            </li>
-          );
-        })}
-      </ol>
     </div>
   );
 
@@ -482,25 +449,60 @@ function ContatosSimulation() {
 
   return (
     <main className="min-h-screen bg-background flex flex-col">
-      <div
-        className="text-white px-5 py-4 sticky top-0 z-20 shadow-md"
-        style={{ backgroundColor: "oklch(0.55 0.18 240)" }}
-      >
-        <div className="w-full max-w-md mx-auto flex items-start justify-between gap-3">
-          <p className={`leading-snug font-medium ${a11y ? "text-lg" : "text-base"}`}>
-            <span className="font-extrabold">Passo {currentStep}:</span> {tip}
-          </p>
-          <Link
-            to="/apps"
-            aria-label="Sair da simulação"
-            className="shrink-0 inline-flex items-center gap-1 h-9 px-3 rounded-full bg-white/20 hover:bg-white/30 text-sm font-bold transition"
+      {/* Instruction bar */}
+      <div className="sticky top-0 z-20 shadow-md">
+        <div className="text-white" style={{ backgroundColor: "oklch(0.55 0.18 240)" }}>
+          <div className="w-full max-w-md mx-auto px-4 py-2.5 flex items-center gap-2">
+            <p className={`flex-1 leading-snug font-semibold min-w-0 ${a11y ? "text-base" : "text-sm"}`}>
+              {tip}
+            </p>
+            <Link
+              to="/apps"
+              aria-label="Sair da simulação"
+              className="shrink-0 inline-flex items-center gap-1 h-8 px-3 rounded-full bg-white/20 hover:bg-white/30 text-sm font-bold transition"
+            >
+              <X className="size-4" /> Sair
+            </Link>
+          </div>
+        </div>
+        <div className="bg-card border-b border-border">
+          <div
+            role="progressbar"
+            aria-valuemin={0}
+            aria-valuemax={steps.length}
+            aria-valuenow={completedCount}
+            aria-label="Progresso da simulação"
+            className="w-full max-w-md mx-auto px-4 py-2.5 flex items-center gap-3"
           >
-            <X className="size-4" />
-            Sair
-          </Link>
+            {steps.map((s, i) => {
+              const isStepDone = isDone || done[s.key];
+              const active = !isDone && !done[s.key] && nextTask === s.key;
+              return (
+                <div key={s.n} className="flex items-center gap-3 flex-1 last:flex-none">
+                  <div className="flex items-center gap-1.5 shrink-0">
+                    <span
+                      className={`size-6 rounded-full inline-flex items-center justify-center text-xs font-extrabold transition ${
+                        isStepDone ? "bg-success text-white" : active ? "text-white" : "bg-muted text-muted-foreground"
+                      }`}
+                      style={active && !isStepDone ? { backgroundColor: "oklch(0.55 0.18 240)" } : undefined}
+                    >
+                      {isStepDone ? <CheckCircle2 className="size-3.5" /> : s.n}
+                    </span>
+                    <span className={`text-xs font-bold leading-none ${active ? "text-foreground" : "text-muted-foreground"}`}>
+                      {s.label}
+                    </span>
+                  </div>
+                  {i < steps.length - 1 && (
+                    <div className="flex-1 h-1 rounded-full bg-muted overflow-hidden">
+                      <div className="h-full bg-success transition-all duration-500" style={{ width: (isDone || done[steps[i].key]) ? "100%" : "0%" }} />
+                    </div>
+                  )}
+                </div>
+              );
+            })}
+          </div>
         </div>
       </div>
-      <div className="bg-card border-b border-border">{Stepper}</div>
 
       <div className="w-full max-w-md mx-auto flex-1 flex flex-col min-h-0">
         {stage === "sim-list" ? (
@@ -636,7 +638,7 @@ function SimList({
           onClick={onOpenSearch}
           className={`w-full h-14 rounded-2xl border-2 flex items-center gap-3 px-4 text-left transition ${
             searchActive
-              ? "animate-pulse"
+              ? "animate-pulse-ring"
               : done.search
                 ? "bg-success/5 border-success/30"
                 : "bg-muted/40 border-border"
@@ -646,7 +648,6 @@ function SimList({
               ? {
                   borderColor: "oklch(0.55 0.18 240)",
                   backgroundColor: "oklch(0.55 0.18 240 / 0.08)",
-                  boxShadow: "0 0 0 4px oklch(0.55 0.18 240 / 0.2)",
                 }
               : undefined
           }
@@ -710,14 +711,11 @@ function SimList({
         onClick={onOpenAdd}
         aria-label="Adicionar novo contato"
         className={`fixed bottom-6 right-6 size-16 rounded-full text-white flex items-center justify-center shadow-2xl transition ${
-          addActive ? "animate-pulse ring-4" : ""
+          addActive ? "animate-pulse-ring" : ""
         } ${done.add ? "opacity-80" : ""}`}
         style={{
           backgroundColor: "oklch(0.55 0.18 240)",
-          boxShadow:
-            addActive
-              ? "0 10px 30px -10px oklch(0.55 0.18 240 / 0.6), 0 0 0 8px oklch(0.55 0.18 240 / 0.25)"
-              : "0 10px 30px -10px oklch(0.55 0.18 240 / 0.5)",
+          boxShadow: "0 10px 30px -10px oklch(0.55 0.18 240 / 0.5)",
         }}
       >
         <Plus className="size-8" strokeWidth={3} />
@@ -729,7 +727,7 @@ function SimList({
             <button
               type="button"
               onClick={onFinish}
-              className="w-full h-14 rounded-2xl bg-success text-white text-lg font-extrabold shadow-md hover:opacity-90 transition ring-4 ring-success/20 animate-pulse"
+              className="w-full h-14 rounded-2xl bg-success text-white text-lg font-extrabold shadow-md hover:opacity-90 transition animate-pulse-ring"
             >
               Concluir simulação
             </button>
@@ -807,10 +805,9 @@ function SimSearch({
           <button
             type="button"
             onClick={onBackToList}
-            className="w-full h-14 rounded-2xl text-white text-lg font-extrabold transition hover:opacity-90 ring-4 animate-pulse"
+            className="w-full h-14 rounded-2xl text-white text-lg font-extrabold transition hover:opacity-90 animate-pulse-ring"
             style={{
               backgroundColor: "oklch(0.55 0.18 240)",
-              boxShadow: "0 0 0 4px oklch(0.55 0.18 240 / 0.25)",
             }}
           >
             Voltar para a agenda
@@ -853,7 +850,7 @@ function SimSearch({
           <button
             type="button"
             onClick={() => onQuery("Cida")}
-            className="h-10 px-4 rounded-full text-white text-sm font-extrabold animate-pulse"
+            className="h-10 px-4 rounded-full text-white text-sm font-extrabold animate-pulse-ring"
             style={{ backgroundColor: "oklch(0.55 0.18 240)" }}
           >
             Usar "Cida"
@@ -875,7 +872,7 @@ function SimSearch({
                   type="button"
                   onClick={() => onOpen(c)}
                   className={`w-full flex items-center gap-3 px-4 py-3 text-left border-b border-border hover:bg-muted transition ${
-                    isMatch ? "animate-pulse" : ""
+                    isMatch ? "animate-pulse-ring" : ""
                   }`}
                   style={
                     isMatch
@@ -989,11 +986,10 @@ function SimAdd({
           onClick={canSave ? onSave : undefined}
           disabled={!canSave}
           className={`w-full h-14 rounded-2xl text-white text-lg font-extrabold transition ${
-            canSave ? "hover:opacity-90 ring-4 animate-pulse" : "opacity-50 cursor-not-allowed"
+            canSave ? "hover:opacity-90 animate-pulse-ring" : "opacity-50 cursor-not-allowed"
           } inline-flex items-center justify-center gap-2`}
           style={{
             backgroundColor: "oklch(0.55 0.18 240)",
-            boxShadow: canSave ? "0 0 0 4px oklch(0.55 0.18 240 / 0.25)" : undefined,
           }}
         >
           <Check className="size-6" />

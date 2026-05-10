@@ -5,6 +5,15 @@
 
 @custom-variant dark (&:is(.dark *));
 
+@keyframes pulse-ring {
+  0%, 100% { box-shadow: 0 0 0 4px rgba(250, 204, 21, 0.9); }
+  50%       { box-shadow: 0 0 0 10px rgba(250, 204, 21, 0.25); }
+}
+
+@utility animate-pulse-ring {
+  animation: pulse-ring 1.4s ease-in-out infinite;
+}
+
 /*
  * Design system definition.
  *

@@ -115,12 +115,12 @@ function ConfigSimulation() {
   const allDone = completedCount === FUNC_ORDER.length;
 
   const Stepper = (
-    <div className="w-full max-w-md mx-auto px-5 pt-4 pb-2">
-      <div className="flex items-center justify-between gap-2 mb-2">
-        <p className={`font-extrabold ${a11y ? "text-base" : "text-sm"}`}>
-          {isDone ? "Simulação concluída" : `Etapa ${currentStep} de ${steps.length}`}
+    <div className="w-full max-w-md mx-auto px-5 py-3">
+      <div className="flex items-center justify-between mb-1.5">
+        <p className={`font-extrabold ${a11y ? "text-sm" : "text-xs"}`}>
+          {isDone ? "Simulação concluída! 🎉" : `Etapa ${Math.min(completedCount + 1, steps.length)} de ${steps.length}`}
         </p>
-        <p className={`text-muted-foreground font-medium ${a11y ? "text-base" : "text-xs"}`}>
+        <p className={`text-muted-foreground font-medium ${a11y ? "text-sm" : "text-xs"}`}>
           {isDone ? "100%" : `${Math.round((completedCount / steps.length) * 100)}%`}
         </p>
       </div>
@@ -130,43 +130,13 @@ function ConfigSimulation() {
         aria-valuemax={steps.length}
         aria-valuenow={isDone ? steps.length : completedCount}
         aria-label="Progresso da simulação"
-        className="h-2.5 w-full rounded-full bg-muted overflow-hidden"
+        className="h-2 w-full rounded-full bg-muted overflow-hidden"
       >
         <div
           className="h-full bg-primary transition-all duration-500"
-          style={{
-            width: `${((isDone ? steps.length : completedCount) / steps.length) * 100}%`,
-          }}
+          style={{ width: `${(completedCount / steps.length) * 100}%` }}
         />
       </div>
-      <ol className="mt-3 grid grid-cols-4 gap-2">
-        {steps.map((s) => {
-          const isStepDone = isDone || done[s.key];
-          const active = !isDone && !done[s.key] && nextFunc === s.key;
-          return (
-            <li key={s.n} className="flex flex-col items-center gap-1 text-center">
-              <span
-                className={`size-7 rounded-full inline-flex items-center justify-center text-xs font-extrabold transition ${
-                  isStepDone
-                    ? "bg-success text-white"
-                    : active
-                      ? "bg-primary text-primary-foreground ring-4 ring-primary/25"
-                      : "bg-muted text-muted-foreground"
-                }`}
-              >
-                {isStepDone ? <CheckCircle2 className="size-4" /> : s.n}
-              </span>
-              <span
-                className={`leading-tight font-bold ${
-                  active ? "text-foreground" : "text-muted-foreground"
-                } ${a11y ? "text-sm" : "text-xs"}`}
-              >
-                {s.label}
-              </span>
-            </li>
-          );
-        })}
-      </ol>
     </div>
   );
 
@@ -463,23 +433,57 @@ function ConfigSimulation() {
 
   return (
     <main className="min-h-screen bg-background flex flex-col">
-      {/* Tip banner */}
-      <div className="bg-primary text-primary-foreground px-5 py-4 sticky top-0 z-20 shadow-md">
-        <div className="w-full max-w-md mx-auto flex items-start justify-between gap-3">
-          <p className={`leading-snug font-medium ${a11y ? "text-lg" : "text-base"}`}>
-            <span className="font-extrabold">Passo {currentStep}:</span> {tip}
-          </p>
-          <Link
-            to="/apps"
-            aria-label="Sair da simulação"
-            className="shrink-0 inline-flex items-center gap-1 h-9 px-3 rounded-full bg-white/20 hover:bg-white/30 text-sm font-bold transition"
+      {/* Instruction bar */}
+      <div className="sticky top-0 z-20 shadow-md">
+        <div className="bg-primary text-primary-foreground">
+          <div className="w-full max-w-md mx-auto px-4 py-2.5 flex items-center gap-2">
+            <p className={`flex-1 leading-snug font-semibold min-w-0 ${a11y ? "text-base" : "text-sm"}`}>
+              {tip}
+            </p>
+            <Link
+              to="/apps"
+              aria-label="Sair da simulação"
+              className="shrink-0 inline-flex items-center gap-1 h-8 px-3 rounded-full bg-white/20 hover:bg-white/30 text-sm font-bold transition"
+            >
+              <X className="size-4" /> Sair
+            </Link>
+          </div>
+        </div>
+        <div className="bg-card border-b border-border">
+          <div
+            role="progressbar"
+            aria-valuemin={0}
+            aria-valuemax={steps.length}
+            aria-valuenow={completedCount}
+            aria-label="Progresso da simulação"
+            className="w-full max-w-md mx-auto px-4 py-2.5 flex items-center gap-3"
           >
-            <X className="size-4" />
-            Sair
-          </Link>
+            {steps.map((s, i) => {
+              const isStepDone = isDone || done[s.key];
+              const active = !isDone && !done[s.key] && nextFunc === s.key;
+              return (
+                <div key={s.n} className="flex items-center gap-3 flex-1 last:flex-none">
+                  <div className="flex items-center gap-1.5 shrink-0">
+                    <span className={`size-6 rounded-full inline-flex items-center justify-center text-xs font-extrabold transition ${
+                      isStepDone ? "bg-success text-white" : active ? "bg-primary text-primary-foreground" : "bg-muted text-muted-foreground"
+                    }`}>
+                      {isStepDone ? <CheckCircle2 className="size-3.5" /> : s.n}
+                    </span>
+                    <span className={`text-xs font-bold leading-none ${active ? "text-foreground" : "text-muted-foreground"}`}>
+                      {s.label}
+                    </span>
+                  </div>
+                  {i < steps.length - 1 && (
+                    <div className="flex-1 h-1 rounded-full bg-muted overflow-hidden">
+                      <div className="h-full bg-success transition-all duration-500" style={{ width: (isDone || done[steps[i].key]) ? "100%" : "0%" }} />
+                    </div>
+                  )}
+                </div>
+              );
+            })}
+          </div>
         </div>
       </div>
-      <div className="bg-card border-b border-border">{Stepper}</div>
 
       <div className="w-full max-w-md mx-auto flex-1 flex flex-col min-h-0">
         {stage === "sim-home" ? (
@@ -659,7 +663,7 @@ function SimHome({
                 onClick={() => onPick(it.key)}
                 className={`w-full flex items-center gap-4 px-4 py-4 text-left border-b border-border transition ${
                   isNext
-                    ? "bg-primary/5 ring-2 ring-inset ring-primary animate-pulse"
+                    ? "bg-primary/5 animate-pulse-ring"
                     : isDoneItem
                       ? "bg-success/5 hover:bg-success/10"
                       : "hover:bg-muted"
@@ -702,7 +706,7 @@ function SimHome({
           <button
             type="button"
             onClick={onFinish}
-            className="w-full h-14 rounded-2xl bg-success text-white text-lg font-extrabold shadow-md hover:opacity-90 transition ring-4 ring-success/20 animate-pulse"
+            className="w-full h-14 rounded-2xl bg-success text-white text-lg font-extrabold shadow-md hover:opacity-90 transition animate-pulse-ring"
           >
             Concluir simulação
           </button>
@@ -764,7 +768,7 @@ function SimWifi({
                 type="button"
                 onClick={onConnect}
                 disabled={password.length < 4}
-                className="h-14 rounded-2xl bg-primary text-primary-foreground text-lg font-extrabold shadow-md hover:bg-primary/90 disabled:opacity-50 disabled:cursor-not-allowed transition ring-4 ring-primary/20 animate-pulse"
+                className="h-14 rounded-2xl bg-primary text-primary-foreground text-lg font-extrabold shadow-md hover:bg-primary/90 disabled:opacity-50 disabled:cursor-not-allowed transition animate-pulse-ring"
               >
                 Conectar
               </button>
@@ -781,7 +785,7 @@ function SimWifi({
               <button
                 type="button"
                 onClick={onBackToHome}
-                className="mt-2 w-full h-14 rounded-2xl bg-success text-white text-lg font-extrabold hover:opacity-90 transition ring-4 ring-success/20 animate-pulse inline-flex items-center justify-center gap-2"
+                className="mt-2 w-full h-14 rounded-2xl bg-success text-white text-lg font-extrabold hover:opacity-90 transition animate-pulse-ring inline-flex items-center justify-center gap-2"
               >
                 <ChevronLeft className="size-5" /> Voltar aos Ajustes
               </button>
@@ -818,7 +822,7 @@ function SimWifi({
           className={`relative w-20 h-11 rounded-full transition shadow-inner ${
             wifiOn
               ? "bg-success"
-              : "bg-muted ring-4 ring-primary/40 animate-pulse"
+              : "bg-muted animate-pulse-ring"
           }`}
         >
           <span
@@ -844,7 +848,7 @@ function SimWifi({
                     type="button"
                     onClick={() => onPick(n)}
                     className={`w-full flex items-center justify-between gap-3 px-4 py-4 text-left transition border-b border-border last:border-b-0 ${
-                      isFirst ? "bg-primary/5 ring-2 ring-inset ring-primary animate-pulse" : "hover:bg-muted"
+                      isFirst ? "bg-primary/5 animate-pulse-ring" : "hover:bg-muted"
                     }`}
                   >
                     <div className="flex items-center gap-3 min-w-0">

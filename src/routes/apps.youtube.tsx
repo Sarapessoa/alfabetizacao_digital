@@ -70,12 +70,12 @@ function YouTubeSimulation() {
   const isDone = stage === "done";
 
   const Stepper = (
-    <div className="w-full max-w-md mx-auto px-5 pt-4 pb-2">
-      <div className="flex items-center justify-between gap-2 mb-2">
-        <p className={`font-extrabold ${a11y ? "text-base" : "text-sm"}`}>
-          {isDone ? "Simulação concluída" : `Etapa ${currentStep} de ${steps.length}`}
+    <div className="w-full max-w-md mx-auto px-5 py-3">
+      <div className="flex items-center justify-between mb-1.5">
+        <p className={`font-extrabold ${a11y ? "text-sm" : "text-xs"}`}>
+          {isDone ? "Simulação concluída! 🎉" : `Etapa ${currentStep} de ${steps.length}`}
         </p>
-        <p className={`text-muted-foreground font-medium ${a11y ? "text-base" : "text-xs"}`}>
+        <p className={`text-muted-foreground font-medium ${a11y ? "text-sm" : "text-xs"}`}>
           {isDone ? "100%" : `${Math.round((currentStep / steps.length) * 100)}%`}
         </p>
       </div>
@@ -85,43 +85,13 @@ function YouTubeSimulation() {
         aria-valuemax={steps.length}
         aria-valuenow={isDone ? steps.length : currentStep}
         aria-label="Progresso da simulação"
-        className="h-2.5 w-full rounded-full bg-muted overflow-hidden"
+        className="h-2 w-full rounded-full bg-muted overflow-hidden"
       >
         <div
           className="h-full bg-destructive transition-all duration-500"
-          style={{
-            width: `${((isDone ? steps.length : currentStep) / steps.length) * 100}%`,
-          }}
+          style={{ width: `${((isDone ? steps.length : currentStep) / steps.length) * 100}%` }}
         />
       </div>
-      <ol className="mt-3 grid grid-cols-3 gap-2">
-        {steps.map((s) => {
-          const done = isDone || s.n < currentStep;
-          const active = !isDone && s.n === currentStep;
-          return (
-            <li key={s.n} className="flex flex-col items-center gap-1 text-center">
-              <span
-                className={`size-7 rounded-full inline-flex items-center justify-center text-xs font-extrabold transition ${
-                  done
-                    ? "bg-success text-white"
-                    : active
-                      ? "bg-destructive text-destructive-foreground ring-4 ring-destructive/25"
-                      : "bg-muted text-muted-foreground"
-                }`}
-              >
-                {done ? <CheckCircle2 className="size-4" /> : s.n}
-              </span>
-              <span
-                className={`leading-tight font-bold ${
-                  active ? "text-foreground" : "text-muted-foreground"
-                } ${a11y ? "text-sm" : "text-xs"}`}
-              >
-                {s.label}
-              </span>
-            </li>
-          );
-        })}
-      </ol>
     </div>
   );
 
@@ -386,27 +356,63 @@ function YouTubeSimulation() {
     stage === "sim-home"
       ? "Toque na imagem do vídeo para começar a assistir."
       : "Você está assistindo! Experimente dar um 'Joinha' ou 'Compartilhar' abaixo.";
-  const tipStep = stage === "sim-home" ? 1 : 2;
 
   return (
     <main className="min-h-screen bg-background flex flex-col">
-      {/* Tip banner (instructional) */}
-      <div className="bg-destructive text-destructive-foreground px-5 py-4 sticky top-0 z-20 shadow-md">
-        <div className="w-full max-w-md mx-auto flex items-start justify-between gap-3">
-          <p className={`leading-snug font-medium ${a11y ? "text-lg" : "text-base"}`}>
-            <span className="font-extrabold">Passo {tipStep}:</span> {tip}
-          </p>
-          <Link
-            to="/apps"
-            aria-label="Sair da simulação"
-            className="shrink-0 inline-flex items-center gap-1 h-9 px-3 rounded-full bg-white/20 hover:bg-white/30 text-sm font-bold transition"
+      {/* Instruction bar */}
+      <div className="sticky top-0 z-20 shadow-md">
+        <div className="bg-destructive text-destructive-foreground">
+          <div className="w-full max-w-md mx-auto px-4 py-2.5 flex items-center gap-2">
+            <p className={`flex-1 leading-snug font-semibold min-w-0 ${a11y ? "text-base" : "text-sm"}`}>
+              {tip}
+            </p>
+            <Link
+              to="/apps"
+              aria-label="Sair da simulação"
+              className="shrink-0 inline-flex items-center gap-1 h-8 px-3 rounded-full bg-white/20 hover:bg-white/30 text-sm font-bold transition"
+            >
+              <X className="size-4" /> Sair
+            </Link>
+          </div>
+        </div>
+        <div className="bg-card border-b border-border">
+          <div
+            role="progressbar"
+            aria-valuemin={0}
+            aria-valuemax={steps.length}
+            aria-valuenow={currentStep}
+            aria-label="Progresso da simulação"
+            className="w-full max-w-md mx-auto px-4 py-2.5 flex items-center gap-3"
           >
-            <X className="size-4" />
-            Sair
-          </Link>
+            {steps.map((s, i) => {
+              const done = s.n < currentStep;
+              const active = s.n === currentStep;
+              return (
+                <div key={s.n} className="flex items-center gap-3 flex-1 last:flex-none">
+                  <div className="flex items-center gap-1.5 shrink-0">
+                    <span className={`size-6 rounded-full inline-flex items-center justify-center text-xs font-extrabold transition ${
+                      done ? "bg-success text-white" : active ? "bg-destructive text-white" : "bg-muted text-muted-foreground"
+                    }`}>
+                      {done ? <CheckCircle2 className="size-3.5" /> : s.n}
+                    </span>
+                    <span className={`text-xs font-bold leading-none ${active ? "text-foreground" : "text-muted-foreground"}`}>
+                      {s.label}
+                    </span>
+                  </div>
+                  {i < steps.length - 1 && (
+                    <div className="flex-1 h-1 rounded-full bg-muted overflow-hidden">
+                      <div
+                        className="h-full bg-success transition-all duration-500"
+                        style={{ width: done ? "100%" : "0%" }}
+                      />
+                    </div>
+                  )}
+                </div>
+              );
+            })}
+          </div>
         </div>
       </div>
-      <div className="bg-card border-b border-border">{Stepper}</div>
 
       {/* Simulated YouTube UI */}
       <div className="w-full max-w-md mx-auto flex-1 flex flex-col min-h-0">
@@ -576,7 +582,7 @@ function SimHome({ onPickVideo }: { onPickVideo: () => void }) {
         className="text-left group focus:outline-none"
         aria-label="Vídeo: Detalhes que você nunca ouviu em Human Nature"
       >
-        <div className="relative aspect-video bg-muted flex items-center justify-center ring-4 ring-info/0 group-hover:ring-info/60 group-focus:ring-info/80 transition animate-pulse overflow-hidden">
+        <div className="relative aspect-video bg-muted flex items-center justify-center animate-pulse-ring overflow-hidden">
           <img
             src={boloImg}
             alt="Bolo de cenoura com cobertura de chocolate"
@@ -599,7 +605,7 @@ function SimHome({ onPickVideo }: { onPickVideo: () => void }) {
             18:42
           </span>
           {/* Toque aqui hint */}
-          <span className="absolute top-3 left-3 inline-flex items-center gap-1 bg-info text-white text-xs font-extrabold px-2 py-1 rounded-full shadow z-10">
+          <span className="absolute top-3 left-3 inline-flex items-center gap-1 bg-yellow-500 text-black text-sm font-extrabold px-2 py-1 rounded-full shadow z-10 animate-bounce">
             Toque aqui
           </span>
           {/* Progress bar with red dot */}
@@ -814,8 +820,8 @@ function SimVideo({
       <div className="flex flex-wrap gap-2 px-4 py-2 pb-3">
         {/* Like / Dislike combined pill */}
         <div
-          className={`shrink-0 inline-flex items-center h-9 rounded-full bg-muted overflow-hidden ring-2 transition ${
-            liked ? "ring-info" : "ring-info animate-pulse"
+          className={`shrink-0 inline-flex items-center h-9 rounded-full bg-muted overflow-hidden transition ${
+            liked ? "" : "animate-pulse-ring"
           }`}
         >
           <button
@@ -840,7 +846,7 @@ function SimVideo({
         <button
           type="button"
           onClick={onShare}
-          className="shrink-0 inline-flex items-center gap-1.5 h-9 px-3 rounded-full bg-muted text-foreground text-sm font-bold ring-2 ring-info animate-pulse"
+          className="shrink-0 inline-flex items-center gap-1.5 h-9 px-3 rounded-full bg-muted text-foreground text-sm font-bold animate-pulse-ring"
         >
           <Share2 className="size-4" />
           Compartilhar

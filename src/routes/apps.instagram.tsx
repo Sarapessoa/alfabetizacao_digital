@@ -235,65 +235,31 @@ function InstagramSimulation() {
             : 1;
 
   const Stepper = (
-    <div className="w-full max-w-md mx-auto px-5 pt-4 pb-2">
-      <div className="flex items-center justify-between gap-2 mb-2">
-        <p className={`font-extrabold ${a11y ? "text-base" : "text-sm"}`}>
-          {isDone ? "Simulação concluída" : `Etapa ${currentStep} de ${steps.length}`}
+    <div className="w-full max-w-md mx-auto px-5 py-3">
+      <div className="flex items-center justify-between mb-1.5">
+        <p className={`font-extrabold ${a11y ? "text-sm" : "text-xs"}`}>
+          {isDone ? "Simulação concluída! 🎉" : `Etapa ${currentStep} de ${steps.length}`}
         </p>
-        <p className={`text-muted-foreground font-medium ${a11y ? "text-base" : "text-xs"}`}>
+        <p className={`text-muted-foreground font-medium ${a11y ? "text-sm" : "text-xs"}`}>
           {isDone ? "100%" : `${Math.round((completedCount / steps.length) * 100)}%`}
         </p>
       </div>
-      <div className="h-2.5 w-full rounded-full bg-muted overflow-hidden">
+      <div
+        role="progressbar"
+        aria-valuemin={0}
+        aria-valuemax={steps.length}
+        aria-valuenow={isDone ? steps.length : completedCount}
+        aria-label="Progresso da simulação"
+        className="h-2 w-full rounded-full bg-muted overflow-hidden"
+      >
         <div
           className="h-full transition-all duration-500"
           style={{
-            width: `${((isDone ? steps.length : completedCount) / steps.length) * 100}%`,
-            background:
-              "linear-gradient(90deg, oklch(0.78 0.16 75), oklch(0.62 0.20 25), oklch(0.62 0.20 355))",
+            width: `${(completedCount / steps.length) * 100}%`,
+            background: "linear-gradient(135deg, oklch(0.78 0.16 75), oklch(0.62 0.20 25), oklch(0.62 0.20 355))",
           }}
         />
       </div>
-      <ol className="mt-3 grid grid-cols-4 gap-2">
-        {steps.map((s) => {
-          const isStepDone = isDone || done[s.key];
-          const active =
-            !isDone &&
-            !done[s.key] &&
-            TASK_ORDER.find((k) => !done[k]) === s.key;
-          return (
-            <li key={s.n} className="flex flex-col items-center gap-1 text-center">
-              <span
-                className={`size-7 rounded-full inline-flex items-center justify-center text-xs font-extrabold transition ${
-                  isStepDone
-                    ? "bg-success text-white"
-                    : active
-                      ? "text-white"
-                      : "bg-muted text-muted-foreground"
-                }`}
-                style={
-                  active && !isStepDone
-                    ? {
-                        background:
-                          "linear-gradient(135deg, oklch(0.78 0.16 75), oklch(0.62 0.20 25), oklch(0.62 0.20 355))",
-                        boxShadow: "0 0 0 4px oklch(0.62 0.20 355 / 0.25)",
-                      }
-                    : undefined
-                }
-              >
-                {isStepDone ? <CheckCircle2 className="size-4" /> : s.n}
-              </span>
-              <span
-                className={`leading-tight font-bold ${
-                  active ? "text-foreground" : "text-muted-foreground"
-                } ${a11y ? "text-sm" : "text-xs"}`}
-              >
-                {s.label}
-              </span>
-            </li>
-          );
-        })}
-      </ol>
     </div>
   );
 
@@ -625,28 +591,70 @@ function InstagramSimulation() {
 
   return (
     <main className="min-h-screen bg-background flex flex-col">
-      <div
-        className="text-white px-5 py-4 sticky top-0 z-30 shadow-md"
-        style={{
-          background:
-            "linear-gradient(135deg, oklch(0.78 0.16 75), oklch(0.62 0.20 25), oklch(0.62 0.20 355))",
-        }}
-      >
-        <div className="w-full max-w-md mx-auto flex items-start justify-between gap-3">
-          <p className={`leading-snug font-medium ${a11y ? "text-lg" : "text-base"}`}>
-            <span className="font-extrabold">Passo {currentStep}:</span> {tip}
-          </p>
-          <Link
-            to="/apps"
-            aria-label="Sair da simulação"
-            className="shrink-0 inline-flex items-center gap-1 h-9 px-3 rounded-full bg-white/20 hover:bg-white/30 text-sm font-bold transition"
+      {/* Instruction bar */}
+      <div className="sticky top-0 z-30 shadow-md">
+        <div
+          className="text-white"
+          style={{
+            background:
+              "linear-gradient(135deg, oklch(0.78 0.16 75), oklch(0.62 0.20 25), oklch(0.62 0.20 355))",
+          }}
+        >
+          <div className="w-full max-w-md mx-auto px-4 py-2.5 flex items-center gap-2">
+            <p className={`flex-1 leading-snug font-semibold min-w-0 ${a11y ? "text-base" : "text-sm"}`}>
+              {tip}
+            </p>
+            <Link
+              to="/apps"
+              aria-label="Sair da simulação"
+              className="shrink-0 inline-flex items-center gap-1 h-8 px-3 rounded-full bg-white/20 hover:bg-white/30 text-sm font-bold transition"
+            >
+              <X className="size-4" /> Sair
+            </Link>
+          </div>
+        </div>
+        <div className="bg-card border-b border-border">
+          <div
+            role="progressbar"
+            aria-valuemin={0}
+            aria-valuemax={steps.length}
+            aria-valuenow={completedCount}
+            aria-label="Progresso da simulação"
+            className="w-full max-w-md mx-auto px-4 py-2.5 flex items-center gap-3"
           >
-            <X className="size-4" />
-            Sair
-          </Link>
+            {steps.map((s, i) => {
+              const isStepDone = isDone || done[s.key];
+              const active = !isDone && !done[s.key] && TASK_ORDER.find((k) => !done[k]) === s.key;
+              return (
+                <div key={s.n} className="flex items-center gap-3 flex-1 last:flex-none">
+                  <div className="flex items-center gap-1.5 shrink-0">
+                    <span
+                      className={`size-6 rounded-full inline-flex items-center justify-center text-xs font-extrabold transition ${
+                        isStepDone ? "bg-success text-white" : active ? "text-white" : "bg-muted text-muted-foreground"
+                      }`}
+                      style={
+                        active && !isStepDone
+                          ? { background: "linear-gradient(135deg, oklch(0.78 0.16 75), oklch(0.62 0.20 25), oklch(0.62 0.20 355))" }
+                          : undefined
+                      }
+                    >
+                      {isStepDone ? <CheckCircle2 className="size-3.5" /> : s.n}
+                    </span>
+                    <span className={`text-xs font-bold leading-none ${active ? "text-foreground" : "text-muted-foreground"}`}>
+                      {s.label}
+                    </span>
+                  </div>
+                  {i < steps.length - 1 && (
+                    <div className="flex-1 h-1 rounded-full bg-muted overflow-hidden">
+                      <div className="h-full bg-success transition-all duration-500" style={{ width: (isDone || done[steps[i].key]) ? "100%" : "0%" }} />
+                    </div>
+                  )}
+                </div>
+              );
+            })}
+          </div>
         </div>
       </div>
-      <div className="bg-card border-b border-border">{Stepper}</div>
 
       <div className="w-full max-w-md mx-auto flex-1 flex flex-col min-h-0 bg-white">
         {stage === "sim-feed" ? (
@@ -931,13 +939,8 @@ function PostCard({
           onClick={onToggleLike}
           aria-label={liked ? "Descurtir" : "Curtir"}
           className={`p-1.5 -ml-1 transition ${
-            highlightLike ? "rounded-full ring-4 animate-pulse" : ""
+            highlightLike ? "rounded-full animate-pulse-ring" : ""
           }`}
-          style={
-            highlightLike
-              ? { boxShadow: "0 0 0 4px oklch(0.62 0.20 25 / 0.35)" }
-              : undefined
-          }
         >
           <Heart
             className="size-7"
@@ -951,13 +954,8 @@ function PostCard({
           onClick={onOpenComments}
           aria-label="Comentar"
           className={`p-1.5 transition ${
-            highlightComment ? "rounded-full ring-4 animate-pulse" : ""
+            highlightComment ? "rounded-full animate-pulse-ring" : ""
           }`}
-          style={
-            highlightComment
-              ? { boxShadow: "0 0 0 4px oklch(0.55 0.18 240 / 0.35)" }
-              : undefined
-          }
         >
           <MessageCircle
             className="size-7 text-black"
@@ -1119,11 +1117,10 @@ function SimFeed({
           <button
             type="button"
             onClick={onContinue}
-            className="w-full h-14 rounded-2xl text-white text-lg font-extrabold animate-pulse hover:opacity-90"
+            className="w-full h-14 rounded-2xl text-white text-lg font-extrabold animate-pulse-ring hover:opacity-90"
             style={{
               background:
                 "linear-gradient(135deg, oklch(0.78 0.16 75), oklch(0.62 0.20 25), oklch(0.62 0.20 355))",
-              boxShadow: "0 0 0 4px oklch(0.62 0.20 355 / 0.25)",
             }}
           >
             Continuar para os Reels →
@@ -1352,16 +1349,11 @@ function SimReels({
                   onClick={() => onLike(reel.id)}
                   aria-label={liked ? "Descurtir" : "Curtir"}
                   className={`flex flex-col items-center gap-1 ${
-                    isCurrent && !liked && !done.reels ? "animate-pulse" : ""
+                    isCurrent && !liked && !done.reels ? "animate-pulse-ring" : ""
                   }`}
                 >
                   <span
                     className="size-12 rounded-full flex items-center justify-center"
-                    style={
-                      isCurrent && !liked && !done.reels
-                        ? { boxShadow: "0 0 0 4px oklch(0.62 0.20 25 / 0.5)" }
-                        : undefined
-                    }
                   >
                     <Heart
                       className="size-9"
@@ -1442,11 +1434,10 @@ function SimReels({
           <button
             type="button"
             onClick={onContinue}
-            className="pointer-events-auto h-12 px-6 rounded-full text-white text-base font-extrabold animate-pulse inline-flex items-center justify-center gap-2"
+            className="pointer-events-auto h-12 px-6 rounded-full text-white text-base font-extrabold animate-pulse-ring inline-flex items-center justify-center gap-2"
             style={{
               background:
                 "linear-gradient(135deg, oklch(0.78 0.16 75), oklch(0.62 0.20 25), oklch(0.62 0.20 355))",
-              boxShadow: "0 0 0 4px oklch(0.62 0.20 355 / 0.35)",
             }}
           >
             Continuar para o Perfil →
@@ -1613,14 +1604,11 @@ function SimProfile({
           onClick={onFinish}
           disabled={!postsViewed}
           className={`w-full h-14 rounded-2xl text-white text-lg font-extrabold transition ${
-            postsViewed ? "animate-pulse" : "opacity-50"
+            postsViewed ? "animate-pulse-ring" : "opacity-50"
           } inline-flex items-center justify-center gap-2`}
           style={{
             background:
               "linear-gradient(135deg, oklch(0.78 0.16 75), oklch(0.62 0.20 25), oklch(0.62 0.20 355))",
-            boxShadow: postsViewed
-              ? "0 0 0 4px oklch(0.62 0.20 355 / 0.35)"
-              : undefined,
           }}
         >
           <Check className="size-6" />
