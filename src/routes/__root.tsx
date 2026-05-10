@@ -1,12 +1,17 @@
+import { useEffect } from "react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import {
   Outlet,
   Link,
   createRootRouteWithContext,
   useRouter,
+  useNavigate,
+  useLocation,
   HeadContent,
   Scripts,
+  redirect,
 } from "@tanstack/react-router";
+import { isSessionValid } from "../lib/auth";
 
 import appCss from "../styles.css?url";
 import { A11yProvider } from "../lib/a11y";
@@ -68,7 +73,15 @@ function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
   );
 }
 
+const PUBLIC_PATHS = ["/", "/login"];
+
 export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()({
+  beforeLoad: ({ location }) => {
+    if (typeof window === "undefined") return;
+    if (!PUBLIC_PATHS.includes(location.pathname) && !isSessionValid()) {
+      throw redirect({ to: "/" });
+    }
+  },
   head: () => ({
     meta: [
       { charSet: "utf-8" },
@@ -111,6 +124,14 @@ function RootShell({ children }: { children: React.ReactNode }) {
 
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
+  const navigate = useNavigate();
+  const { pathname } = useLocation();
+
+  useEffect(() => {
+    if (!PUBLIC_PATHS.includes(pathname) && !isSessionValid()) {
+      navigate({ to: "/" });
+    }
+  }, [pathname, navigate]);
 
   return (
     <QueryClientProvider client={queryClient}>

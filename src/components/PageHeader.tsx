@@ -1,7 +1,8 @@
 import { ArrowLeft, LogOut, Volume2, Square } from "lucide-react";
-import { Link } from "@tanstack/react-router";
+import { useNavigate } from "@tanstack/react-router";
 import { A11yToggle } from "../lib/a11y";
 import { useScrolled } from "../lib/use-scrolled";
+import { clearSession } from "../lib/auth";
 
 type Props = {
   onBack?: () => void;
@@ -19,6 +20,7 @@ export function PageHeader({
   speakLabel = "Ouvir",
 }: Props) {
   const scrolled = useScrolled();
+  const navigate = useNavigate();
 
   return (
     <header
@@ -38,12 +40,13 @@ export function PageHeader({
             <ArrowLeft className="size-5" /> Voltar
           </button>
         ) : (
-          <Link
-            to="/"
+          <button
+            type="button"
+            onClick={() => { clearSession(); navigate({ to: "/" }); }}
             className="inline-flex items-center gap-2 h-12 px-4 rounded-2xl border-2 border-border bg-card text-foreground text-base font-bold hover:bg-muted transition"
           >
             <LogOut className="size-5" /> Sair
-          </Link>
+          </button>
         )}
         <div className="flex items-center gap-2">
           <A11yToggle />
