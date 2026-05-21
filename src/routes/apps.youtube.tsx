@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { type SVGProps, useCallback, useEffect, useMemo, useState } from "react";
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import {
   ArrowLeft,
@@ -10,7 +10,6 @@ import {
   Cast,
   Bell,
   Search,
-  Home as HomeIcon,
   PlaySquare,
   PlusCircle,
   ListVideo,
@@ -50,6 +49,14 @@ export const Route = createFileRoute("/apps/youtube")({
 });
 
 type Stage = "intro" | "overview" | "sim-home" | "sim-video" | "done";
+
+function HomeFilledIcon(props: SVGProps<SVGSVGElement>) {
+  return (
+    <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" {...props}>
+      <path d="M3 10.25 12 3l9 7.25v9.25A1.5 1.5 0 0 1 19.5 21h-4.75a.75.75 0 0 1-.75-.75V15a2 2 0 0 0-4 0v5.25a.75.75 0 0 1-.75.75H4.5A1.5 1.5 0 0 1 3 19.5z" />
+    </svg>
+  );
+}
 
 function YouTubeSimulation() {
   const [stage, setStage] = useState<Stage>("overview");
@@ -433,7 +440,7 @@ function YouTubeSimulation() {
               setDialog({
                 title: "Compartilhar",
                 body:
-                  "Aqui você poderia enviar esse vídeo pelo WhatsApp para um amigo ou familiar, igual mandar uma indicação de programa de TV.",
+                  "Aqui você poderia enviar esse vídeo pelo WhatsApp para um amigo, igual mandar uma indicação de programa de TV.",
               })
             }
             onFinish={() => setStage("done")}
@@ -623,10 +630,10 @@ function SimHome({ onPickVideo }: { onPickVideo: () => void }) {
           />
           <div className="flex-1 min-w-0">
             <p className="font-extrabold leading-snug text-sm">
-              Bolo de cenoura fofinho com cobertura de chocolate
+              BOLO DE CHOCOLATE FÁCIL E RÁPIDO FEITO A MÃO ( SUPER FOFINHO )
             </p>
             <p className="text-xs text-muted-foreground mt-0.5">
-              Receitas da Vovó · 1,2 mi visualizações · há 3 dias
+              Receitas da Vovó · 468 mil visualizações · há 5 dias
             </p>
           </div>
           <MoreVertical className="size-5 text-muted-foreground" />
@@ -650,7 +657,7 @@ function SimHome({ onPickVideo }: { onPickVideo: () => void }) {
           <div className="mt-2 flex items-start gap-2">
             <span className="size-7 shrink-0 rounded-full bg-success/40" />
             <p className="text-xs leading-snug">
-              Fiz para a minha família no domingo e foi um sucesso! Ficou super fofinho, obrigada pela rec...
+              Consegui fazer e foi um sucesso! Ficou super fofinho, obrigada pela receita
             </p>
           </div>
         </div>
@@ -732,7 +739,7 @@ function SimHome({ onPickVideo }: { onPickVideo: () => void }) {
         }`}
       >
         {[
-          { I: HomeIcon, l: "Início", on: true },
+          { I: HomeFilledIcon, l: "Início", on: true },
           { I: PlaySquare, l: "Shorts" },
           { I: PlusCircle, l: "" },
           { I: ListVideo, l: "Inscrições", dot: true },
@@ -797,7 +804,7 @@ function SimVideo({
       {/* Title */}
       <div className="px-4 pt-3">
         <h2 className="font-extrabold text-base leading-snug">
-          Como fazer um bolo de cenoura fofinho
+          BOLO DE CHOCOLATE FÁCIL E RÁPIDO FEITO A MÃO ( SUPER FOFINHO )
         </h2>
         <p className="text-xs text-muted-foreground mt-1">
           468 mil visualizações · há 5 dias · #receita #bolo
@@ -817,7 +824,7 @@ function SimVideo({
         </button>
       </div>
       {/* Action buttons (YouTube-style pill row) */}
-      <div className="flex flex-wrap gap-2 px-4 py-2 pb-3">
+      <div className="flex overflow-x-hidden gap-2 px-4 py-2 pb-3">
         {/* Like / Dislike combined pill */}
         <div
           className={`shrink-0 inline-flex items-center h-9 rounded-full bg-muted overflow-hidden transition ${
