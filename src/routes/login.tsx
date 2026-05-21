@@ -1,8 +1,9 @@
-import { useState, useCallback } from "react";
+import { useState } from "react";
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { Eye, EyeOff, LogIn, Smartphone, Volume2, Square } from "lucide-react";
 import { A11yToggle } from "../lib/a11y";
 import { saveSession } from "../lib/auth";
+import { useAudioTts } from "../lib/tts";
 
 export const Route = createFileRoute("/login")({
   component: LoginPage,
@@ -21,34 +22,13 @@ function LoginPage() {
   const [error, setError] = useState("");
   const [speaking, setSpeaking] = useState(false);
   const navigate = useNavigate();
-
-  const speak = useCallback((text: string) => {
-    if (typeof window === "undefined" || !("speechSynthesis" in window)) return;
-    window.speechSynthesis.cancel();
-    const utter = new SpeechSynthesisUtterance(text);
-    utter.lang = "pt-BR";
-    utter.rate = 0.9;
-    utter.pitch = 1;
-    const voices = window.speechSynthesis.getVoices();
-    const ptVoice = voices.find((v) => v.lang.toLowerCase().startsWith("pt"));
-    if (ptVoice) utter.voice = ptVoice;
-    utter.onend = () => setSpeaking(false);
-    utter.onerror = () => setSpeaking(false);
-    setSpeaking(true);
-    window.speechSynthesis.speak(utter);
-  }, []);
-
-  const stopSpeaking = useCallback(() => {
-    if (typeof window !== "undefined" && "speechSynthesis" in window) {
-      window.speechSynthesis.cancel();
-      setSpeaking(false);
-    }
-  }, []);
+  const { speak, stopSpeaking } = useAudioTts({ setSpeaking });
 
   const readScreen = () => {
-    speak(
-      "Bem-vinda ao Ajudante Tech. Digite seu e-mail e toque no botão Entrar para começar.",
-    );
+    speak({
+      file: "login-tela.mp3",
+      text: "Bem-vinda ao Ajudante Tech. Digite seu e-mail e toque no botão Entrar para começar.",
+    });
   };
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -112,7 +92,12 @@ function LoginPage() {
                 </label>
                 <button
                   type="button"
-                  onClick={() => speak("Seu e-mail. Digite o endereço de e-mail que você usa. Ele precisa ter o símbolo arroba.")}
+                  onClick={() =>
+                    speak({
+                      file: "login-campo-email.mp3",
+                      text: "Seu e-mail. Digite o endereço de e-mail que você usa. Ele precisa ter o símbolo arroba.",
+                    })
+                  }
                   aria-label="Ouvir explicação do campo e-mail"
                   className="size-11 rounded-full flex items-center justify-center bg-muted text-foreground hover:bg-accent hover:text-accent-foreground transition"
                 >
@@ -148,7 +133,12 @@ function LoginPage() {
                 </label>
                 <button
                   type="button"
-                  onClick={() => speak("Sua senha. Digite a palavra secreta que você escolheu para entrar na sua conta.")}
+                  onClick={() =>
+                    speak({
+                      file: "login-campo-senha.mp3",
+                      text: "Sua senha. Digite a palavra secreta que você escolheu para entrar na sua conta.",
+                    })
+                  }
                   aria-label="Ouvir explicação do campo senha"
                   className="size-11 rounded-full flex items-center justify-center bg-muted text-foreground hover:bg-accent hover:text-accent-foreground transition"
                 >

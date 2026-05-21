@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { createFileRoute } from "@tanstack/react-router";
 import {
   ShieldCheck,
@@ -18,6 +18,7 @@ import {
   Lightbulb,
 } from "lucide-react";
 import { useA11y } from "../lib/a11y";
+import { useAudioTts } from "../lib/tts";
 import { BottomTabBar } from "../components/BottomTabBar";
 import { PageHeader } from "../components/PageHeader";
 
@@ -51,7 +52,7 @@ type Scam = {
 
 const SCAMS: Scam[] = [
   {
-    id: "filho",
+    id: "numero-novo",
     name: "Mensagem de número novo",
     short: "Alguém diz ser conhecido seu pedindo PIX urgente.",
     icon: MessageSquare,
@@ -182,7 +183,7 @@ const SCAMS: Scam[] = [
     ],
     doThis: [
       "Feche o aviso. Se não fechar, desligue o celular e ligue de novo.",
-      "Procure ajuda de um parente ou de uma loja de confiança.",
+      "Procure ajuda de uma pessoa de confiança, da equipe do lar ou de uma loja de confiança.",
     ],
     dontDo: [
       "Instalar programa para 'limpar' o celular.",
@@ -205,7 +206,7 @@ const SCAMS: Scam[] = [
     ],
     doThis: [
       "Faça chamada de vídeo antes de criar laços.",
-      "Conte para alguém da família ou amiga sobre essa pessoa.",
+      "Conte para uma amiga ou para alguém da equipe do lar sobre essa pessoa.",
       "Pesquise a foto da pessoa no Google Imagens.",
     ],
     dontDo: [
@@ -227,37 +228,20 @@ function SegurancaPage() {
     window.scrollTo(0, 0);
   }, [openScam]);
 
-  const speak = useCallback((text: string) => {
-    if (typeof window === "undefined" || !("speechSynthesis" in window)) return;
-    window.speechSynthesis.cancel();
-    const utter = new SpeechSynthesisUtterance(text);
-    utter.lang = "pt-BR";
-    utter.rate = 0.9;
-    const ptVoice = window.speechSynthesis
-      .getVoices()
-      .find((v) => v.lang.toLowerCase().startsWith("pt"));
-    if (ptVoice) utter.voice = ptVoice;
-    utter.onend = () => setSpeaking(false);
-    utter.onerror = () => setSpeaking(false);
-    setSpeaking(true);
-    window.speechSynthesis.speak(utter);
-  }, []);
-
-  const stopSpeaking = useCallback(() => {
-    if (typeof window !== "undefined" && "speechSynthesis" in window) {
-      window.speechSynthesis.cancel();
-      setSpeaking(false);
-    }
-  }, []);
+  const { speak, stopSpeaking } = useAudioTts({ setSpeaking });
 
   const readScreen = () => {
     if (openScam) {
       const text = `${openScam.name}. Como funciona: ${openScam.how}. Sinais de alerta: ${openScam.signals.join("; ")}. O que fazer: ${openScam.doThis.join("; ")}. O que não fazer: ${openScam.dontDo.join("; ")}. Frase pronta: ${openScam.safePhrase}`;
-      speak(text);
+      speak({
+        file: `seguranca-golpe-${openScam.id}.mp3`,
+        text,
+      });
     } else {
-      speak(
-        "Segurança e golpes. Aqui você aprende a reconhecer os principais golpes que circulam no celular e na internet. Toque em cada um para ver os sinais de alerta e o que fazer com calma.",
-      );
+      speak({
+        file: "seguranca-tela.mp3",
+        text: "Segurança e golpes. Aqui você aprende a reconhecer os principais golpes que circulam no celular e na internet. Toque em cada um para ver os sinais de alerta e o que fazer com calma.",
+      });
     }
   };
 

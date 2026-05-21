@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import {
   ArrowLeft,
@@ -24,6 +24,7 @@ import {
   ArrowUpRight,
 } from "lucide-react";
 import { A11yToggle, useA11y } from "../lib/a11y";
+import { useAudioTts } from "../lib/tts";
 
 export const Route = createFileRoute("/apps/google")({
   component: GoogleSimulation,
@@ -99,28 +100,7 @@ function GoogleSimulation() {
     return () => clearTimeout(t);
   }, [stage]);
 
-  const speak = useCallback((text: string) => {
-    if (typeof window === "undefined" || !("speechSynthesis" in window)) return;
-    window.speechSynthesis.cancel();
-    const utter = new SpeechSynthesisUtterance(text);
-    utter.lang = "pt-BR";
-    utter.rate = 0.9;
-    const ptVoice = window.speechSynthesis
-      .getVoices()
-      .find((v) => v.lang.toLowerCase().startsWith("pt"));
-    if (ptVoice) utter.voice = ptVoice;
-    utter.onend = () => setSpeaking(false);
-    utter.onerror = () => setSpeaking(false);
-    setSpeaking(true);
-    window.speechSynthesis.speak(utter);
-  }, []);
-
-  const stopSpeaking = useCallback(() => {
-    if (typeof window !== "undefined" && "speechSynthesis" in window) {
-      window.speechSynthesis.cancel();
-      setSpeaking(false);
-    }
-  }, []);
+  const { speak, stopSpeaking } = useAudioTts({ setSpeaking });
 
   const screenText = useMemo(() => {
     switch (stage) {
@@ -139,7 +119,25 @@ function GoogleSimulation() {
     }
   }, [stage]);
 
-  const handleSpeak = () => (speaking ? stopSpeaking() : speak(screenText));
+  const screenAudioFile = useMemo(() => {
+    switch (stage) {
+      case "overview":
+        return "google-overview.mp3";
+      case "sim-search":
+        return "google-passo-pesquisar.mp3";
+      case "sim-results":
+        return "google-passo-resultados.mp3";
+      case "sim-page":
+        return "google-passo-site.mp3";
+      case "done":
+        return "google-concluido.mp3";
+      default:
+        return "google-overview.mp3";
+    }
+  }, [stage]);
+
+  const handleSpeak = () =>
+    speaking ? stopSpeaking() : speak({ file: screenAudioFile, text: screenText });
 
   // ----- Intro splash -----
   if (stage === "intro") {
@@ -636,7 +634,7 @@ function SimResults({
 }) {
   const results = [
     {
-      site: "receitasdavovo.com.br",
+      site: "receitasdadonarosa.com.br",
       title: "Chá de camomila: como preparar e benefícios",
       desc:
         "Aprenda passo a passo como fazer um chá de camomila perfeito para relaxar e dormir melhor. Receita simples com 3 ingredientes...",
@@ -795,7 +793,7 @@ function SimPage({
         </button>
         <div className="flex-1 h-8 px-3 rounded-md bg-card border border-border flex items-center gap-2 text-xs text-muted-foreground">
           <Lock className="size-3 text-success" />
-          <span className="truncate">receitasdavovo.com.br</span>
+          <span className="truncate">receitasdadonarosa.com.br</span>
         </div>
         <RotateCw className="size-4 text-muted-foreground" />
         <Star className="size-4 text-muted-foreground" />
@@ -806,7 +804,7 @@ function SimPage({
       {/* Page content */}
       <article className="px-5 py-5 flex-1">
         <p className="text-xs text-muted-foreground font-bold uppercase tracking-wide">
-          Receitas da Vovó
+          Receitas da Dona Rosa
         </p>
         <h2 className="mt-1 text-2xl font-extrabold leading-tight">
           Chá de camomila: como preparar

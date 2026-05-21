@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import {
   ArrowLeft,
@@ -19,6 +19,7 @@ import {
   Star,
 } from "lucide-react";
 import { A11yToggle, useA11y } from "../lib/a11y";
+import { useAudioTts } from "../lib/tts";
 
 export const Route = createFileRoute("/apps/contatos")({
   component: ContatosSimulation,
@@ -140,28 +141,7 @@ function ContatosSimulation() {
     return () => clearTimeout(t);
   }, [stage]);
 
-  const speak = useCallback((text: string) => {
-    if (typeof window === "undefined" || !("speechSynthesis" in window)) return;
-    window.speechSynthesis.cancel();
-    const utter = new SpeechSynthesisUtterance(text);
-    utter.lang = "pt-BR";
-    utter.rate = 0.9;
-    const ptVoice = window.speechSynthesis
-      .getVoices()
-      .find((v) => v.lang.toLowerCase().startsWith("pt"));
-    if (ptVoice) utter.voice = ptVoice;
-    utter.onend = () => setSpeaking(false);
-    utter.onerror = () => setSpeaking(false);
-    setSpeaking(true);
-    window.speechSynthesis.speak(utter);
-  }, []);
-
-  const stopSpeaking = useCallback(() => {
-    if (typeof window !== "undefined" && "speechSynthesis" in window) {
-      window.speechSynthesis.cancel();
-      setSpeaking(false);
-    }
-  }, []);
+  const { speak, stopSpeaking } = useAudioTts({ setSpeaking });
 
   const screenText = useMemo(() => {
     switch (stage) {
@@ -184,7 +164,28 @@ function ContatosSimulation() {
     }
   }, [stage, allDone, nextTask]);
 
-  const handleSpeak = () => (speaking ? stopSpeaking() : speak(screenText));
+  const screenAudioFile = useMemo(() => {
+    switch (stage) {
+      case "overview":
+        return "contatos-overview.mp3";
+      case "sim-list":
+        if (allDone) return "contatos-lista-concluiu.mp3";
+        return nextTask === "search"
+          ? "contatos-lista-pesquisar.mp3"
+          : "contatos-lista-adicionar.mp3";
+      case "sim-search":
+        return "contatos-pesquisar.mp3";
+      case "sim-add":
+        return "contatos-adicionar.mp3";
+      case "done":
+        return "contatos-concluido.mp3";
+      default:
+        return "contatos-overview.mp3";
+    }
+  }, [stage, allDone, nextTask]);
+
+  const handleSpeak = () =>
+    speaking ? stopSpeaking() : speak({ file: screenAudioFile, text: screenText });
 
   const goList = () => setStage("sim-list");
 

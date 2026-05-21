@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import {
   ArrowLeft,
@@ -21,6 +21,7 @@ import {
   Check,
 } from "lucide-react";
 import { A11yToggle, useA11y } from "../lib/a11y";
+import { useAudioTts } from "../lib/tts";
 
 export const Route = createFileRoute("/apps/configuracoes")({
   component: ConfigSimulation,
@@ -147,28 +148,7 @@ function ConfigSimulation() {
     return () => clearTimeout(t);
   }, [stage]);
 
-  const speak = useCallback((text: string) => {
-    if (typeof window === "undefined" || !("speechSynthesis" in window)) return;
-    window.speechSynthesis.cancel();
-    const utter = new SpeechSynthesisUtterance(text);
-    utter.lang = "pt-BR";
-    utter.rate = 0.9;
-    const ptVoice = window.speechSynthesis
-      .getVoices()
-      .find((v) => v.lang.toLowerCase().startsWith("pt"));
-    if (ptVoice) utter.voice = ptVoice;
-    utter.onend = () => setSpeaking(false);
-    utter.onerror = () => setSpeaking(false);
-    setSpeaking(true);
-    window.speechSynthesis.speak(utter);
-  }, []);
-
-  const stopSpeaking = useCallback(() => {
-    if (typeof window !== "undefined" && "speechSynthesis" in window) {
-      window.speechSynthesis.cancel();
-      setSpeaking(false);
-    }
-  }, []);
+  const { speak, stopSpeaking } = useAudioTts({ setSpeaking });
 
   const screenText = useMemo(() => {
     switch (stage) {
@@ -193,7 +173,31 @@ function ConfigSimulation() {
     }
   }, [stage, allDone]);
 
-  const handleSpeak = () => (speaking ? stopSpeaking() : speak(screenText));
+  const screenAudioFile = useMemo(() => {
+    switch (stage) {
+      case "overview":
+        return "configuracoes-overview.mp3";
+      case "sim-home":
+        return allDone
+          ? "configuracoes-home-concluiu-ajustes.mp3"
+          : "configuracoes-home-ajustes.mp3";
+      case "sim-wifi":
+        return "configuracoes-wifi.mp3";
+      case "sim-sound":
+        return "configuracoes-som.mp3";
+      case "sim-brightness":
+        return "configuracoes-brilho.mp3";
+      case "sim-textsize":
+        return "configuracoes-tamanho-letra.mp3";
+      case "done":
+        return "configuracoes-concluido.mp3";
+      default:
+        return "configuracoes-overview.mp3";
+    }
+  }, [stage, allDone]);
+
+  const handleSpeak = () =>
+    speaking ? stopSpeaking() : speak({ file: screenAudioFile, text: screenText });
 
   const goHome = () => setStage("sim-home");
 
@@ -508,7 +512,7 @@ function ConfigSimulation() {
             onToggle={() => setWifiOn((v) => !v)}
             onPick={(n) => {
               setWifiPicked(n);
-              setWifiPassword("vovomaria123");
+              setWifiPassword("larmaria123");
             }}
             onPasswordChange={setWifiPassword}
             onConnect={() => setWifiConnected(true)}

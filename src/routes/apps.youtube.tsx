@@ -1,4 +1,4 @@
-import { type SVGProps, useCallback, useEffect, useMemo, useState } from "react";
+import { type SVGProps, useEffect, useMemo, useState } from "react";
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import {
   ArrowLeft,
@@ -27,6 +27,7 @@ import {
   VolumeX,
 } from "lucide-react";
 import { A11yToggle, useA11y } from "../lib/a11y";
+import { useAudioTts } from "../lib/tts";
 import boloImg from "../assets/yt-bolo.jpg";
 import croceImg from "../assets/yt-croche.jpg";
 import avatarImg from "../assets/yt-avatar.jpg";
@@ -109,28 +110,7 @@ function YouTubeSimulation() {
     return () => clearTimeout(t);
   }, [stage]);
 
-  const speak = useCallback((text: string) => {
-    if (typeof window === "undefined" || !("speechSynthesis" in window)) return;
-    window.speechSynthesis.cancel();
-    const utter = new SpeechSynthesisUtterance(text);
-    utter.lang = "pt-BR";
-    utter.rate = 0.9;
-    const ptVoice = window.speechSynthesis
-      .getVoices()
-      .find((v) => v.lang.toLowerCase().startsWith("pt"));
-    if (ptVoice) utter.voice = ptVoice;
-    utter.onend = () => setSpeaking(false);
-    utter.onerror = () => setSpeaking(false);
-    setSpeaking(true);
-    window.speechSynthesis.speak(utter);
-  }, []);
-
-  const stopSpeaking = useCallback(() => {
-    if (typeof window !== "undefined" && "speechSynthesis" in window) {
-      window.speechSynthesis.cancel();
-      setSpeaking(false);
-    }
-  }, []);
+  const { speak, stopSpeaking } = useAudioTts({ setSpeaking });
 
   const screenText = useMemo(() => {
     switch (stage) {
@@ -147,7 +127,23 @@ function YouTubeSimulation() {
     }
   }, [stage]);
 
-  const handleSpeak = () => (speaking ? stopSpeaking() : speak(screenText));
+  const screenAudioFile = useMemo(() => {
+    switch (stage) {
+      case "overview":
+        return "youtube-overview.mp3";
+      case "sim-home":
+        return "youtube-passo-escolher-video.mp3";
+      case "sim-video":
+        return "youtube-passo-interagir.mp3";
+      case "done":
+        return "youtube-concluido.mp3";
+      default:
+        return "youtube-overview.mp3";
+    }
+  }, [stage]);
+
+  const handleSpeak = () =>
+    speaking ? stopSpeaking() : speak({ file: screenAudioFile, text: screenText });
 
   // ----- Intro splash -----
   if (stage === "intro") {
@@ -260,7 +256,7 @@ function YouTubeSimulation() {
               {[
                 { n: 1, t: "Abra o Aplicativo", d: "Procure o ícone vermelho na sua tela inicial e toque nele." },
                 { n: 2, t: "Escolha um Vídeo", d: "Toque na imagem do vídeo que você quer assistir." },
-                { n: 3, t: "Curta e Compartilhe", d: "Dê um joinha ou compartilhe com a família." },
+                { n: 3, t: "Curta e Compartilhe", d: "Dê um joinha ou compartilhe com uma amiga." },
               ].map((s) => {
                 const done = s.n < currentStep;
                 const active = s.n === currentStep;
@@ -488,7 +484,7 @@ function YouTubeSimulation() {
 function SimHome({ onPickVideo }: { onPickVideo: () => void }) {
   const chips = ["Tudo", "Receitas", "Novelas", "Crochê", "Oração", "Música"];
   const shorts = [
-    { title: "Bolo de fubá cremoso da vovó", badge: "Novo", img: boloImg },
+    { title: "Bolo de fubá cremoso da Dona Rosa", badge: "Novo", img: boloImg },
     { title: "Ponto de crochê passo a passo", img: croceImg },
     { title: "Resumo da novela de ontem", badge: "Novo", img: novelaImg },
     { title: "Hino que acalma o coração", img: oracaoImg },
@@ -625,7 +621,7 @@ function SimHome({ onPickVideo }: { onPickVideo: () => void }) {
         <div className="flex gap-3 px-4 pt-3">
           <img
             src={avatarImg}
-            alt="Foto de perfil do canal Receitas da Vovó"
+            alt="Foto de perfil do canal Receitas da Dona Rosa"
             className="size-10 shrink-0 rounded-full object-cover"
           />
           <div className="flex-1 min-w-0">
@@ -633,7 +629,7 @@ function SimHome({ onPickVideo }: { onPickVideo: () => void }) {
               BOLO DE CHOCOLATE FÁCIL E RÁPIDO FEITO A MÃO ( SUPER FOFINHO )
             </p>
             <p className="text-xs text-muted-foreground mt-0.5">
-              Receitas da Vovó · 468 mil visualizações · há 5 dias
+              Receitas da Dona Rosa · 468 mil visualizações · há 5 dias
             </p>
           </div>
           <MoreVertical className="size-5 text-muted-foreground" />
@@ -772,8 +768,8 @@ function SimVideo({
 }) {
   const upNext = [
     {
-      title: "Bolo de fubá cremoso da vovó",
-      channel: "Receitas da Vovó",
+      title: "Bolo de fubá cremoso da Dona Rosa",
+      channel: "Receitas da Dona Rosa",
       meta: "1,1 mi · há 1 mês",
       duration: "12:08",
       gradient: "from-warning/40 to-destructive/30",
@@ -815,7 +811,7 @@ function SimVideo({
         <div className="flex items-center gap-3">
           <span className="size-10 rounded-full bg-info/30" />
           <div>
-            <p className="font-extrabold text-sm">Receitas da Vovó</p>
+            <p className="font-extrabold text-sm">Receitas da Dona Rosa</p>
             <p className="text-xs text-muted-foreground">1,2 mi inscritos</p>
           </div>
         </div>

@@ -1,4 +1,4 @@
-import { useState, useCallback, useMemo } from "react";
+import { useState, useMemo } from "react";
 import { createFileRoute, Link, Outlet, useLocation } from "@tanstack/react-router";
 import {
   Search,
@@ -19,6 +19,7 @@ import {
   SlidersHorizontal,
 } from "lucide-react";
 import { useA11y } from "../lib/a11y";
+import { useAudioTts } from "../lib/tts";
 import { BottomTabBar } from "../components/BottomTabBar";
 import { PageHeader } from "../components/PageHeader";
 
@@ -102,7 +103,7 @@ const apps: AppItem[] = [
     analogy: "Como cartas, telegramas e SMS",
     shortAnalogy: "Cartas e SMS",
     analogyIcon: Mail,
-    description: "Envie mensagens, fotos e faça chamadas para a família.",
+    description: "Envie mensagens, fotos e faça chamadas para amigas e pessoas próximas.",
     icon: MessageCircle,
     tone: "success",
     to: "/apps/whatsapp",
@@ -122,7 +123,7 @@ const apps: AppItem[] = [
     analogy: "Como uma revista e álbum de fotos",
     shortAnalogy: "Revista e álbum",
     analogyIcon: Newspaper,
-    description: "Veja fotos da família e de assuntos que você gosta.",
+    description: "Veja fotos de amigas, lugares e assuntos que você gosta.",
     icon: ImageIcon,
     tone: "pink",
     to: "/apps/instagram",
@@ -145,34 +146,13 @@ function AppsPage() {
   const [query, setQuery] = useState("");
   const [speaking, setSpeaking] = useState(false);
   const { enabled: a11y } = useA11y();
-
-  const speak = useCallback((text: string) => {
-    if (typeof window === "undefined" || !("speechSynthesis" in window)) return;
-    window.speechSynthesis.cancel();
-    const utter = new SpeechSynthesisUtterance(text);
-    utter.lang = "pt-BR";
-    utter.rate = 0.9;
-    const ptVoice = window.speechSynthesis
-      .getVoices()
-      .find((v) => v.lang.toLowerCase().startsWith("pt"));
-    if (ptVoice) utter.voice = ptVoice;
-    utter.onend = () => setSpeaking(false);
-    utter.onerror = () => setSpeaking(false);
-    setSpeaking(true);
-    window.speechSynthesis.speak(utter);
-  }, []);
-
-  const stopSpeaking = useCallback(() => {
-    if (typeof window !== "undefined" && "speechSynthesis" in window) {
-      window.speechSynthesis.cancel();
-      setSpeaking(false);
-    }
-  }, []);
+  const { speak, stopSpeaking } = useAudioTts({ setSpeaking });
 
   const readScreen = () =>
-    speak(
-      "Aplicativos. Escolha um aplicativo para aprender a usá-lo passo a passo. Cada aplicativo é comparado com algo que você já conhece, para ficar mais fácil de entender.",
-    );
+    speak({
+      file: "apps-tela.mp3",
+      text: "Aplicativos. Escolha um aplicativo para aprender a usá-lo passo a passo. Cada aplicativo é comparado com algo que você já conhece, para ficar mais fácil de entender.",
+    });
 
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase();

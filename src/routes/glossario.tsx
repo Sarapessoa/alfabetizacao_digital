@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { createFileRoute } from "@tanstack/react-router";
 import {
   Search,
@@ -35,6 +35,7 @@ import {
   Link2,
 } from "lucide-react";
 import { useA11y } from "../lib/a11y";
+import { useAudioTts } from "../lib/tts";
 import { BottomTabBar } from "../components/BottomTabBar";
 import { PageHeader } from "../components/PageHeader";
 
@@ -265,7 +266,7 @@ const TERMS: Term[] = [
     short: "Mandar uma foto ou documento junto",
     what: "É um desenho de clipinho. Serve para mandar junto com a mensagem uma foto, um documento ou um áudio guardado no celular.",
     where: "Dentro do WhatsApp e do e-mail, perto de onde você escreve a mensagem.",
-    example: "Toque no clipinho do WhatsApp para escolher uma foto da galeria e mandar para sua filha.",
+    example: "Toque no clipinho do WhatsApp para escolher uma foto da galeria e mandar para uma amiga.",
   },
 
   // Redes sociais
@@ -333,7 +334,7 @@ const TERMS: Term[] = [
     short: "Mandar um recado de voz no lugar de digitar",
     what: "É o desenho de um microfoninho. Em vez de escrever a mensagem, você segura o botão e fala. Quando solta, o recado é enviado em forma de áudio.",
     where: "No WhatsApp, do lado direito de onde você escreve a mensagem.",
-    example: "Segure o microfoninho, fale 'Bom dia, querida!' e solte o dedo para mandar o áudio.",
+    example: "Segure o microfoninho, fale 'Bom dia!' e solte o dedo para mandar o áudio.",
   },
 
   // Segurança
@@ -415,37 +416,28 @@ function GlossarioPage() {
     window.scrollTo(0, 0);
   }, [openTerm, category]);
 
-  const speak = useCallback((text: string) => {
-    if (typeof window === "undefined" || !("speechSynthesis" in window)) return;
-    window.speechSynthesis.cancel();
-    const utter = new SpeechSynthesisUtterance(text);
-    utter.lang = "pt-BR";
-    utter.rate = 0.9;
-    const ptVoice = window.speechSynthesis.getVoices().find((v) => v.lang.toLowerCase().startsWith("pt"));
-    if (ptVoice) utter.voice = ptVoice;
-    utter.onend = () => setSpeaking(false);
-    utter.onerror = () => setSpeaking(false);
-    setSpeaking(true);
-    window.speechSynthesis.speak(utter);
-  }, []);
-
-  const stopSpeaking = useCallback(() => {
-    if (typeof window !== "undefined" && "speechSynthesis" in window) {
-      window.speechSynthesis.cancel();
-      setSpeaking(false);
-    }
-  }, []);
+  const { speak, stopSpeaking } = useAudioTts({ setSpeaking });
 
   const readScreen = () => {
     if (openTerm) {
-      speak(`${openTerm.name}. ${openTerm.what} Onde aparece: ${openTerm.where}. Exemplo: ${openTerm.example}`);
+      speak({
+        file: `glossario-termo-${openTerm.id}.mp3`,
+        text: `${openTerm.name}. ${openTerm.what} Onde aparece: ${openTerm.where}. Exemplo: ${openTerm.example}`,
+      });
     } else if (category) {
       const cat = CATEGORIES.find((c) => c.key === category);
-      speak(`${cat?.name ?? "Todos os símbolos"}. Toque em qualquer palavra para aprender o que ela significa.`);
+      speak({
+        file:
+          category === "todos"
+            ? "glossario-categoria-todos.mp3"
+            : `glossario-categoria-${category}.mp3`,
+        text: `${cat?.name ?? "Todos os símbolos"}. Toque em qualquer palavra para aprender o que ela significa.`,
+      });
     } else {
-      speak(
-        "Glossário Digital. Pesquise uma palavra ou escolha uma categoria para aprender o que cada símbolo do celular significa.",
-      );
+      speak({
+        file: "glossario-tela.mp3",
+        text: "Glossário Digital. Pesquise uma palavra ou escolha uma categoria para aprender o que cada símbolo do celular significa.",
+      });
     }
   };
 

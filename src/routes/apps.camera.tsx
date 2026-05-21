@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import {
   ArrowLeft,
@@ -22,6 +22,7 @@ import {
   Aperture,
 } from "lucide-react";
 import { A11yToggle, useA11y } from "../lib/a11y";
+import { useAudioTts } from "../lib/tts";
 import religious1 from "@/assets/religious-1.jpg";
 import religious2 from "@/assets/religious-2.jpg";
 import religious3 from "@/assets/religious-3.jpg";
@@ -73,8 +74,8 @@ const ALBUMS: Album[] = [
     cover: religious4,
   },
   {
-    id: "familia",
-    name: "Família",
+    id: "amigas",
+    name: "Amigas",
     count: 12,
     cover: religious2,
   },
@@ -157,28 +158,7 @@ function CameraSimulation() {
     return () => clearTimeout(t);
   }, [flash]);
 
-  const speak = useCallback((text: string) => {
-    if (typeof window === "undefined" || !("speechSynthesis" in window)) return;
-    window.speechSynthesis.cancel();
-    const utter = new SpeechSynthesisUtterance(text);
-    utter.lang = "pt-BR";
-    utter.rate = 0.9;
-    const ptVoice = window.speechSynthesis
-      .getVoices()
-      .find((v) => v.lang.toLowerCase().startsWith("pt"));
-    if (ptVoice) utter.voice = ptVoice;
-    utter.onend = () => setSpeaking(false);
-    utter.onerror = () => setSpeaking(false);
-    setSpeaking(true);
-    window.speechSynthesis.speak(utter);
-  }, []);
-
-  const stopSpeaking = useCallback(() => {
-    if (typeof window !== "undefined" && "speechSynthesis" in window) {
-      window.speechSynthesis.cancel();
-      setSpeaking(false);
-    }
-  }, []);
+  const { speak, stopSpeaking } = useAudioTts({ setSpeaking });
 
   const screenText = useMemo(() => {
     switch (stage) {
@@ -199,7 +179,27 @@ function CameraSimulation() {
     }
   }, [stage]);
 
-  const handleSpeak = () => (speaking ? stopSpeaking() : speak(screenText));
+  const screenAudioFile = useMemo(() => {
+    switch (stage) {
+      case "overview":
+        return "camera-overview.mp3";
+      case "sim-camera":
+        return "camera-passo-tirar-foto.mp3";
+      case "sim-gallery":
+        return "camera-passo-galeria.mp3";
+      case "sim-album":
+        return "camera-passo-album.mp3";
+      case "sim-photo":
+        return "camera-passo-foto.mp3";
+      case "done":
+        return "camera-concluido.mp3";
+      default:
+        return "camera-overview.mp3";
+    }
+  }, [stage]);
+
+  const handleSpeak = () =>
+    speaking ? stopSpeaking() : speak({ file: screenAudioFile, text: screenText });
 
   // ----- Intro splash -----
   if (stage === "intro") {
@@ -402,7 +402,7 @@ function CameraSimulation() {
           </h2>
           <p className={`leading-snug ${a11y ? "text-xl" : "text-lg text-muted-foreground"}`}>
             Você aprendeu a tirar fotos e usar a galeria. Agora pode guardar suas lembranças e
-            mostrar para a família.
+            mostrar para amigas e pessoas próximas.
           </p>
           <div className="flex flex-col gap-3 w-full">
             <button

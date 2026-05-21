@@ -27,6 +27,7 @@ import {
   Check,
 } from "lucide-react";
 import { A11yToggle, useA11y } from "../lib/a11y";
+import { useAudioTts } from "../lib/tts";
 
 import postFood from "../assets/insta-food.jpg";
 import postFriends from "../assets/insta-friends.jpg";
@@ -158,7 +159,7 @@ type Reel = {
 const REELS: Reel[] = [
   {
     id: "r1",
-    user: "receitas_da_vovo",
+    user: "receitas_dona_rosa",
     image: reel1,
     caption: "Receita de bolo de fubá fofinho 🍰 anota aí!",
     baseLikes: 1820,
@@ -270,28 +271,7 @@ function InstagramSimulation() {
     return () => clearTimeout(t);
   }, [stage]);
 
-  const speak = useCallback((text: string) => {
-    if (typeof window === "undefined" || !("speechSynthesis" in window)) return;
-    window.speechSynthesis.cancel();
-    const utter = new SpeechSynthesisUtterance(text);
-    utter.lang = "pt-BR";
-    utter.rate = 0.9;
-    const ptVoice = window.speechSynthesis
-      .getVoices()
-      .find((v) => v.lang.toLowerCase().startsWith("pt"));
-    if (ptVoice) utter.voice = ptVoice;
-    utter.onend = () => setSpeaking(false);
-    utter.onerror = () => setSpeaking(false);
-    setSpeaking(true);
-    window.speechSynthesis.speak(utter);
-  }, []);
-
-  const stopSpeaking = useCallback(() => {
-    if (typeof window !== "undefined" && "speechSynthesis" in window) {
-      window.speechSynthesis.cancel();
-      setSpeaking(false);
-    }
-  }, []);
+  const { speak, stopSpeaking } = useAudioTts({ setSpeaking });
 
   const screenText = useMemo(() => {
     switch (stage) {
@@ -316,7 +296,27 @@ function InstagramSimulation() {
     }
   }, [stage, done]);
 
-  const handleSpeak = () => (speaking ? stopSpeaking() : speak(screenText));
+  const screenAudioFile = useMemo(() => {
+    switch (stage) {
+      case "overview":
+        return "instagram-overview.mp3";
+      case "sim-feed":
+        if (!done.like) return "instagram-feed-curtir.mp3";
+        if (!done.comment) return "instagram-feed-comentar.mp3";
+        return "instagram-feed-continuar.mp3";
+      case "sim-reels":
+        return done.reels ? "instagram-reels-concluido.mp3" : "instagram-reels.mp3";
+      case "sim-profile":
+        return done.profile ? "instagram-perfil-concluido.mp3" : "instagram-perfil.mp3";
+      case "done":
+        return "instagram-concluido.mp3";
+      default:
+        return "instagram-overview.mp3";
+    }
+  }, [stage, done]);
+
+  const handleSpeak = () =>
+    speaking ? stopSpeaking() : speak({ file: screenAudioFile, text: screenText });
 
   const PINK = "oklch(0.62 0.20 355)";
 

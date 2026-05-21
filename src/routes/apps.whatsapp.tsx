@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import {
   ArrowLeft,
@@ -26,6 +26,7 @@ import {
   CheckCheck,
 } from "lucide-react";
 import { A11yToggle, useA11y } from "../lib/a11y";
+import { useAudioTts } from "../lib/tts";
 
 export const Route = createFileRoute("/apps/whatsapp")({
   component: WhatsappSimulation,
@@ -228,28 +229,7 @@ function WhatsappSimulation() {
     };
   }, [playing]);
 
-  const speak = useCallback((text: string) => {
-    if (typeof window === "undefined" || !("speechSynthesis" in window)) return;
-    window.speechSynthesis.cancel();
-    const utter = new SpeechSynthesisUtterance(text);
-    utter.lang = "pt-BR";
-    utter.rate = 0.9;
-    const ptVoice = window.speechSynthesis
-      .getVoices()
-      .find((v) => v.lang.toLowerCase().startsWith("pt"));
-    if (ptVoice) utter.voice = ptVoice;
-    utter.onend = () => setSpeaking(false);
-    utter.onerror = () => setSpeaking(false);
-    setSpeaking(true);
-    window.speechSynthesis.speak(utter);
-  }, []);
-
-  const stopSpeaking = useCallback(() => {
-    if (typeof window !== "undefined" && "speechSynthesis" in window) {
-      window.speechSynthesis.cancel();
-      setSpeaking(false);
-    }
-  }, []);
+  const { speak, stopSpeaking } = useAudioTts({ setSpeaking });
 
   const screenText = useMemo(() => {
     switch (stage) {
@@ -270,7 +250,27 @@ function WhatsappSimulation() {
     }
   }, [stage]);
 
-  const handleSpeak = () => (speaking ? stopSpeaking() : speak(screenText));
+  const screenAudioFile = useMemo(() => {
+    switch (stage) {
+      case "overview":
+        return "whatsapp-overview.mp3";
+      case "sim-chats":
+        return "whatsapp-passo-conversas.mp3";
+      case "sim-message":
+        return "whatsapp-passo-mensagem.mp3";
+      case "sim-call":
+        return "whatsapp-passo-chamada.mp3";
+      case "sim-audio":
+        return "whatsapp-passo-audio.mp3";
+      case "done":
+        return "whatsapp-concluido.mp3";
+      default:
+        return "whatsapp-overview.mp3";
+    }
+  }, [stage]);
+
+  const handleSpeak = () =>
+    speaking ? stopSpeaking() : speak({ file: screenAudioFile, text: screenText });
 
   // ----- Intro splash -----
   if (stage === "intro") {
@@ -350,7 +350,7 @@ function WhatsappSimulation() {
                 a11y ? "text-xl text-foreground" : "text-lg text-muted-foreground"
               }`}
             >
-              É como mandar uma <strong className="text-success">carta</strong> para a família, só
+              É como mandar uma <strong className="text-success">carta</strong> para uma amiga, só
               que chega na hora. Também dá para conversar pelo telefone e ver a pessoa, como nas
               antigas chamadas, mas de graça.
             </p>
@@ -442,7 +442,7 @@ function WhatsappSimulation() {
           </h2>
           <p className={`leading-snug ${a11y ? "text-xl" : "text-lg text-muted-foreground"}`}>
             Você aprendeu a abrir conversas, mandar mensagens, fazer ligações e enviar áudios.
-            Agora pode falar com a família a qualquer hora!
+            Agora pode falar com amigas e pessoas próximas a qualquer hora!
           </p>
           <div className="flex flex-col gap-3 w-full">
             <button
