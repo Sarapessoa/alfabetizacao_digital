@@ -14,11 +14,11 @@ Total: 88 arquivos.
 | 6 | `youtube-passo-escolher-video.mp3` | Apps / youtube | Passo 1. Toque na imagem do vídeo para começar a assistir. |
 | 7 | `youtube-passo-interagir.mp3` | Apps / youtube | Passo 2. Você está assistindo. Experimente dar um joinha ou compartilhar abaixo. |
 | 8 | `youtube-concluido.mp3` | Apps / youtube | Parabéns! Você aprendeu o básico do YouTube. Agora você pode escolher e assistir vídeos sozinho. |
-| 9 | `google-overview.mp3` | Apps / google | Pesquisa Google. É como uma enciclopédia gigante que responde qualquer pergunta. Toque em iniciar simulação prática para começar. |
-| 10 | `google-passo-pesquisar.mp3` | Apps / google | Passo 1. Toque na barra de pesquisa, digite a sua pergunta e toque em pesquisar. |
+| 9 | `google-overview.mp3` | Apps / google | Pesquisa Google. É como uma enciclopédia gigante que ajuda a encontrar respostas. Toque em iniciar simulação prática para começar. |
+| 10 | `google-passo-pesquisar.mp3` | Apps / google | Passo 1. Toque na barra de pesquisa para ver onde digitar. Nesta simulação, a pergunta do tutorial já aparece pronta. Depois, toque em pesquisar. |
 | 11 | `google-passo-resultados.mp3` | Apps / google | Passo 2. Estes são os resultados. Toque em um link azul para abrir e ler a resposta. |
 | 12 | `google-passo-site.mp3` | Apps / google | Passo 3. Você abriu um site com a resposta. Quando terminar, toque em concluir. |
-| 13 | `google-concluido.mp3` | Apps / google | Parabéns! Você aprendeu a pesquisar no Google. Agora pode procurar respostas para qualquer pergunta. |
+| 13 | `google-concluido.mp3` | Apps / google | Parabéns! Você aprendeu onde tocar para pesquisar no Google e como abrir uma resposta com calma. |
 | 14 | `camera-overview.mp3` | Apps / camera | Câmera e Galeria. É como ter uma câmera e um álbum de fotos no celular. Toque em iniciar simulação prática para começar. |
 | 15 | `camera-passo-tirar-foto.mp3` | Apps / camera | Passo 1. Toque no botão branco redondo para tirar uma foto. Depois, toque no quadradinho à esquerda para abrir a galeria. |
 | 16 | `camera-passo-galeria.mp3` | Apps / camera | Passo 2. Esta é a galeria. Toque em um álbum para ver as fotos guardadas dentro dele. |

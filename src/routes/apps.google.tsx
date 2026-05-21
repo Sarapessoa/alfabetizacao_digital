@@ -105,15 +105,15 @@ function GoogleSimulation() {
   const screenText = useMemo(() => {
     switch (stage) {
       case "overview":
-        return "Pesquisa Google. É como uma enciclopédia gigante que responde qualquer pergunta. Toque em iniciar simulação prática para começar.";
+        return "Pesquisa Google. É como uma enciclopédia gigante que ajuda a encontrar respostas. Toque em iniciar simulação prática para começar.";
       case "sim-search":
-        return "Passo 1. Toque na barra de pesquisa, digite a sua pergunta e toque em pesquisar.";
+        return "Passo 1. Toque na barra de pesquisa para ver onde digitar. Nesta simulação, a pergunta do tutorial já aparece pronta. Depois, toque em pesquisar.";
       case "sim-results":
         return "Passo 2. Estes são os resultados. Toque em um link azul para abrir e ler a resposta.";
       case "sim-page":
         return "Passo 3. Você abriu um site com a resposta. Quando terminar, toque em concluir.";
       case "done":
-        return "Parabéns! Você aprendeu a pesquisar no Google. Agora pode procurar respostas para qualquer pergunta.";
+        return "Parabéns! Você aprendeu onde tocar para pesquisar no Google e como abrir uma resposta com calma.";
       default:
         return "Pesquisa Google";
     }
@@ -250,8 +250,8 @@ function GoogleSimulation() {
               {[
                 {
                   n: 1,
-                  t: "Faça a sua Pergunta",
-                  d: "Toque na barra de pesquisa e digite o que você quer saber.",
+                  t: "Toque na barra de pesquisa",
+                  d: "Ela é o lugar onde a pergunta aparece. Nesta simulação, vamos usar uma pergunta pronta.",
                 },
                 {
                   n: 2,
@@ -333,8 +333,8 @@ function GoogleSimulation() {
             Muito bem! Você conseguiu!
           </h2>
           <p className={`leading-snug ${a11y ? "text-xl" : "text-lg text-muted-foreground"}`}>
-            Você aprendeu a pesquisar no Google. Agora pode procurar respostas para qualquer
-            pergunta, igual folhear uma enciclopédia.
+            Você aprendeu onde tocar para pesquisar no Google e como abrir uma resposta, igual
+            folhear uma enciclopédia.
           </p>
           <div className="flex flex-col gap-3 w-full">
             <button
@@ -363,7 +363,7 @@ function GoogleSimulation() {
   // ----- Simulation screens -----
   const tip =
     stage === "sim-search"
-      ? "Toque na barra de pesquisa e digite a sua pergunta."
+      ? "Toque na barra de pesquisa. A pergunta do tutorial vai aparecer pronta."
       : stage === "sim-results"
         ? "Toque em um link azul para abrir o site com a resposta."
         : "Pronto! Esta é a resposta. Toque em concluir quando terminar.";
@@ -428,7 +428,7 @@ function GoogleSimulation() {
             query={query}
             setQuery={setQuery}
             onSearch={() => {
-              if (!query.trim()) setQuery(SUGGESTED_QUERY);
+              setQuery(SUGGESTED_QUERY);
               setStage("sim-results");
             }}
             suggested={SUGGESTED_QUERY}
@@ -511,11 +511,8 @@ function SimSearch({
   onSearch: () => void;
   suggested: string;
 }) {
-  const recent = [
-    "Receita de bolo de cenoura",
-    "Previsão do tempo amanhã",
-    "Telefone da farmácia",
-  ];
+  const fillTutorialQuery = () => setQuery(suggested);
+
   return (
     <div className="flex flex-col bg-background flex-1 px-5 pt-8 pb-6">
       {/* Top right small avatar */}
@@ -545,12 +542,15 @@ function SimSearch({
             id="g-search"
             type="text"
             value={query}
-            onChange={(e) => setQuery(e.target.value)}
+            readOnly
+            onClick={fillTutorialQuery}
+            onFocus={fillTutorialQuery}
             placeholder="Pesquisar no Google"
-            className="w-full h-14 pl-12 pr-20 rounded-full bg-card border-2 border-info text-foreground text-base focus:outline-none animate-pulse-ring"
+            className="w-full h-14 pl-12 pr-20 rounded-full bg-card border-2 border-info text-foreground text-base focus:outline-none animate-pulse-ring cursor-text"
             onKeyDown={(e) => {
               if (e.key === "Enter") {
                 e.preventDefault();
+                fillTutorialQuery();
                 onSearch();
               }
             }}
@@ -561,38 +561,32 @@ function SimSearch({
           </div>
         </div>
         <p className="mt-2 text-xs text-muted-foreground text-center">
-          Dica: digite{" "}
+          Dica: toque na barra para aparecer{" "}
           <button
             type="button"
-            onClick={() => setQuery(suggested)}
+            onClick={fillTutorialQuery}
             className="font-extrabold text-info underline underline-offset-2"
           >
             "{suggested}"
-          </button>{" "}
-          ou qualquer pergunta.
+          </button>
+          .
         </p>
       </div>
 
-      {/* Recent searches */}
+      {/* Guided search */}
       <div className="mt-6 rounded-2xl bg-card border border-border overflow-hidden">
         <p className="px-4 pt-3 text-xs font-extrabold text-muted-foreground uppercase tracking-wide">
-          Pesquisas recentes
+          Pesquisa do tutorial
         </p>
-        <ul>
-          {recent.map((r) => (
-            <li key={r}>
-              <button
-                type="button"
-                onClick={() => setQuery(r)}
-                className="w-full flex items-center gap-3 px-4 py-3 text-left hover:bg-muted transition"
-              >
-                <Search className="size-4 text-muted-foreground" />
-                <span className="text-sm text-foreground flex-1 truncate">{r}</span>
-                <ArrowUpRight className="size-4 text-muted-foreground" />
-              </button>
-            </li>
-          ))}
-        </ul>
+        <button
+          type="button"
+          onClick={fillTutorialQuery}
+          className="w-full flex items-center gap-3 px-4 py-3 text-left hover:bg-muted transition"
+        >
+          <Search className="size-4 text-muted-foreground" />
+          <span className="text-sm text-foreground flex-1 truncate">{suggested}</span>
+          <ArrowUpRight className="size-4 text-muted-foreground" />
+        </button>
       </div>
 
       {/* Search button */}
