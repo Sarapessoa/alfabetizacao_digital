@@ -12,16 +12,16 @@ import {
   Mic,
   Camera,
   Globe,
-  Image as ImageIcon,
-  MapPin,
+  Home,
   Newspaper,
   ChevronLeft,
+  ChevronDown,
   MoreVertical,
   Lock,
   RotateCw,
   Star,
   Share2,
-  ArrowUpRight,
+  User,
 } from "lucide-react";
 import { A11yToggle, useA11y } from "../lib/a11y";
 import { useAudioTts } from "../lib/tts";
@@ -369,9 +369,13 @@ function GoogleSimulation() {
         : "Pronto! Esta é a resposta. Toque em concluir quando terminar.";
 
   return (
-    <main className="min-h-screen bg-background flex flex-col">
+    <main
+      className={`bg-[#f4f5f4] flex flex-col ${
+        stage === "sim-page" ? "h-screen overflow-hidden" : "min-h-screen"
+      }`}
+    >
       {/* Instruction bar */}
-      <div className="sticky top-0 z-20 shadow-md">
+      <div className="sticky top-0 z-30 shrink-0 shadow-md">
         <div className="bg-info text-white">
           <div className="w-full max-w-md mx-auto px-4 py-2.5 flex items-center gap-2">
             <p className={`flex-1 leading-snug font-semibold min-w-0 ${a11y ? "text-base" : "text-sm"}`}>
@@ -386,7 +390,7 @@ function GoogleSimulation() {
             </Link>
           </div>
         </div>
-        <div className="bg-card border-b border-border">
+        <div className="bg-white border-b border-[#dfe4e0]">
           <div
             role="progressbar"
             aria-valuemin={0}
@@ -501,7 +505,6 @@ function GoogleLogo({ className = "" }: { className?: string }) {
 }
 
 function SimSearch({
-  query,
   setQuery,
   onSearch,
   suggested,
@@ -511,107 +514,180 @@ function SimSearch({
   onSearch: () => void;
   suggested: string;
 }) {
-  const fillTutorialQuery = () => setQuery(suggested);
+  const runTutorialSearch = () => {
+    setQuery(suggested);
+    onSearch();
+  };
+  const shortcuts = [
+    { label: "Receitas", icon: BookOpen, tone: "text-success" },
+    { label: "Saúde", icon: Sparkles, tone: "text-info" },
+    { label: "Farmácia", icon: Star, tone: "text-warning" },
+    { label: "Músicas", icon: Newspaper, tone: "text-destructive" },
+  ];
+  const news = [
+    {
+      title: "Chá de camomila: como preparar uma bebida tranquila para a noite",
+      source: "Receitas da Dona Rosa",
+      age: "Hoje",
+      kind: "tea",
+    },
+    {
+      title: "Alongamentos simples para fazer sentada com segurança",
+      source: "Bem-estar Diário",
+      age: "Ontem",
+      kind: "stretch",
+    },
+  ];
 
   return (
-    <div className="flex flex-col bg-background flex-1 px-5 pt-8 pb-6">
-      {/* Top right small avatar */}
-      <div className="flex items-center justify-end gap-3 text-muted-foreground">
-        <span className="text-sm font-bold">Conta</span>
-        <span className="size-8 rounded-full bg-info/30 flex items-center justify-center text-xs font-extrabold text-info">
-          M
-        </span>
+    <div className="flex flex-col bg-[#f4f5f4] flex-1 px-4 pt-5 pb-5 overflow-y-auto">
+      {/* Google app top bar */}
+      <div className="flex items-center justify-between text-[#343a38]">
+        <Home className="size-7" strokeWidth={2.6} />
+        <div className="flex items-center gap-5">
+          <span className="size-9 rounded-full bg-[#607d6b] text-white flex items-center justify-center text-lg font-bold">
+            A
+          </span>
+          <span className="size-7 rounded-lg border-2 border-[#343a38] flex items-center justify-center text-base font-extrabold">
+            9
+          </span>
+          <MoreVertical className="size-7" strokeWidth={2.6} />
+        </div>
       </div>
 
       {/* Logo */}
-      <div className="mt-10 flex justify-center">
-        <GoogleLogo className="text-6xl" />
+      <div className="mt-8 flex justify-center">
+        <GoogleLogo className="text-5xl" />
       </div>
 
       {/* Search bar */}
-      <div className="mt-8">
+      <div className="mt-7">
         <label htmlFor="g-search" className="sr-only">
           Pesquisar no Google
         </label>
         <div className="relative">
-          <Search
-            className="absolute left-4 top-1/2 -translate-y-1/2 size-5 text-muted-foreground"
-            strokeWidth={2.4}
-          />
+          <span
+            aria-hidden="true"
+            className="absolute left-5 top-1/2 -translate-y-1/2 font-extrabold text-3xl"
+          >
+            <span className="text-info">G</span>
+          </span>
           <input
             id="g-search"
             type="text"
-            value={query}
+            value=""
             readOnly
-            onClick={fillTutorialQuery}
-            onFocus={fillTutorialQuery}
-            placeholder="Pesquisar no Google"
-            className="w-full h-14 pl-12 pr-20 rounded-full bg-card border-2 border-info text-foreground text-base focus:outline-none animate-pulse-ring cursor-text"
+            onClick={runTutorialSearch}
+            onFocus={() => undefined}
+            placeholder="Pesquise no Google..."
+            className="w-full h-16 pl-16 pr-24 rounded-full bg-[#e4e8e5] text-[#343a38] placeholder:text-[#69716d] text-lg focus:outline-none animate-pulse-ring cursor-text shadow-sm"
             onKeyDown={(e) => {
               if (e.key === "Enter") {
                 e.preventDefault();
-                fillTutorialQuery();
-                onSearch();
+                runTutorialSearch();
               }
             }}
           />
-          <div className="absolute right-3 top-1/2 -translate-y-1/2 flex items-center gap-3 text-info">
-            <Mic className="size-5" />
-            <Camera className="size-5" />
+          <div className="absolute right-5 top-1/2 -translate-y-1/2 flex items-center gap-4 text-[#343a38]">
+            <Mic className="size-7" strokeWidth={2.4} />
+            <Camera className="size-7" strokeWidth={2.4} />
           </div>
         </div>
-        <p className="mt-2 text-xs text-muted-foreground text-center">
-          Dica: toque na barra para aparecer{" "}
-          <button
-            type="button"
-            onClick={fillTutorialQuery}
-            className="font-extrabold text-info underline underline-offset-2"
-          >
-            "{suggested}"
-          </button>
-          .
-        </p>
       </div>
 
-      {/* Guided search */}
-      <div className="mt-6 rounded-2xl bg-card border border-border overflow-hidden">
-        <p className="px-4 pt-3 text-xs font-extrabold text-muted-foreground uppercase tracking-wide">
-          Pesquisa do tutorial
-        </p>
+      {/* Mode chips */}
+      <div className="mt-4 grid grid-cols-2 gap-3">
         <button
           type="button"
-          onClick={fillTutorialQuery}
-          className="w-full flex items-center gap-3 px-4 py-3 text-left hover:bg-muted transition"
+          onClick={runTutorialSearch}
+          className="h-12 rounded-full bg-[#e4e8e5] text-[#343a38] flex items-center justify-center gap-2 text-base font-bold"
         >
-          <Search className="size-4 text-muted-foreground" />
-          <span className="text-sm text-foreground flex-1 truncate">{suggested}</span>
-          <ArrowUpRight className="size-4 text-muted-foreground" />
+          <Sparkles className="size-5" />
+          Modo IA
+        </button>
+        <button
+          type="button"
+          onClick={runTutorialSearch}
+          className="h-12 rounded-full bg-[#e4e8e5] text-[#343a38] flex items-center justify-center gap-2 text-base font-bold"
+        >
+          <Lock className="size-5" />
+          Modo anônimo
         </button>
       </div>
 
-      {/* Search button */}
-      <button
-        type="button"
-        onClick={onSearch}
-        className="mt-6 w-full h-14 rounded-2xl bg-info text-info-foreground text-lg font-extrabold shadow-lg shadow-info/30 hover:bg-info/90 active:scale-[0.99] transition"
-      >
-        Pesquisar
-      </button>
+      {/* Guided shortcuts */}
+      <section className="mt-6 rounded-3xl bg-white px-4 py-4 overflow-hidden border border-[#dfe4e0]">
+        <div className="flex justify-between gap-5 overflow-x-auto pb-1">
+          {shortcuts.map(({ label, icon: Icon, tone }) => (
+            <button
+              type="button"
+              key={label}
+              onClick={runTutorialSearch}
+              className="shrink-0 flex flex-col items-center gap-2 min-w-14"
+            >
+              <span className="size-12 rounded-full bg-[#f4f5f4] flex items-center justify-center">
+                <Icon className={`size-6 ${tone}`} />
+              </span>
+              <span className="text-xs text-[#4c5550] font-semibold">{label}</span>
+            </button>
+          ))}
+        </div>
+      </section>
 
-      {/* Bottom shortcut bar (decorative) */}
-      <div className="mt-auto pt-8 grid grid-cols-4 gap-2 text-[11px] font-bold text-muted-foreground">
-        {[
-          { I: Globe, l: "Tudo" },
-          { I: ImageIcon, l: "Imagens" },
-          { I: MapPin, l: "Mapas" },
-          { I: Newspaper, l: "Notícias" },
-        ].map(({ I, l }) => (
-          <div key={l} className="flex flex-col items-center gap-1">
-            <I className="size-5" />
-            <span>{l}</span>
-          </div>
+      <p className="mt-3 text-xs text-[#69716d] text-center">
+        Toque na barra para aparecer{" "}
+        <button
+          type="button"
+          onClick={runTutorialSearch}
+          className="font-extrabold text-info underline underline-offset-2"
+        >
+          "{suggested}"
+        </button>
+        .
+      </p>
+
+      {/* Discover feed */}
+      <div className="mt-6 flex flex-col gap-3">
+        {news.map((item) => (
+          <article
+            key={item.title}
+            className="rounded-3xl bg-white overflow-hidden shadow-sm border border-[#dfe4e0]"
+          >
+            <div className="p-4">
+              <div className="grid grid-cols-[1fr_88px] gap-3 items-start">
+                <h3 className="text-xl leading-snug font-normal text-[#343a38]">{item.title}</h3>
+                <div
+                  aria-hidden="true"
+                  className={`h-20 rounded-2xl border border-[#dfe4e0] flex items-center justify-center ${
+                    item.kind === "tea"
+                      ? "bg-gradient-to-br from-[#f4ead6] to-[#dce9df]"
+                      : "bg-gradient-to-br from-[#e3ebef] to-[#e7e2da]"
+                  }`}
+                >
+                  {item.kind === "tea" ? (
+                    <BookOpen className="size-8 text-success" />
+                  ) : (
+                    <Sparkles className="size-8 text-info" />
+                  )}
+                </div>
+              </div>
+              <div className="mt-4 flex items-center gap-2 text-[#69716d]">
+                <span className="size-6 rounded-full bg-[#607d6b] text-white text-xs font-bold flex items-center justify-center">
+                  {item.source.charAt(0)}
+                </span>
+                <span className="text-sm font-medium">{item.source}</span>
+                <span className="text-sm">· {item.age}</span>
+                <div className="ml-auto flex items-center gap-4 text-[#343a38]">
+                  <Share2 className="size-5" />
+                  <MoreVertical className="size-5" />
+                </div>
+              </div>
+            </div>
+          </article>
         ))}
       </div>
+
+      <div className="h-4" />
     </div>
   );
 }
@@ -629,135 +705,188 @@ function SimResults({
   const results = [
     {
       site: "receitasdadonarosa.com.br",
-      title: "Chá de camomila: como preparar e benefícios",
+      name: "Receitas da Dona Rosa",
+      title: "Chá de camomila: veja como fazer do jeito certo",
       desc:
-        "Aprenda passo a passo como fazer um chá de camomila perfeito para relaxar e dormir melhor. Receita simples com 3 ingredientes...",
-      featured: true,
+        "Para preparar o chá, ferva 1 xícara de água, desligue o fogo e coloque as flores de camomila. Tampe por alguns minutos, coe e beba morno.",
+      date: "23 de mai. de 2024",
+    },
+    {
+      site: "bemestardiario.com.br",
+      name: "Bem-estar Diário",
+      title: "Chá de camomila: para que serve e como preparar",
+      desc:
+        "Veja uma forma simples de fazer chá de camomila e alguns cuidados importantes para tomar a bebida com tranquilidade.",
+      date: "13 de jan. de 2025",
     },
     {
       site: "saude.gov.br",
-      title: "Plantas medicinais — Camomila",
+      name: "Saúde Brasil",
+      title: "Plantas medicinais: orientações para usar com segurança",
       desc:
-        "A camomila é uma planta usada há séculos para acalmar e ajudar na digestão. Veja como preparar e cuidados ao consumir...",
-    },
-    {
-      site: "vidasaudavel.com",
-      title: "10 benefícios do chá de camomila para a saúde",
-      desc:
-        "Descubra por que o chá de camomila é tão indicado: relaxamento, sono, digestão e cuidados com a pele. Guia completo...",
+        "Informações gerais sobre plantas medicinais, preparo correto e quando procurar orientação de um profissional de saúde.",
+      date: "Atualizado recentemente",
     },
   ];
+  const questions = [
+    "Como preparar corretamente o chá de camomila?",
+    "Pode ferver a camomila junto com a água?",
+    "Qual é o melhor horário para tomar chá de camomila?",
+    "Chá de camomila ajuda a relaxar?",
+  ];
+
   return (
-    <div className="flex flex-col bg-background flex-1">
-      {/* Compact top search bar */}
-      <div className="px-4 pt-3 pb-3 border-b border-border bg-card">
-        <div className="flex items-center gap-2">
-          <ChevronLeft className="size-5 text-muted-foreground shrink-0" />
-          <div className="flex-1 h-11 px-4 rounded-full bg-muted flex items-center gap-2 border border-border">
-            <Search className="size-4 text-muted-foreground" />
-            <span className="text-sm text-foreground truncate flex-1">{query}</span>
-            <Mic className="size-4 text-info" />
+    <div className="flex flex-col bg-[#f4f5f4] flex-1 overflow-y-auto">
+      {/* Browser-like top bar */}
+      <div className="sticky top-0 z-10 bg-[#f4f5f4] border-b border-[#dfe4e0]">
+        <div className="px-4 pt-4 pb-3 flex items-center gap-3">
+          <Home className="size-6 shrink-0 text-[#343a38]" strokeWidth={2.6} />
+          <div className="flex-1 h-10 rounded-full bg-[#e4e8e5] px-3 flex items-center gap-2 text-[#4d5551] min-w-0">
+            <span className="text-base leading-none">⌘</span>
+            <span className="text-sm truncate">google.com/search?q=Como+fazer+chá</span>
           </div>
-          <span className="size-8 shrink-0 rounded-full bg-info/30 flex items-center justify-center text-xs font-extrabold text-info">
-            M
+          <span className="size-7 rounded-lg border-2 border-[#343a38] flex items-center justify-center text-sm font-extrabold text-[#343a38]">
+            9
           </span>
+          <MoreVertical className="size-6 shrink-0 text-[#343a38]" strokeWidth={2.6} />
         </div>
-        {/* Tabs */}
-        <div className="mt-3 flex gap-5 overflow-x-auto text-sm font-bold">
-          {[
-            { l: "Tudo", on: true },
-            { l: "Imagens" },
-            { l: "Vídeos" },
-            { l: "Notícias" },
-            { l: "Mapas" },
-          ].map((t) => (
-            <span
-              key={t.l}
-              className={`shrink-0 pb-2 ${
-                t.on
-                  ? "text-info border-b-2 border-info"
-                  : "text-muted-foreground border-b-2 border-transparent"
-              }`}
-            >
-              {t.l}
+
+        <div className="px-4 pb-3">
+          <div className="flex items-center justify-between px-1">
+            <Sparkles className="size-6 text-[#56635d]" />
+            <GoogleLogo className="text-3xl" />
+            <span className="size-9 rounded-full bg-[#607d6b] text-white flex items-center justify-center text-lg font-bold ring-4 ring-[#d8e2dc]">
+              A
             </span>
-          ))}
+          </div>
+
+          <div className="mt-3 h-12 rounded-full bg-white shadow-md px-4 flex items-center gap-3">
+            <Search className="size-5 text-[#69716d]" />
+            <span className="flex-1 text-base text-[#1f2422] truncate">{query}</span>
+            <X className="size-5 text-[#343a38]" />
+            <span className="h-7 w-px bg-[#dfe4e0]" />
+            <Mic className="size-5 text-[#343a38]" />
+          </div>
         </div>
       </div>
 
-      {/* Results meta */}
-      <p className="px-4 pt-3 text-xs text-muted-foreground">
-        Cerca de 1.240.000 resultados (0,38 segundos)
-      </p>
-
-      {/* Results list */}
-      <ul className="flex flex-col">
-        {results.map((r, idx) => {
-          const isFirst = idx === 0;
-          return (
-            <li key={r.site}>
-              <button
-                type="button"
-                onClick={() => {
-                  if (isFirst) onPickResult();
-                  else
-                    onExplain({
-                      title: "Outro resultado",
-                      body:
-                        "Você pode tocar em qualquer link azul para abrir. Para essa simulação, vamos usar o primeiro resultado, que está destacado.",
-                    });
-                }}
-                className={`w-full text-left px-4 py-4 transition ${
-                  isFirst
-                    ? "bg-info/5 animate-pulse-ring"
-                    : "hover:bg-muted/60 border-b border-border"
-                }`}
-              >
-                <div className="flex items-center gap-2 text-xs text-muted-foreground">
-                  <span className="size-5 rounded-full bg-muted flex items-center justify-center">
-                    <Globe className="size-3" />
-                  </span>
-                  <span className="font-bold text-foreground">{r.site.split(".")[0]}</span>
-                  <span className="truncate">https://{r.site}</span>
+      <div className="bg-white pt-3">
+        <button
+          type="button"
+          onClick={onPickResult}
+          className="mx-3 mb-3 block w-[calc(100%-1.5rem)] rounded-2xl text-left px-3 py-4 bg-white border border-[#dfe4e0] animate-pulse-ring"
+        >
+          <div className="flex items-start gap-3">
+            <span className="size-10 rounded-full bg-[#f4f5f4] border border-[#dfe4e0] flex items-center justify-center text-success">
+              <BookOpen className="size-5" />
+            </span>
+            <div className="min-w-0 flex-1">
+              <div className="flex items-start gap-2">
+                <div className="min-w-0 flex-1">
+                  <p className="text-base text-[#1f2422]">{results[0].name}</p>
+                  <p className="text-sm text-[#5f6763] truncate">https://www.{results[0].site}</p>
                 </div>
-                <h3 className="mt-1 text-info text-lg font-extrabold leading-snug underline underline-offset-2">
+                <MoreVertical className="size-5 text-[#69716d] shrink-0" />
+              </div>
+              <h3 className="mt-3 text-xl leading-tight font-normal text-[#1558c8]">
+                {results[0].title}
+              </h3>
+              <p className="mt-2 text-sm leading-snug text-[#5f6763]">
+                <span>{results[0].date} - </span>
+                {results[0].desc}
+              </p>
+              <span className="mt-3 inline-flex items-center gap-1 bg-yellow-500 text-black text-sm font-extrabold px-2 py-1 rounded-full shadow animate-bounce">
+                Toque aqui
+              </span>
+            </div>
+          </div>
+        </button>
+
+        <div className="h-3 bg-[#eef0f1]" />
+
+        <section className="px-4 py-5 bg-white">
+          <h3 className="text-2xl leading-tight font-semibold text-[#1f2422]">
+            As pessoas também perguntam
+          </h3>
+          <div className="mt-4 border-t border-[#d7dcda]">
+            {questions.map((question) => (
+              <button
+                key={question}
+                type="button"
+                onClick={() =>
+                  onExplain({
+                    title: "Pergunta relacionada",
+                    body:
+                      "No Google real, tocar aqui abre uma resposta curta. Nesta simulação, vamos continuar usando o primeiro link destacado.",
+                  })
+                }
+                className="w-full py-3.5 border-b border-[#d7dcda] flex items-center gap-3 text-left"
+              >
+                <span className="flex-1 text-lg leading-snug text-[#1f2422]">{question}</span>
+                <span className="size-9 rounded-full bg-[#f1f3f2] flex items-center justify-center text-[#69716d] shrink-0">
+                  <ChevronDown className="size-5" />
+                </span>
+              </button>
+            ))}
+          </div>
+        </section>
+
+        <div className="h-3 bg-[#eef0f1]" />
+
+        {results.slice(1).map((r) => (
+          <button
+            key={r.site}
+            type="button"
+            onClick={() =>
+              onExplain({
+                title: "Outro resultado",
+                body:
+                  "Você pode tocar em outros links azuis no Google. Para esta simulação, vamos usar o primeiro resultado, que está destacado.",
+              })
+            }
+            className="w-full text-left px-4 py-5 bg-white border-b border-[#dfe4e0]"
+          >
+            <div className="flex items-start gap-3">
+              <span className="size-10 rounded-full bg-[#607d6b] text-white flex items-center justify-center font-extrabold">
+                {r.name.charAt(0)}
+              </span>
+              <div className="min-w-0 flex-1">
+                <div className="flex items-start gap-2">
+                  <div className="min-w-0 flex-1">
+                    <p className="text-base text-[#1f2422]">{r.name}</p>
+                    <p className="text-sm text-[#5f6763] truncate">https://{r.site}</p>
+                  </div>
+                  <MoreVertical className="size-5 text-[#69716d] shrink-0" />
+                </div>
+                <h3 className="mt-3 text-xl leading-tight font-normal text-[#1558c8]">
                   {r.title}
                 </h3>
-                <p className="mt-1 text-sm text-muted-foreground leading-snug line-clamp-3">
+                <p className="mt-2 text-sm leading-snug text-[#5f6763]">
+                  <span>{r.date} - </span>
                   {r.desc}
                 </p>
-                {isFirst && (
-                  <span className="mt-2 inline-flex items-center gap-1 bg-info text-white text-xs font-extrabold px-2 py-1 rounded-full">
-                    Toque aqui
-                  </span>
-                )}
-              </button>
-            </li>
-          );
-        })}
-      </ul>
+              </div>
+            </div>
+          </button>
+        ))}
 
-      {/* Related searches */}
-      <div className="mt-2 px-4 py-4 border-t border-border">
-        <p className="text-xs font-extrabold text-muted-foreground uppercase tracking-wide mb-2">
-          Pesquisas relacionadas
-        </p>
-        <div className="flex flex-wrap gap-2">
-          {["camomila para dormir", "chá calmante natural", "como secar camomila"].map((q) => (
-            <span
-              key={q}
-              className="px-3 py-1.5 rounded-full bg-muted text-foreground text-xs font-bold"
-            >
-              {q}
-            </span>
-          ))}
-        </div>
-      </div>
-
-      {/* Pagination */}
-      <div className="mt-auto px-4 py-5 flex items-center justify-center gap-2 text-info text-sm font-bold border-t border-border">
-        <GoogleLogo className="text-2xl" />
-        <span className="ml-3">1 2 3 4 5</span>
+        <section className="px-4 py-5 bg-white">
+          <h3 className="text-2xl leading-tight font-semibold text-[#1f2422]">
+            Outras pessoas pesquisaram
+          </h3>
+          <div className="mt-4 flex gap-3 overflow-x-auto pb-1">
+            {["chá de camomila para dormir", "como preparar chá", "benefícios da camomila"].map(
+              (q) => (
+                <span
+                  key={q}
+                  className="shrink-0 px-3 py-2 rounded-full border border-[#d7dcda] text-[#1558c8] text-sm font-semibold"
+                >
+                  {q}
+                </span>
+              ),
+            )}
+          </div>
+        </section>
       </div>
     </div>
   );
@@ -774,80 +903,138 @@ function SimPage({
   onFinish: () => void;
 }) {
   return (
-    <div className="flex flex-col bg-background flex-1">
-      {/* Browser bar */}
-      <div className="px-4 py-2 bg-muted border-b border-border flex items-center gap-2">
-        <button
-          type="button"
-          onClick={onBack}
-          className="inline-flex items-center gap-1 h-8 px-2 rounded-md text-foreground hover:bg-card transition text-sm font-bold"
-          aria-label="Voltar para os resultados"
-        >
-          <ChevronLeft className="size-4" />
-        </button>
-        <div className="flex-1 h-8 px-3 rounded-md bg-card border border-border flex items-center gap-2 text-xs text-muted-foreground">
-          <Lock className="size-3 text-success" />
-          <span className="truncate">receitasdadonarosa.com.br</span>
+    <div className="flex flex-col bg-white flex-1 overflow-y-auto">
+      <div className="sticky top-0 z-20">
+        {/* Browser bar */}
+        <div className="px-4 py-3 bg-[#f26a21] flex items-center gap-3 text-[#25211f]">
+          <button
+            type="button"
+            onClick={onBack}
+            className="inline-flex items-center justify-center size-8 rounded-md hover:bg-white/15 transition"
+            aria-label="Voltar para os resultados"
+          >
+            <Home className="size-6" strokeWidth={2.6} />
+          </button>
+          <div className="flex-1 h-10 px-3 rounded-full bg-white/25 flex items-center gap-2 min-w-0 text-[#4a352d]">
+            <Lock className="size-4 shrink-0" />
+            <span className="truncate text-sm">receitasdadonarosa.com.br</span>
+          </div>
+          <span className="size-8 rounded-lg border-2 border-[#25211f] flex items-center justify-center text-sm font-extrabold">
+            9
+          </span>
+          <MoreVertical className="size-6 shrink-0" strokeWidth={2.6} />
         </div>
-        <RotateCw className="size-4 text-muted-foreground" />
-        <Star className="size-4 text-muted-foreground" />
-        <Share2 className="size-4 text-muted-foreground" />
-        <MoreVertical className="size-4 text-muted-foreground" />
+
+        {/* Site header */}
+        <div className="h-20 px-4 bg-white shadow-md flex items-center justify-between">
+          <button
+            type="button"
+            className="size-10 flex flex-col justify-center gap-1.5"
+            aria-label="Menu do site"
+          >
+            <span className="h-1 w-8 rounded-full bg-[#343a38]" />
+            <span className="h-1 w-8 rounded-full bg-[#343a38]" />
+            <span className="h-1 w-8 rounded-full bg-[#343a38]" />
+          </button>
+          <div className="flex items-center gap-3">
+            <span className="size-11 rounded-full bg-white shadow-md flex items-center justify-center text-[#f26a21]">
+              <Search className="size-6" />
+            </span>
+            <span className="text-2xl font-extrabold tracking-tight text-[#f26a21]">
+              RECEITAS DA ROSA
+            </span>
+          </div>
+          <span className="size-11 rounded-full bg-white shadow-md flex items-center justify-center text-[#f26a21]">
+            <User className="size-6" />
+          </span>
+        </div>
       </div>
 
       {/* Page content */}
-      <article className="px-5 py-5 flex-1">
-        <p className="text-xs text-muted-foreground font-bold uppercase tracking-wide">
-          Receitas da Dona Rosa
-        </p>
-        <h2 className="mt-1 text-2xl font-extrabold leading-tight">
-          Chá de camomila: como preparar
-        </h2>
-        <p className="mt-1 text-xs text-muted-foreground">
-          Por Maria Helena · Atualizado há 2 dias
-        </p>
+      <article className="bg-white flex-1">
+        <div className="px-5 pt-6 pb-4">
+          <p className="text-xs text-muted-foreground font-bold">
+            Receitas &gt; Chás e bebidas
+          </p>
+          <h2 className="mt-8 text-center text-3xl font-extrabold leading-tight text-[#3a3a3a]">
+            Chá de camomila: veja como fazer do jeito certo e aproveitar seus benefícios
+          </h2>
+          <p className="mt-8 text-center text-base text-[#4d5551]">
+            Atualizado em 23/05/2024 às 15:57
+          </p>
+          <button
+            type="button"
+            className="mx-auto mt-4 flex items-center gap-2 text-[#4d5551] text-base"
+          >
+            <Share2 className="size-5" />
+            Compartilhar
+          </button>
 
-        <div className="mt-4 aspect-video rounded-xl bg-gradient-to-br from-warning/30 to-success/30 border border-border flex items-center justify-center">
-          <span className="text-foreground/60 text-sm font-bold">Foto do chá</span>
+          <div className="mt-6 rounded-lg bg-white shadow-lg border border-[#eef0f1] p-4">
+            <div className="flex items-center gap-3">
+              <span className="size-14 rounded-full bg-[#d8e2dc] flex items-center justify-center text-[#607d6b] font-extrabold">
+                DR
+              </span>
+              <p className="text-base text-[#3a3a3a]">
+                Por <span className="underline">Dona Rosa</span>
+              </p>
+            </div>
+            <p className="mt-3 text-base leading-relaxed text-[#4d5551]">
+              Uma explicação simples para preparar o chá com calma e segurança.
+            </p>
+          </div>
         </div>
 
-        <p className="mt-4 text-base leading-relaxed text-foreground">
-          O chá de camomila é uma das bebidas mais antigas e queridas para
-          relaxar antes de dormir. Veja como preparar em poucos minutos:
-        </p>
-
-        <h3 className="mt-4 text-lg font-extrabold">Ingredientes</h3>
-        <ul className="mt-2 list-disc pl-6 text-base text-foreground space-y-1">
-          <li>1 colher de sopa de flores de camomila secas</li>
-          <li>1 xícara de água quente</li>
-          <li>Mel a gosto (opcional)</li>
-        </ul>
-
-        <h3 className="mt-4 text-lg font-extrabold">Modo de preparo</h3>
-        <ol className="mt-2 list-decimal pl-6 text-base text-foreground space-y-1">
-          <li>Ferva a água em uma chaleira ou panela.</li>
-          <li>Coloque as flores de camomila em uma xícara.</li>
-          <li>Despeje a água quente e tampe por 5 minutos.</li>
-          <li>Coe, adoce com mel se quiser e beba ainda morno.</li>
-        </ol>
-
-        <p className="mt-4 text-sm text-muted-foreground italic">
-          Dica: tome 30 minutos antes de dormir para ajudar a relaxar.
-        </p>
-
-        <div className="mt-6 rounded-2xl bg-info/5 border-2 border-info p-4">
-          <p className="text-sm font-bold text-info">
-            Você pesquisou: <span className="font-extrabold">"{query}"</span>
+        <section className="px-5 py-5">
+          <p className="text-2xl leading-snug font-extrabold text-[#3a3a3a]">
+            O chá de camomila é conhecido por ajudar no bem-estar, mas o preparo
+            correto deixa a bebida mais agradável.
           </p>
-          <p className="mt-1 text-sm text-muted-foreground leading-snug">
-            Encontrou a resposta no site! Quando terminar de ler, toque no
-            botão abaixo para concluir.
+
+          <div className="mt-6 aspect-[4/3] rounded-sm bg-gradient-to-br from-[#f4ead6] to-[#dce9df] border border-[#dfe4e0] flex items-center justify-center overflow-hidden">
+            <div className="text-center">
+              <BookOpen className="mx-auto size-16 text-[#607d6b]" />
+              <p className="mt-2 text-sm font-bold text-[#607d6b]">Foto do chá de camomila</p>
+            </div>
+          </div>
+
+          <p className="mt-6 text-xl leading-relaxed text-[#3a3a3a]">
+            A camomila é uma planta delicada. Para preparar o chá, aqueça a água
+            e desligue o fogo antes de colocar as flores. Assim, o sabor fica
+            suave e a bebida pode ser tomada com mais tranquilidade.
           </p>
-        </div>
+
+          <h3 className="mt-8 text-2xl font-extrabold text-[#3a3a3a]">
+            Como preparar o chá de camomila
+          </h3>
+          <p className="mt-4 text-xl leading-relaxed text-[#3a3a3a]">
+            Coloque uma xícara de água para aquecer. Quando começar a ferver,
+            desligue o fogo. Acrescente uma colher de chá de flores de camomila,
+            tampe a xícara e espere de 5 a 10 minutos. Depois, coe e beba morno.
+          </p>
+
+          <h3 className="mt-8 text-2xl font-extrabold text-[#3a3a3a]">
+            Benefícios do chá de camomila
+          </h3>
+          <p className="mt-4 text-xl leading-relaxed text-[#3a3a3a]">
+            O chá de camomila pode ajudar a relaxar e trazer uma sensação de
+            conforto. Se você usa remédios ou tem alguma dúvida de saúde, converse
+            com a equipe do lar antes de tomar com frequência.
+          </p>
+
+          <div className="mt-8 rounded-2xl bg-info/5 border-2 border-info p-4">
+            <p className="text-sm font-bold text-info">
+              Você pesquisou: <span className="font-extrabold">"{query}"</span>
+            </p>
+            <p className="mt-1 text-sm text-muted-foreground leading-snug">
+              Encontrou a resposta no site. Quando terminar de ler, toque no botão abaixo.
+            </p>
+          </div>
+        </section>
       </article>
 
       {/* Finish bar */}
-      <div className="mt-auto p-4 border-t border-border bg-card sticky bottom-0">
+      <div className="mt-auto p-4 border-t border-[#dfe4e0] bg-[#f4f5f4] sticky bottom-0">
         <button
           type="button"
           onClick={onFinish}
