@@ -64,7 +64,7 @@ type Chat = {
 const CHATS: Chat[] = [
   {
     id: "cida",
-    name: "Dona Cida (amiga)",
+    name: "Dona Cida",
     initial: "C",
     preview: "Já tomou seu remédio?",
     time: "10:24",
@@ -73,7 +73,7 @@ const CHATS: Chat[] = [
   },
   {
     id: "antonio",
-    name: "Seu Antônio (amigo)",
+    name: "Seu Antônio",
     initial: "A",
     preview: "Te espero amanhã na pracinha ❤️",
     time: "Ontem",
@@ -98,7 +98,7 @@ type ChatMessage = {
 };
 
 const INITIAL_MESSAGES: ChatMessage[] = [
-  { id: "m1", from: "them", kind: "text", text: "Bom dia, amiga! Tudo bem?" },
+  { id: "m1", from: "them", kind: "text", text: "Bom dia! Tudo bem?" },
   { id: "m2", from: "them", kind: "text", text: "Já tomou seu remédio?" },
 ];
 
@@ -110,7 +110,7 @@ function WhatsappSimulation() {
 
   const [openChat, setOpenChat] = useState<Chat | null>(null);
   const [messages, setMessages] = useState<ChatMessage[]>(INITIAL_MESSAGES);
-  const [draft, setDraft] = useState("Estou bem, amiga! Tomei sim 😊");
+  const [draft, setDraft] = useState("Estou bem! Tomei sim 😊");
   const [messageSent, setMessageSent] = useState(false);
 
   // Call
@@ -151,7 +151,11 @@ function WhatsappSimulation() {
         <p className={`font-extrabold ${a11y ? "text-sm" : "text-xs"}`}>
           {isDone ? "Simulação concluída! 🎉" : `Etapa ${currentStep} de ${steps.length}`}
         </p>
-        <p className={`text-muted-foreground font-medium ${a11y ? "text-sm" : "text-xs"}`}>
+        <p
+          className={`font-medium ${
+            a11y ? "text-sm text-foreground" : "text-xs text-muted-foreground"
+          }`}
+        >
           {isDone ? "100%" : `${Math.round((currentStep / steps.length) * 100)}%`}
         </p>
       </div>
@@ -161,10 +165,14 @@ function WhatsappSimulation() {
         aria-valuemax={steps.length}
         aria-valuenow={isDone ? steps.length : currentStep}
         aria-label="Progresso da simulação"
-        className="h-2 w-full rounded-full bg-muted overflow-hidden"
+        className={`h-2 w-full rounded-full overflow-hidden ${
+          a11y ? "bg-background border border-foreground" : "bg-muted"
+        }`}
       >
         <div
-          className="h-full bg-success transition-all duration-500"
+          className={`h-full transition-all duration-500 ${
+            a11y ? "bg-foreground" : "bg-success"
+          }`}
           style={{ width: `${((isDone ? steps.length : currentStep) / steps.length) * 100}%` }}
         />
       </div>
@@ -275,9 +283,19 @@ function WhatsappSimulation() {
   // ----- Intro splash -----
   if (stage === "intro") {
     return (
-      <main className="min-h-screen bg-success flex flex-col items-center justify-center text-white">
+      <main
+        className={`min-h-screen flex flex-col items-center justify-center ${
+          a11y ? "bg-foreground text-background" : "bg-success text-white"
+        }`}
+      >
         <div className="flex flex-col items-center gap-4 animate-pulse">
-          <div className="size-24 rounded-full bg-white text-success flex items-center justify-center shadow-2xl">
+          <div
+            className={`size-24 rounded-full flex items-center justify-center shadow-2xl ${
+              a11y
+                ? "bg-background text-foreground border-4 border-background"
+                : "bg-white text-success"
+            }`}
+          >
             <MessageCircle className="size-12" strokeWidth={2.6} />
           </div>
           <h1 className="text-4xl font-extrabold tracking-tight">WhatsApp</h1>
@@ -288,13 +306,17 @@ function WhatsappSimulation() {
 
   // ----- Header bar (shared) -----
   const headerBar = (
-    <header className="bg-success text-white px-5 pt-5 pb-6">
+    <header className={`${a11y ? "bg-foreground text-background" : "bg-success text-white"} px-5 pt-5 pb-6`}>
       <div className="w-full max-w-md mx-auto flex flex-col gap-4">
         <div className="flex items-center justify-between gap-2">
           <Link
             to="/apps"
             aria-label="Voltar para aplicativos"
-            className="inline-flex items-center gap-2 h-11 px-3 rounded-2xl text-base font-bold hover:bg-white/10 transition"
+            className={`inline-flex items-center gap-2 px-3 rounded-2xl font-bold transition ${
+              a11y
+                ? "h-12 bg-background text-foreground border-2 border-background text-lg"
+                : "h-11 text-base hover:bg-white/10"
+            }`}
           >
             <ArrowLeft className="size-5" />
             Voltar
@@ -305,7 +327,11 @@ function WhatsappSimulation() {
               type="button"
               onClick={handleSpeak}
               aria-label={speaking ? "Parar leitura" : "Ouvir"}
-              className="inline-flex items-center gap-2 h-11 px-3 rounded-full bg-white text-success text-base font-bold hover:opacity-90 transition"
+              className={`inline-flex items-center gap-2 px-3 rounded-full font-bold hover:opacity-90 transition ${
+                a11y
+                  ? "h-12 bg-background text-foreground border-2 border-background text-lg"
+                  : "h-11 bg-white text-success text-base"
+              }`}
             >
               {speaking ? <Square className="size-5" /> : <Volume2 className="size-5" />}
               {speaking ? "Parar" : "Ouvir"}
@@ -326,20 +352,20 @@ function WhatsappSimulation() {
   // ----- Overview screen -----
   if (stage === "overview") {
     return (
-      <main className="min-h-screen bg-muted/40 flex flex-col">
+      <main className={`min-h-screen flex flex-col ${a11y ? "bg-background" : "bg-muted/40"}`}>
         {headerBar}
         <div className="w-full max-w-md mx-auto flex-1 flex flex-col gap-6 px-5 py-6">
           <section
-            className={`rounded-2xl bg-card p-5 border-l-8 border-l-success shadow-md ${
-              a11y ? "border-2 border-foreground" : "border border-border"
+            className={`rounded-2xl bg-card p-5 shadow-md ${
+              a11y ? "border-4 border-foreground" : "border border-border border-l-8 border-l-success"
             }`}
           >
-            <h2 className={`font-extrabold text-success ${a11y ? "text-2xl" : "text-xl"}`}>
+            <h2 className={`font-extrabold ${a11y ? "text-2xl text-foreground" : "text-xl text-success"}`}>
               O que é parecido?
             </h2>
             <div
-              className={`mt-3 inline-flex items-center gap-2 rounded-full bg-success/10 text-success px-3 py-1.5 font-extrabold ${
-                a11y ? "text-lg" : "text-base"
+              className={`mt-3 inline-flex items-center gap-2 rounded-full px-3 py-1.5 font-extrabold ${
+                a11y ? "text-lg bg-foreground text-background" : "text-base bg-success/10 text-success"
               }`}
             >
               <Mail className="size-5" />
@@ -350,7 +376,7 @@ function WhatsappSimulation() {
                 a11y ? "text-xl text-foreground" : "text-lg text-muted-foreground"
               }`}
             >
-              É como mandar uma <strong className="text-success">carta</strong> para uma amiga, só
+              É como mandar uma <strong className={a11y ? "text-foreground" : "text-success"}>carta</strong> para uma pessoa de confiança, só
               que chega na hora. Também dá para conversar pelo telefone e ver a pessoa, como nas
               antigas chamadas, mas de graça.
             </p>
@@ -358,17 +384,21 @@ function WhatsappSimulation() {
 
           <section
             className={`rounded-2xl bg-card p-5 ${
-              a11y ? "border-2 border-foreground" : "border border-border"
+              a11y ? "border-4 border-foreground" : "border border-border"
             }`}
           >
             <div className="flex items-center justify-between gap-2 mb-2">
               <h2 className={`font-extrabold ${a11y ? "text-2xl" : "text-xl"}`}>Passo a Passo</h2>
-              <p className={`text-muted-foreground font-bold ${a11y ? "text-base" : "text-xs"}`}>
+              <p className={`font-bold ${a11y ? "text-base text-foreground" : "text-xs text-muted-foreground"}`}>
                 Etapa {currentStep} de {steps.length}
               </p>
             </div>
-            <div className="h-2.5 w-full rounded-full bg-muted overflow-hidden mb-4">
-              <div className="h-full bg-success transition-all duration-500" style={{ width: "25%" }} />
+            <div
+              className={`h-2.5 w-full rounded-full overflow-hidden mb-4 ${
+                a11y ? "bg-background border border-foreground" : "bg-muted"
+              }`}
+            >
+              <div className={`h-full transition-all duration-500 ${a11y ? "bg-foreground" : "bg-success"}`} style={{ width: "25%" }} />
             </div>
             <ol className="flex flex-col gap-3">
               {[
@@ -382,19 +412,21 @@ function WhatsappSimulation() {
                   <li
                     key={s.n}
                     className={`rounded-2xl p-4 transition ${
-                      active
-                        ? "bg-success/5 border-2 border-success"
-                        : a11y
-                          ? "bg-card border-2 border-foreground"
+                      a11y
+                        ? "bg-card border-4 border-foreground"
+                        : active
+                          ? "bg-success/5 border-2 border-success"
                           : "bg-card border border-border"
                     }`}
                   >
                     <div className="flex items-center gap-3">
                       <span
                         className={`size-8 rounded-full inline-flex items-center justify-center font-extrabold ${
-                          active
-                            ? "bg-success text-white ring-4 ring-success/25"
-                            : "bg-muted text-muted-foreground"
+                          a11y
+                            ? "bg-foreground text-background"
+                            : active
+                              ? "bg-success text-white ring-4 ring-success/25"
+                              : "bg-muted text-muted-foreground"
                         }`}
                       >
                         {s.n}
@@ -417,7 +449,11 @@ function WhatsappSimulation() {
           <button
             type="button"
             onClick={() => setStage("intro")}
-            className="inline-flex items-center justify-center gap-2 w-full h-16 rounded-2xl bg-success text-white text-xl font-extrabold shadow-lg shadow-success/30 hover:opacity-90 active:scale-[0.99] transition"
+            className={`inline-flex items-center justify-center gap-2 w-full h-16 rounded-2xl text-xl font-extrabold active:scale-[0.99] transition ${
+              a11y
+                ? "bg-foreground text-background border-4 border-foreground"
+                : "bg-success text-white shadow-lg shadow-success/30 hover:opacity-90"
+            }`}
           >
             <MessageCircle className="size-6" />
             Iniciar Simulação Prática
@@ -434,7 +470,13 @@ function WhatsappSimulation() {
         {headerBar}
         {Stepper}
         <div className="w-full max-w-md mx-auto flex-1 flex flex-col items-center justify-center gap-6 px-5 py-10 text-center">
-          <div className="size-24 rounded-full bg-success/15 text-success flex items-center justify-center">
+          <div
+            className={`size-24 rounded-full flex items-center justify-center ${
+              a11y
+                ? "bg-background text-foreground border-4 border-foreground"
+                : "bg-success/15 text-success"
+            }`}
+          >
             <CheckCircle2 className="size-14" strokeWidth={2.4} />
           </div>
           <h2 className={`font-extrabold ${a11y ? "text-3xl" : "text-2xl"}`}>
@@ -442,7 +484,7 @@ function WhatsappSimulation() {
           </h2>
           <p className={`leading-snug ${a11y ? "text-xl" : "text-lg text-muted-foreground"}`}>
             Você aprendeu a abrir conversas, mandar mensagens, fazer ligações e enviar áudios.
-            Agora pode falar com amigas e pessoas próximas a qualquer hora!
+            Agora pode falar com pessoas de confiança a qualquer hora!
           </p>
           <div className="flex flex-col gap-3 w-full">
             <button
@@ -450,7 +492,7 @@ function WhatsappSimulation() {
               onClick={() => {
                 setOpenChat(null);
                 setMessages(INITIAL_MESSAGES);
-                setDraft("Estou bem, amiga! Tomei sim 😊");
+                setDraft("Estou bem! Tomei sim 😊");
                 setMessageSent(false);
                 setCallType(null);
                 setCallPhase("idle");
@@ -460,14 +502,22 @@ function WhatsappSimulation() {
                 setPlayProgress(0);
                 setStage("overview");
               }}
-              className="h-14 rounded-2xl border-2 border-border bg-card text-foreground text-lg font-bold hover:bg-muted transition"
+              className={`h-14 rounded-2xl text-lg font-bold transition ${
+                a11y
+                  ? "border-4 border-foreground bg-background text-foreground"
+                  : "border-2 border-border bg-card text-foreground hover:bg-muted"
+              }`}
             >
               Repetir simulação
             </button>
             <button
               type="button"
               onClick={() => navigate({ to: "/apps" })}
-              className="h-14 rounded-2xl bg-success text-white text-lg font-extrabold hover:opacity-90 transition"
+              className={`h-14 rounded-2xl text-lg font-extrabold transition ${
+                a11y
+                  ? "bg-foreground text-background border-4 border-foreground"
+                  : "bg-success text-white hover:opacity-90"
+              }`}
             >
               Ver outros aplicativos
             </button>
@@ -480,7 +530,7 @@ function WhatsappSimulation() {
   // ----- Tip banner -----
   const tip =
     stage === "sim-chats"
-      ? "Toque na conversa de Dona Cida (amiga), que está piscando."
+      ? "Toque na conversa de Dona Cida, que está piscando."
       : stage === "sim-message"
         ? messageSent
           ? "Mensagem enviada! Toque em Continuar para a próxima etapa."
@@ -496,12 +546,18 @@ function WhatsappSimulation() {
             : recording
               ? "Gravando... Solte o botão para enviar o áudio."
               : "Segure o botão do microfone para gravar e fale algo.";
+  const floatingContrastPosition =
+    stage === "sim-audio"
+      ? "right-4 bottom-32"
+      : stage === "sim-call"
+        ? "left-4 bottom-28"
+        : "left-4 bottom-24";
 
   return (
     <main className="min-h-screen bg-background flex flex-col">
       {/* Instruction bar */}
       <div className="sticky top-0 z-20 shadow-md">
-        <div className="bg-success text-white">
+        <div className={a11y ? "bg-foreground text-background" : "bg-success text-white"}>
           <div className="w-full max-w-md mx-auto px-4 py-2.5 flex items-center gap-2">
             <p className={`flex-1 leading-snug font-semibold min-w-0 ${a11y ? "text-base" : "text-sm"}`}>
               {tip}
@@ -509,13 +565,17 @@ function WhatsappSimulation() {
             <Link
               to="/apps"
               aria-label="Sair da simulação"
-              className="shrink-0 inline-flex items-center gap-1 h-8 px-3 rounded-full bg-white/20 hover:bg-white/30 text-sm font-bold transition"
+              className={`shrink-0 inline-flex items-center gap-1 px-3 rounded-full font-bold transition ${
+                a11y
+                  ? "h-10 bg-background text-foreground border-2 border-background text-base"
+                  : "h-8 bg-white/20 hover:bg-white/30 text-sm"
+              }`}
             >
               <X className="size-4" /> Sair
             </Link>
           </div>
         </div>
-        <div className="bg-card border-b border-border">
+        <div className={`bg-card ${a11y ? "border-b-4 border-foreground" : "border-b border-border"}`}>
           <div
             role="progressbar"
             aria-valuemin={0}
@@ -530,18 +590,32 @@ function WhatsappSimulation() {
               return (
                 <div key={s.n} className="flex items-center gap-3 flex-1 last:flex-none">
                   <div className="flex items-center gap-1.5 shrink-0">
-                    <span className={`size-6 rounded-full inline-flex items-center justify-center text-xs font-extrabold transition ${
-                      done ? "bg-success text-white" : active ? "bg-success text-white" : "bg-muted text-muted-foreground"
-                    }`}>
+                    <span
+                      className={`rounded-full inline-flex items-center justify-center font-extrabold transition ${
+                        a11y
+                          ? "size-8 bg-foreground text-background text-sm"
+                          : `size-6 text-xs ${
+                              done || active
+                                ? "bg-success text-white"
+                                : "bg-muted text-muted-foreground"
+                            }`
+                      }`}
+                    >
                       {done ? <CheckCircle2 className="size-3.5" /> : s.n}
                     </span>
-                    <span className={`text-xs font-bold leading-none ${active ? "text-foreground" : "text-muted-foreground"}`}>
+                    <span
+                      className={`font-bold leading-none ${
+                        a11y
+                          ? "text-sm text-foreground"
+                          : `text-xs ${active ? "text-foreground" : "text-muted-foreground"}`
+                      }`}
+                    >
                       {s.label}
                     </span>
                   </div>
                   {i < steps.length - 1 && (
-                    <div className="flex-1 h-1 rounded-full bg-muted overflow-hidden">
-                      <div className="h-full bg-success transition-all duration-500" style={{ width: done ? "100%" : "0%" }} />
+                    <div className={`flex-1 h-1 rounded-full overflow-hidden ${a11y ? "bg-background border border-foreground" : "bg-muted"}`}>
+                      <div className={`h-full transition-all duration-500 ${a11y ? "bg-foreground" : "bg-success"}`} style={{ width: done ? "100%" : "0%" }} />
                     </div>
                   )}
                 </div>
@@ -636,10 +710,12 @@ function WhatsappSimulation() {
           onClick={() => setDialog(null)}
         >
           <div
-            className="w-full max-w-md rounded-3xl bg-card border-2 border-border shadow-2xl p-6 flex flex-col gap-3"
+            className={`w-full max-w-md rounded-3xl bg-card shadow-2xl p-6 flex flex-col gap-3 ${
+              a11y ? "border-4 border-foreground" : "border-2 border-border"
+            }`}
             onClick={(e) => e.stopPropagation()}
           >
-            <div className="flex items-center gap-2 text-success">
+            <div className={`flex items-center gap-2 ${a11y ? "text-foreground" : "text-success"}`}>
               <Sparkles className="size-6" />
               <h3 id="exp-title" className={`font-extrabold ${a11y ? "text-2xl" : "text-xl"}`}>
                 {dialog.title}
@@ -651,13 +727,23 @@ function WhatsappSimulation() {
             <button
               type="button"
               onClick={() => setDialog(null)}
-              className="mt-2 h-12 rounded-full bg-success text-white text-base font-extrabold hover:opacity-90 transition"
+              className={`mt-2 h-12 rounded-full text-base font-extrabold transition ${
+                a11y
+                  ? "bg-foreground text-background border-4 border-foreground"
+                  : "bg-success text-white hover:opacity-90"
+              }`}
             >
               OK, entendi
             </button>
           </div>
         </div>
       )}
+      <div className={`fixed ${floatingContrastPosition} z-30 pointer-events-none`}>
+        <A11yToggle
+          compact
+          className={`pointer-events-auto ${a11y ? "shadow-xl" : "shadow-lg shadow-foreground/20"}`}
+        />
+      </div>
     </main>
   );
 }
@@ -696,14 +782,17 @@ function SimChats({
   onPick: (c: Chat) => void;
   onExplain: (d: { title: string; body: string }) => void;
 }) {
+  const { enabled: a11y } = useA11y();
   return (
     <div className="flex flex-col flex-1 bg-white">
       {/* Top bar (teal) */}
       <div
-        className="px-4 py-3 flex items-center justify-between text-white"
-        style={{ backgroundColor: WA.teal }}
+        className={`px-4 py-3 flex items-center justify-between ${
+          a11y ? "text-background" : "text-white"
+        }`}
+        style={{ backgroundColor: a11y ? "var(--foreground)" : WA.teal }}
       >
-        <h2 className="text-xl font-bold tracking-tight">WhatsApp</h2>
+        <h2 className={`${a11y ? "text-2xl" : "text-xl"} font-bold tracking-tight`}>WhatsApp</h2>
         <div className="flex items-center gap-1">
           <button
             type="button"
@@ -711,7 +800,9 @@ function SimChats({
               onExplain({ title: "Buscar", body: "A lupa serve para procurar uma conversa pelo nome." })
             }
             aria-label="Buscar"
-            className="size-10 rounded-full hover:bg-white/10 flex items-center justify-center"
+            className={`size-10 rounded-full flex items-center justify-center ${
+              a11y ? "bg-background text-foreground border-2 border-background" : "hover:bg-white/10"
+            }`}
           >
             <Search className="size-5" />
           </button>
@@ -721,7 +812,9 @@ function SimChats({
               onExplain({ title: "Mais opções", body: "Aqui aparecem ajustes e novidades. Vamos pular por agora." })
             }
             aria-label="Mais opções"
-            className="size-10 rounded-full hover:bg-white/10 flex items-center justify-center"
+            className={`size-10 rounded-full flex items-center justify-center ${
+              a11y ? "bg-background text-foreground border-2 border-background" : "hover:bg-white/10"
+            }`}
           >
             <MoreVertical className="size-5" />
           </button>
@@ -730,8 +823,10 @@ function SimChats({
 
       {/* Tabs (visual only) */}
       <div
-        className="flex text-sm font-bold uppercase tracking-wide text-white/80"
-        style={{ backgroundColor: WA.teal }}
+        className={`flex font-bold uppercase tracking-wide ${
+          a11y ? "text-base text-background" : "text-sm text-white/80"
+        }`}
+        style={{ backgroundColor: a11y ? "var(--foreground)" : WA.teal }}
       >
         <div className="flex-1 text-center pb-2 border-b-[3px] border-white text-white">
           Conversas
@@ -752,35 +847,40 @@ function SimChats({
                   isFirst ? "animate-pulse-ring" : "hover:bg-black/5"
                 }`}
                 style={{
-                  borderColor: WA.divider,
-                  backgroundColor: isFirst ? "rgba(37, 211, 102, 0.08)" : undefined,
+                  borderColor: a11y ? "var(--foreground)" : WA.divider,
+                  borderBottomWidth: a11y ? 4 : 1,
+                  backgroundColor: a11y ? "#fff" : isFirst ? "rgba(37, 211, 102, 0.08)" : undefined,
                 }}
               >
                 <span
-                  className={`size-12 rounded-full flex items-center justify-center text-white text-lg font-bold ${c.color}`}
+                  className={`size-12 rounded-full flex items-center justify-center font-bold ${
+                    a11y ? "bg-foreground text-background text-xl" : `text-white text-lg ${c.color}`
+                  }`}
                 >
                   {c.initial}
                 </span>
                 <span className="flex-1 min-w-0">
                   <span className="flex items-center justify-between gap-2">
-                    <span className="text-[17px] font-semibold truncate text-foreground">
+                    <span className={`${a11y ? "text-xl" : "text-[17px]"} font-semibold truncate text-foreground`}>
                       {c.name}
                     </span>
                     <span
-                      className="text-xs font-medium shrink-0"
-                      style={{ color: c.unread ? WA.green : WA.metaGray }}
+                      className={`${a11y ? "text-sm text-foreground" : "text-xs"} font-medium shrink-0`}
+                      style={{ color: a11y ? undefined : c.unread ? WA.green : WA.metaGray }}
                     >
                       {c.time}
                     </span>
                   </span>
                   <span className="flex items-center justify-between gap-2 mt-0.5">
-                    <span className="text-sm truncate" style={{ color: WA.metaGray }}>
+                    <span className={`${a11y ? "text-base text-foreground" : "text-sm"} truncate`} style={{ color: a11y ? undefined : WA.metaGray }}>
                       {c.preview}
                     </span>
                     {c.unread ? (
                       <span
-                        className="inline-flex items-center justify-center min-w-5 h-5 px-1.5 rounded-full text-white text-xs font-bold shrink-0"
-                        style={{ backgroundColor: WA.green }}
+                         className={`inline-flex items-center justify-center min-w-5 h-5 px-1.5 rounded-full font-bold shrink-0 ${
+                           a11y ? "bg-foreground text-background text-sm" : "text-white text-xs"
+                         }`}
+                         style={{ backgroundColor: a11y ? undefined : WA.green }}
                       >
                         {c.unread}
                       </span>
@@ -796,11 +896,13 @@ function SimChats({
       {/* Floating chat FAB */}
       <div className="relative">
         <div
-          className="absolute right-4 -top-16 size-14 rounded-2xl flex items-center justify-center shadow-lg"
-          style={{ backgroundColor: WA.green }}
+          className={`absolute right-4 -top-16 size-14 rounded-2xl flex items-center justify-center shadow-lg ${
+            a11y ? "bg-foreground border-4 border-background" : ""
+          }`}
+          style={{ backgroundColor: a11y ? undefined : WA.green }}
           aria-hidden
         >
-          <MessageCircle className="size-7 text-white" />
+          <MessageCircle className={`size-7 ${a11y ? "text-background" : "text-white"}`} />
         </div>
       </div>
     </div>
@@ -822,29 +924,40 @@ function ChatHeader({
   const h = highlight ?? "none";
   const ringCall = h === "call" || h === "both";
   const ringVideo = h === "video" || h === "both";
+  const { enabled: a11y } = useA11y();
   return (
     <div
-      className="px-2 py-2 flex items-center gap-2 text-white"
-      style={{ backgroundColor: WA.teal }}
+      className={`px-2 py-2 flex items-center gap-2 ${a11y ? "text-background" : "text-white"}`}
+      style={{ backgroundColor: a11y ? "var(--foreground)" : WA.teal }}
     >
-      <button type="button" aria-label="Voltar" className="size-9 rounded-full hover:bg-white/10 flex items-center justify-center">
+      <button
+        type="button"
+        aria-label="Voltar"
+        className={`size-9 rounded-full flex items-center justify-center ${
+          a11y ? "bg-background text-foreground border-2 border-background" : "hover:bg-white/10"
+        }`}
+      >
         <ChevronLeft className="size-6" />
       </button>
       <span
-        className={`size-10 rounded-full flex items-center justify-center text-white font-bold ${chat.color}`}
+        className={`size-10 rounded-full flex items-center justify-center font-bold ${
+          a11y ? "bg-background text-foreground" : `text-white ${chat.color}`
+        }`}
       >
         {chat.initial}
       </span>
       <div className="flex-1 min-w-0 leading-tight">
-        <p className="text-[16px] font-semibold truncate">{chat.name}</p>
-        <p className="text-[12px] text-white/85">online</p>
+        <p className={`${a11y ? "text-lg" : "text-[16px]"} font-semibold truncate`}>{chat.name}</p>
+        <p className={`${a11y ? "text-sm text-background" : "text-[12px] text-white/85"}`}>online</p>
       </div>
       <button
         type="button"
         onClick={onVideo}
         aria-label="Chamada de vídeo"
         className={`size-10 rounded-full flex items-center justify-center transition ${
-          ringVideo ? "bg-white/20 ring-2 ring-white animate-pulse" : "hover:bg-white/10"
+          a11y
+            ? "bg-background text-foreground border-2 border-background"
+            : ringVideo ? "bg-white/20 ring-2 ring-white animate-pulse" : "hover:bg-white/10"
         }`}
       >
         <Video className="size-5" />
@@ -854,12 +967,20 @@ function ChatHeader({
         onClick={onCall}
         aria-label="Ligar"
         className={`size-10 rounded-full flex items-center justify-center transition ${
-          ringCall ? "bg-white/20 ring-2 ring-white animate-pulse" : "hover:bg-white/10"
+          a11y
+            ? "bg-background text-foreground border-2 border-background"
+            : ringCall ? "bg-white/20 ring-2 ring-white animate-pulse" : "hover:bg-white/10"
         }`}
       >
         <Phone className="size-5" />
       </button>
-      <button type="button" aria-label="Mais opções" className="size-10 rounded-full hover:bg-white/10 flex items-center justify-center">
+      <button
+        type="button"
+        aria-label="Mais opções"
+        className={`size-10 rounded-full flex items-center justify-center ${
+          a11y ? "bg-background text-foreground border-2 border-background" : "hover:bg-white/10"
+        }`}
+      >
         <MoreVertical className="size-5" />
       </button>
     </div>
@@ -882,16 +1003,18 @@ function Bubble({
   className?: string;
   style?: React.CSSProperties;
 }) {
+  const { enabled: a11y } = useA11y();
   return (
     <div
       className={`relative max-w-[80%] px-2.5 py-1.5 shadow-[0_1px_0.5px_rgba(11,20,26,0.13)] ${
         mine ? "self-end" : "self-start"
       } ${className ?? ""}`}
       style={{
-        backgroundColor: mine ? WA.outBubble : WA.inBubble,
+        backgroundColor: a11y ? "#fff" : mine ? WA.outBubble : WA.inBubble,
         borderRadius: 8,
         borderTopRightRadius: mine ? 0 : 8,
         borderTopLeftRadius: mine ? 8 : 0,
+        border: a11y ? "3px solid var(--foreground)" : undefined,
         ...style,
       }}
     >
@@ -906,22 +1029,22 @@ function Bubble({
         <span
           className="block w-3 h-3"
           style={{
-            backgroundColor: mine ? WA.outBubble : WA.inBubble,
+            backgroundColor: a11y ? "#fff" : mine ? WA.outBubble : WA.inBubble,
             transform: mine ? "skewX(-30deg) translateX(-4px)" : "skewX(30deg) translateX(4px)",
             boxShadow: "0 1px 0.5px rgba(11,20,26,0.13)",
           }}
         />
       </span>
-      <div className="text-[15px] leading-snug text-[#111B21]">{children}</div>
+      <div className={`${a11y ? "text-lg" : "text-[15px]"} leading-snug text-[#111B21]`}>{children}</div>
       <div
-        className="flex items-center justify-end gap-1 mt-0.5 text-[11px]"
-        style={{ color: WA.metaGray }}
+        className={`flex items-center justify-end gap-1 mt-0.5 ${a11y ? "text-sm text-foreground" : "text-[11px]"}`}
+        style={{ color: a11y ? undefined : WA.metaGray }}
       >
         <span>{time}</span>
         {mine && (
           <CheckCheck
             className="size-3.5"
-            style={{ color: read ? WA.tickRead : WA.metaGray }}
+            style={{ color: a11y ? "var(--foreground)" : read ? WA.tickRead : WA.metaGray }}
           />
         )}
       </div>
@@ -945,11 +1068,15 @@ function MessagesList({
   onPause?: () => void;
   highlightLastIncomingAudio?: boolean;
 }) {
+  const { enabled: a11y } = useA11y();
   const lastIncomingAudioId = [...messages]
     .reverse()
     .find((m) => m.from === "them" && m.kind === "audio")?.id;
   return (
-    <div className="flex-1 overflow-y-auto px-3 py-3 flex flex-col gap-1.5" style={CHAT_BG_STYLE}>
+    <div
+      className="flex-1 overflow-y-auto px-3 py-3 flex flex-col gap-1.5"
+      style={a11y ? { backgroundColor: "#fff" } : CHAT_BG_STYLE}
+    >
       {messages.map((m) => {
         const mine = m.from === "me";
         if (m.kind === "text") {
@@ -970,10 +1097,10 @@ function MessagesList({
             mine={mine}
             time="10:25"
             read
-            className={isHighlight ? "ring-2 ring-offset-1 animate-pulse" : ""}
+            className={isHighlight ? `${a11y ? "ring-4" : "ring-2"} ring-offset-1 animate-pulse` : ""}
             style={
               isHighlight
-                ? ({ ["--tw-ring-color" as string]: WA.green } as React.CSSProperties)
+                ? ({ ["--tw-ring-color" as string]: a11y ? "var(--foreground)" : WA.green } as React.CSSProperties)
                 : undefined
             }
           >
@@ -987,8 +1114,10 @@ function MessagesList({
                 }}
                 aria-label={isThisPlaying ? "Pausar áudio" : "Tocar áudio"}
                 disabled={mine}
-                className="size-9 rounded-full flex items-center justify-center shrink-0 text-white"
-                style={{ backgroundColor: WA.metaGray }}
+                className={`size-9 rounded-full flex items-center justify-center shrink-0 ${
+                  a11y ? "bg-foreground text-background" : "text-white"
+                }`}
+                style={{ backgroundColor: a11y ? undefined : WA.metaGray }}
               >
                 {isThisPlaying ? <Pause className="size-5" /> : <Play className="size-5" />}
               </button>
@@ -1006,21 +1135,23 @@ function MessagesList({
                         style={{
                           width: 2,
                           height: heights[i],
-                          backgroundColor: filled ? WA.tickRead : "#B1B7BB",
+                          backgroundColor: a11y ? "var(--foreground)" : filled ? WA.tickRead : "#B1B7BB",
                         }}
                       />
                     );
                   })}
                 </div>
-                <p className="text-[11px] mt-0.5" style={{ color: WA.metaGray }}>
+                <p className={`${a11y ? "text-sm text-foreground" : "text-[11px]"} mt-0.5`} style={{ color: a11y ? undefined : WA.metaGray }}>
                   {formatDur(dur)}
                 </p>
               </div>
               <span
-                className="size-7 rounded-full flex items-center justify-center shrink-0"
-                style={{ backgroundColor: mine ? "rgba(0,0,0,0.05)" : "rgba(0,0,0,0.05)" }}
+                className={`size-7 rounded-full flex items-center justify-center shrink-0 ${
+                  a11y ? "bg-foreground" : ""
+                }`}
+                style={{ backgroundColor: a11y ? undefined : mine ? "rgba(0,0,0,0.05)" : "rgba(0,0,0,0.05)" }}
               >
-                <Mic className="size-4" style={{ color: WA.metaGray }} />
+                <Mic className="size-4" style={{ color: a11y ? "var(--background)" : WA.metaGray }} />
               </span>
             </div>
           </Bubble>
@@ -1038,10 +1169,11 @@ function formatDur(s: number) {
 
 /* ---------- Composer (shared shell) ---------- */
 function ComposerShell({ children }: { children: React.ReactNode }) {
+  const { enabled: a11y } = useA11y();
   return (
     <div
-      className="px-2 py-2 flex items-end gap-2"
-      style={{ backgroundColor: WA.chatBg }}
+      className={`px-2 py-2 flex items-end gap-2 ${a11y ? "border-t-4 border-foreground" : ""}`}
+      style={{ backgroundColor: a11y ? "#fff" : WA.chatBg }}
     >
       {children}
     </div>
@@ -1053,9 +1185,12 @@ function ComposerInputPill({
 }: {
   children: React.ReactNode;
 }) {
+  const { enabled: a11y } = useA11y();
   return (
     <div
-      className="flex-1 flex items-center gap-1 rounded-full px-1.5 min-h-12 shadow-sm"
+      className={`flex-1 flex items-center gap-1 rounded-full px-1.5 min-h-12 shadow-sm ${
+        a11y ? "border-4 border-foreground" : ""
+      }`}
       style={{ backgroundColor: "#FFFFFF" }}
     >
       {children}
@@ -1082,6 +1217,7 @@ function SimMessage({
   onContinue: () => void;
 }) {
   const hasDraft = draft.trim().length > 0;
+  const { enabled: a11y } = useA11y();
   return (
     <div className="flex flex-col flex-1">
       <ChatHeader chat={chat} />
@@ -1092,7 +1228,7 @@ function SimMessage({
             type="button"
             aria-label="Emoji"
             className="size-10 flex items-center justify-center"
-            style={{ color: WA.metaGray }}
+            style={{ color: a11y ? "var(--foreground)" : WA.metaGray }}
           >
             <Smile className="size-6" />
           </button>
@@ -1102,14 +1238,16 @@ function SimMessage({
             onChange={(e) => onDraftChange(e.target.value)}
             placeholder="Mensagem"
             aria-label="Escreva sua mensagem"
-            className="flex-1 h-11 bg-transparent outline-none text-[16px] text-[#111B21] placeholder:text-[color:var(--meta)]"
-            style={{ ["--meta" as string]: WA.metaGray } as React.CSSProperties}
+            className={`flex-1 h-11 bg-transparent outline-none text-[#111B21] placeholder:text-[color:var(--meta)] ${
+              a11y ? "text-lg" : "text-[16px]"
+            }`}
+            style={{ ["--meta" as string]: a11y ? "var(--foreground)" : WA.metaGray } as React.CSSProperties}
           />
           <button
             type="button"
             aria-label="Anexar"
             className="size-10 flex items-center justify-center -rotate-45"
-            style={{ color: WA.metaGray }}
+            style={{ color: a11y ? "var(--foreground)" : WA.metaGray }}
           >
             <Paperclip className="size-5" />
           </button>
@@ -1118,7 +1256,7 @@ function SimMessage({
               type="button"
               aria-label="Câmera"
               className="size-10 flex items-center justify-center"
-              style={{ color: WA.metaGray }}
+              style={{ color: a11y ? "var(--foreground)" : WA.metaGray }}
             >
               <Camera className="size-5" />
             </button>
@@ -1129,21 +1267,25 @@ function SimMessage({
           onClick={hasDraft && !sent ? onSend : undefined}
           disabled={!hasDraft || sent}
           aria-label={hasDraft ? "Enviar mensagem" : "Gravar áudio"}
-          className={`size-12 rounded-full text-white flex items-center justify-center shadow-md transition ${
+          className={`size-12 rounded-full flex items-center justify-center shadow-md transition ${
+            a11y ? "bg-foreground text-background border-4 border-foreground" : "text-white"
+          } ${
             hasDraft && !sent ? "animate-pulse-ring" : ""
           }`}
-          style={{ backgroundColor: WA.green }}
+          style={{ backgroundColor: a11y ? undefined : WA.green }}
         >
           {hasDraft ? <Send className="size-5" strokeWidth={2.6} /> : <Mic className="size-5" />}
         </button>
       </ComposerShell>
       {sent && (
-        <div className="p-4 border-t border-border bg-background">
+        <div className={`p-4 bg-background ${a11y ? "border-t-4 border-foreground" : "border-t border-border"}`}>
           <button
             type="button"
             onClick={onContinue}
-            className="w-full h-14 rounded-2xl text-white text-lg font-extrabold shadow-md hover:opacity-90 transition animate-pulse-ring"
-            style={{ backgroundColor: WA.green }}
+            className={`w-full h-14 rounded-2xl text-lg font-extrabold shadow-md hover:opacity-90 transition animate-pulse-ring ${
+              a11y ? "bg-foreground text-background border-4 border-foreground" : "text-white"
+            }`}
+            style={{ backgroundColor: a11y ? undefined : WA.green }}
           >
             Continuar
           </button>
@@ -1171,6 +1313,7 @@ function SimCall({
   onEnd: () => void;
   onContinue: () => void;
 }) {
+  const { enabled: a11y } = useA11y();
   if (phase === "idle") {
     return (
       <div className="flex flex-col flex-1">
@@ -1183,15 +1326,15 @@ function SimCall({
         <MessagesList
           messages={[
             ...INITIAL_MESSAGES,
-            { id: "you-msg", from: "me", kind: "text", text: "Estou bem, amiga! Tomei sim 😊" },
+            { id: "you-msg", from: "me", kind: "text", text: "Estou bem! Tomei sim 😊" },
           ]}
         />
         <div
-          className="px-3 py-3 text-center text-sm"
-          style={{ backgroundColor: WA.chatBg, color: WA.metaGray }}
+          className={`px-3 py-3 text-center ${a11y ? "text-base border-t-4 border-foreground" : "text-sm"}`}
+          style={{ backgroundColor: a11y ? "#fff" : WA.chatBg, color: a11y ? "var(--foreground)" : WA.metaGray }}
         >
-          ↑ Toque no <strong style={{ color: WA.teal }}>telefone</strong> ou na{" "}
-          <strong style={{ color: WA.teal }}>câmera de vídeo</strong> no topo
+          ↑ Toque no <strong style={{ color: a11y ? "var(--foreground)" : WA.teal }}>telefone</strong> ou na{" "}
+          <strong style={{ color: a11y ? "var(--foreground)" : WA.teal }}>câmera de vídeo</strong> no topo
         </div>
       </div>
     );
@@ -1200,9 +1343,9 @@ function SimCall({
   if (phase === "ringing") {
     return (
       <div
-        className="flex flex-col flex-1 text-white relative overflow-hidden"
+        className={`flex flex-col flex-1 relative overflow-hidden ${a11y ? "text-background" : "text-white"}`}
         style={{
-          background: `linear-gradient(180deg, ${WA.tealDark} 0%, #0B302A 100%)`,
+          background: a11y ? "var(--foreground)" : `linear-gradient(180deg, ${WA.tealDark} 0%, #0B302A 100%)`,
         }}
       >
         {/* Fake video feed background for video calls */}
@@ -1215,30 +1358,34 @@ function SimCall({
           />
         )}
         <div className="relative z-10 px-5 pt-6 flex items-center justify-between">
-          <p className="text-sm text-white/80">
+          <p className={a11y ? "text-base text-background" : "text-sm text-white/80"}>
             {type === "video" ? "Chamada de vídeo" : "Chamada de voz"} · WhatsApp
           </p>
-          <p className="text-sm font-bold text-white/90">
+          <p className={a11y ? "text-base font-bold text-background" : "text-sm font-bold text-white/90"}>
             {seconds < 3 ? "Chamando..." : formatDur(seconds)}
           </p>
         </div>
         <div className="relative z-10 flex-1 flex flex-col items-center justify-center gap-4 px-6 text-center">
           <span
-            className={`size-32 rounded-full flex items-center justify-center text-5xl font-extrabold ${chat.color} ${
-              seconds < 3 ? "animate-pulse" : ""
-            }`}
+             className={`size-32 rounded-full flex items-center justify-center text-5xl font-extrabold ${
+               a11y ? "bg-background text-foreground" : chat.color
+             } ${
+               seconds < 3 ? "animate-pulse" : ""
+             }`}
             style={{ boxShadow: "0 0 0 6px rgba(255,255,255,0.08)" }}
           >
             {chat.initial}
           </span>
           <h3 className="text-3xl font-semibold">{chat.name}</h3>
-          <p className="text-base text-white/70">
+          <p className={a11y ? "text-lg text-background" : "text-base text-white/70"}>
             {seconds < 3 ? "Tocando o telefone..." : type === "video" ? "Em chamada de vídeo" : "Em chamada"}
           </p>
         </div>
         {type === "video" && seconds >= 3 && (
           <div
-            className="absolute right-4 top-20 w-24 h-32 rounded-2xl border border-white/20 flex items-center justify-center text-[11px] text-white/70 z-10"
+            className={`absolute right-4 top-20 w-24 h-32 rounded-2xl flex items-center justify-center z-10 ${
+              a11y ? "border-4 border-background text-sm text-background" : "border border-white/20 text-[11px] text-white/70"
+            }`}
             style={{ backgroundColor: "rgba(0,0,0,0.35)" }}
           >
             Sua câmera
@@ -1249,8 +1396,10 @@ function SimCall({
             type="button"
             onClick={onEnd}
             aria-label="Encerrar chamada"
-            className="size-16 rounded-full text-white flex items-center justify-center shadow-2xl animate-pulse-ring"
-            style={{ backgroundColor: "#EA0038" }}
+            className={`size-16 rounded-full flex items-center justify-center shadow-2xl animate-pulse-ring ${
+              a11y ? "bg-background text-foreground border-4 border-background" : "text-white"
+            }`}
+            style={{ backgroundColor: a11y ? undefined : "#EA0038" }}
           >
             <PhoneOff className="size-7" />
           </button>
@@ -1263,24 +1412,28 @@ function SimCall({
     <div className="flex flex-col flex-1 bg-background">
       <div className="flex-1 flex flex-col items-center justify-center gap-4 px-6 text-center">
         <div
-          className="size-20 rounded-full flex items-center justify-center text-white"
-          style={{ backgroundColor: WA.green }}
+          className={`size-20 rounded-full flex items-center justify-center ${
+            a11y ? "bg-foreground text-background border-4 border-foreground" : "text-white"
+          }`}
+          style={{ backgroundColor: a11y ? undefined : WA.green }}
         >
           <Check className="size-12" strokeWidth={2.6} />
         </div>
-        <h3 className="text-2xl font-extrabold" style={{ color: WA.teal }}>
+        <h3 className={`${a11y ? "text-3xl text-foreground" : "text-2xl"} font-extrabold`} style={{ color: a11y ? undefined : WA.teal }}>
           Chamada encerrada
         </h3>
-        <p className="text-base text-muted-foreground">
+        <p className={a11y ? "text-lg text-foreground" : "text-base text-muted-foreground"}>
           Você fez uma {type === "video" ? "chamada de vídeo" : "ligação"} de {formatDur(seconds)}.
         </p>
       </div>
-      <div className="p-5 border-t border-border">
+      <div className={`p-5 ${a11y ? "border-t-4 border-foreground" : "border-t border-border"}`}>
         <button
           type="button"
           onClick={onContinue}
-          className="w-full h-14 rounded-2xl text-white text-lg font-extrabold shadow-md hover:opacity-90 transition animate-pulse-ring"
-          style={{ backgroundColor: WA.green }}
+          className={`w-full h-14 rounded-2xl text-lg font-extrabold shadow-md hover:opacity-90 transition animate-pulse-ring ${
+            a11y ? "bg-foreground text-background border-4 border-foreground" : "text-white"
+          }`}
+          style={{ backgroundColor: a11y ? undefined : WA.green }}
         >
           Continuar
         </button>
@@ -1317,6 +1470,7 @@ function SimAudio({
   onPause: () => void;
   onFinish: () => void;
 }) {
+  const { enabled: a11y } = useA11y();
   return (
     <div className="flex flex-col flex-1">
       <ChatHeader chat={chat} />
@@ -1333,12 +1487,12 @@ function SimAudio({
         <ComposerInputPill>
           {recording ? (
             <span
-              className="flex items-center gap-2 px-3 font-bold flex-1"
-              style={{ color: "#EA0038" }}
+              className={`flex items-center gap-2 px-3 font-bold flex-1 ${a11y ? "text-foreground text-lg" : ""}`}
+              style={{ color: a11y ? undefined : "#EA0038" }}
             >
-              <span className="size-3 rounded-full bg-[#EA0038] animate-pulse" />
+              <span className={`size-3 rounded-full animate-pulse ${a11y ? "bg-foreground" : "bg-[#EA0038]"}`} />
               Gravando... {formatDur(recSeconds)}
-              <span className="ml-auto text-xs font-medium" style={{ color: WA.metaGray }}>
+              <span className={`${a11y ? "text-sm text-foreground" : "text-xs"} ml-auto font-medium`} style={{ color: a11y ? undefined : WA.metaGray }}>
                 ← deslize para cancelar
               </span>
             </span>
@@ -1348,18 +1502,18 @@ function SimAudio({
                 type="button"
                 aria-label="Emoji"
                 className="size-10 flex items-center justify-center"
-                style={{ color: WA.metaGray }}
+                style={{ color: a11y ? "var(--foreground)" : WA.metaGray }}
               >
                 <Smile className="size-6" />
               </button>
-              <span className="flex-1 text-[16px]" style={{ color: WA.metaGray }}>
+              <span className={`flex-1 ${a11y ? "text-lg text-foreground" : "text-[16px]"}`} style={{ color: a11y ? undefined : WA.metaGray }}>
                 Mensagem
               </span>
               <button
                 type="button"
                 aria-label="Anexar"
                 className="size-10 flex items-center justify-center -rotate-45"
-                style={{ color: WA.metaGray }}
+                style={{ color: a11y ? "var(--foreground)" : WA.metaGray }}
               >
                 <Paperclip className="size-5" />
               </button>
@@ -1367,7 +1521,7 @@ function SimAudio({
                 type="button"
                 aria-label="Câmera"
                 className="size-10 flex items-center justify-center"
-                style={{ color: WA.metaGray }}
+                style={{ color: a11y ? "var(--foreground)" : WA.metaGray }}
               >
                 <Camera className="size-5" />
               </button>
@@ -1378,8 +1532,10 @@ function SimAudio({
           <button
             type="button"
             onClick={onFinish}
-            className="h-12 px-4 rounded-full text-white text-base font-bold inline-flex items-center gap-2 shadow-md"
-            style={{ backgroundColor: WA.green }}
+            className={`h-12 px-4 rounded-full font-bold inline-flex items-center gap-2 shadow-md ${
+              a11y ? "bg-foreground text-background border-4 border-foreground text-lg" : "text-white text-base"
+            }`}
+            style={{ backgroundColor: a11y ? undefined : WA.green }}
           >
             Concluir
           </button>
@@ -1398,12 +1554,14 @@ function SimAudio({
               onHoldEnd();
             }}
             aria-label="Segure para gravar áudio"
-            className={`size-12 rounded-full text-white flex items-center justify-center shadow-md transition select-none ${
+            className={`size-12 rounded-full flex items-center justify-center shadow-md transition select-none ${
+              a11y ? "bg-foreground text-background border-4 border-foreground" : "text-white"
+            } ${
               recording
                 ? "scale-125 ring-8 ring-[rgba(234,0,56,0.25)]"
                 : "animate-pulse-ring"
             }`}
-            style={{ backgroundColor: recording ? "#EA0038" : WA.green }}
+            style={{ backgroundColor: a11y ? undefined : recording ? "#EA0038" : WA.green }}
           >
             <Mic className="size-6" strokeWidth={2.6} />
           </button>
@@ -1412,8 +1570,10 @@ function SimAudio({
 
       {!audioSent && !recording && (
         <div
-          className="px-4 py-2 text-center text-xs border-t"
-          style={{ backgroundColor: "#fff", borderColor: WA.divider, color: WA.metaGray }}
+          className={`px-4 py-2 text-center border-t ${
+            a11y ? "text-sm border-foreground border-t-4 text-foreground" : "text-xs"
+          }`}
+          style={{ backgroundColor: "#fff", borderColor: a11y ? undefined : WA.divider, color: a11y ? undefined : WA.metaGray }}
         >
           Dica: <strong>segure</strong> o microfone para gravar e <strong>solte</strong> para enviar.
         </div>
