@@ -17,9 +17,7 @@ import { Route as AppsRouteImport } from './routes/apps'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AppsYoutubeRouteImport } from './routes/apps.youtube'
 import { Route as AppsWhatsappRouteImport } from './routes/apps.whatsapp'
-import { Route as AppsInstagramRouteImport } from './routes/apps.instagram'
 import { Route as AppsGoogleRouteImport } from './routes/apps.google'
-import { Route as AppsContatosRouteImport } from './routes/apps.contatos'
 import { Route as AppsConfiguracoesRouteImport } from './routes/apps.configuracoes'
 import { Route as AppsCameraRouteImport } from './routes/apps.camera'
 
@@ -63,19 +61,9 @@ const AppsWhatsappRoute = AppsWhatsappRouteImport.update({
   path: '/whatsapp',
   getParentRoute: () => AppsRoute,
 } as any)
-const AppsInstagramRoute = AppsInstagramRouteImport.update({
-  id: '/instagram',
-  path: '/instagram',
-  getParentRoute: () => AppsRoute,
-} as any)
 const AppsGoogleRoute = AppsGoogleRouteImport.update({
   id: '/google',
   path: '/google',
-  getParentRoute: () => AppsRoute,
-} as any)
-const AppsContatosRoute = AppsContatosRouteImport.update({
-  id: '/contatos',
-  path: '/contatos',
   getParentRoute: () => AppsRoute,
 } as any)
 const AppsConfiguracoesRoute = AppsConfiguracoesRouteImport.update({
@@ -98,9 +86,7 @@ export interface FileRoutesByFullPath {
   '/seguranca': typeof SegurancaRoute
   '/apps/camera': typeof AppsCameraRoute
   '/apps/configuracoes': typeof AppsConfiguracoesRoute
-  '/apps/contatos': typeof AppsContatosRoute
   '/apps/google': typeof AppsGoogleRoute
-  '/apps/instagram': typeof AppsInstagramRoute
   '/apps/whatsapp': typeof AppsWhatsappRoute
   '/apps/youtube': typeof AppsYoutubeRoute
 }
@@ -113,9 +99,7 @@ export interface FileRoutesByTo {
   '/seguranca': typeof SegurancaRoute
   '/apps/camera': typeof AppsCameraRoute
   '/apps/configuracoes': typeof AppsConfiguracoesRoute
-  '/apps/contatos': typeof AppsContatosRoute
   '/apps/google': typeof AppsGoogleRoute
-  '/apps/instagram': typeof AppsInstagramRoute
   '/apps/whatsapp': typeof AppsWhatsappRoute
   '/apps/youtube': typeof AppsYoutubeRoute
 }
@@ -129,9 +113,7 @@ export interface FileRoutesById {
   '/seguranca': typeof SegurancaRoute
   '/apps/camera': typeof AppsCameraRoute
   '/apps/configuracoes': typeof AppsConfiguracoesRoute
-  '/apps/contatos': typeof AppsContatosRoute
   '/apps/google': typeof AppsGoogleRoute
-  '/apps/instagram': typeof AppsInstagramRoute
   '/apps/whatsapp': typeof AppsWhatsappRoute
   '/apps/youtube': typeof AppsYoutubeRoute
 }
@@ -146,9 +128,7 @@ export interface FileRouteTypes {
     | '/seguranca'
     | '/apps/camera'
     | '/apps/configuracoes'
-    | '/apps/contatos'
     | '/apps/google'
-    | '/apps/instagram'
     | '/apps/whatsapp'
     | '/apps/youtube'
   fileRoutesByTo: FileRoutesByTo
@@ -161,9 +141,7 @@ export interface FileRouteTypes {
     | '/seguranca'
     | '/apps/camera'
     | '/apps/configuracoes'
-    | '/apps/contatos'
     | '/apps/google'
-    | '/apps/instagram'
     | '/apps/whatsapp'
     | '/apps/youtube'
   id:
@@ -176,9 +154,7 @@ export interface FileRouteTypes {
     | '/seguranca'
     | '/apps/camera'
     | '/apps/configuracoes'
-    | '/apps/contatos'
     | '/apps/google'
-    | '/apps/instagram'
     | '/apps/whatsapp'
     | '/apps/youtube'
   fileRoutesById: FileRoutesById
@@ -250,25 +226,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppsWhatsappRouteImport
       parentRoute: typeof AppsRoute
     }
-    '/apps/instagram': {
-      id: '/apps/instagram'
-      path: '/instagram'
-      fullPath: '/apps/instagram'
-      preLoaderRoute: typeof AppsInstagramRouteImport
-      parentRoute: typeof AppsRoute
-    }
     '/apps/google': {
       id: '/apps/google'
       path: '/google'
       fullPath: '/apps/google'
       preLoaderRoute: typeof AppsGoogleRouteImport
-      parentRoute: typeof AppsRoute
-    }
-    '/apps/contatos': {
-      id: '/apps/contatos'
-      path: '/contatos'
-      fullPath: '/apps/contatos'
-      preLoaderRoute: typeof AppsContatosRouteImport
       parentRoute: typeof AppsRoute
     }
     '/apps/configuracoes': {
@@ -291,9 +253,7 @@ declare module '@tanstack/react-router' {
 interface AppsRouteChildren {
   AppsCameraRoute: typeof AppsCameraRoute
   AppsConfiguracoesRoute: typeof AppsConfiguracoesRoute
-  AppsContatosRoute: typeof AppsContatosRoute
   AppsGoogleRoute: typeof AppsGoogleRoute
-  AppsInstagramRoute: typeof AppsInstagramRoute
   AppsWhatsappRoute: typeof AppsWhatsappRoute
   AppsYoutubeRoute: typeof AppsYoutubeRoute
 }
@@ -301,9 +261,7 @@ interface AppsRouteChildren {
 const AppsRouteChildren: AppsRouteChildren = {
   AppsCameraRoute: AppsCameraRoute,
   AppsConfiguracoesRoute: AppsConfiguracoesRoute,
-  AppsContatosRoute: AppsContatosRoute,
   AppsGoogleRoute: AppsGoogleRoute,
-  AppsInstagramRoute: AppsInstagramRoute,
   AppsWhatsappRoute: AppsWhatsappRoute,
   AppsYoutubeRoute: AppsYoutubeRoute,
 }

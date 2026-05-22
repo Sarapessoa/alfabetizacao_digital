@@ -8,14 +8,10 @@ import {
   Camera,
   Settings,
   MessageCircle,
-  Users,
-  Image as ImageIcon,
   Tv,
   BookOpen,
   Album,
   Mail,
-  Contact,
-  Newspaper,
   SlidersHorizontal,
 } from "lucide-react";
 import { useA11y } from "../lib/a11y";
@@ -52,9 +48,7 @@ type AppItem = {
     | "/apps/google"
     | "/apps/camera"
     | "/apps/configuracoes"
-    | "/apps/whatsapp"
-    | "/apps/contatos"
-    | "/apps/instagram";
+    | "/apps/whatsapp";
 };
 
 const apps: AppItem[] = [
@@ -107,26 +101,6 @@ const apps: AppItem[] = [
     icon: MessageCircle,
     tone: "success",
     to: "/apps/whatsapp",
-  },
-  {
-    name: "Contatos",
-    analogy: "Como uma agenda de papel",
-    shortAnalogy: "Agenda",
-    analogyIcon: Contact,
-    description: "Guarde telefones e endereços de pessoas importantes.",
-    icon: Users,
-    tone: "info",
-    to: "/apps/contatos",
-  },
-  {
-    name: "Instagram",
-    analogy: "Como uma revista e álbum de fotos",
-    shortAnalogy: "Revista e álbum",
-    analogyIcon: Newspaper,
-    description: "Veja fotos de amigas, lugares e assuntos que você gosta.",
-    icon: ImageIcon,
-    tone: "pink",
-    to: "/apps/instagram",
   },
 ];
 
