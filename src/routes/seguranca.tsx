@@ -320,7 +320,7 @@ function SegurancaPage() {
             <ul className="flex flex-col gap-3">
               {openScam.signals.map((s, i) => (
                 <li key={i} className="flex items-start gap-3">
-                  <XCircle className="size-6 shrink-0 text-yellow-600 mt-0.5" strokeWidth={2.4} />
+                  <XCircle className={`size-6 shrink-0 mt-0.5 ${a11y ? "text-foreground" : "text-yellow-600"}`} strokeWidth={2.4} />
                   <span className={`leading-snug text-foreground ${a11y ? "text-xl font-medium" : "text-lg"}`}>{s}</span>
                 </li>
               ))}
@@ -332,7 +332,7 @@ function SegurancaPage() {
             <ul className="flex flex-col gap-3">
               {openScam.doThis.map((s, i) => (
                 <li key={i} className="flex items-start gap-3">
-                  <CheckCircle2 className="size-6 shrink-0 text-success mt-0.5" strokeWidth={2.4} />
+                  <CheckCircle2 className={`size-6 shrink-0 mt-0.5 ${a11y ? "text-foreground" : "text-success"}`} strokeWidth={2.4} />
                   <span className={`leading-snug text-foreground ${a11y ? "text-xl font-medium" : "text-lg"}`}>{s}</span>
                 </li>
               ))}
@@ -344,7 +344,7 @@ function SegurancaPage() {
             <ul className="flex flex-col gap-3">
               {openScam.dontDo.map((s, i) => (
                 <li key={i} className="flex items-start gap-3">
-                  <XCircle className="size-6 shrink-0 text-destructive mt-0.5" strokeWidth={2.4} />
+                  <XCircle className={`size-6 shrink-0 mt-0.5 ${a11y ? "text-foreground" : "text-destructive"}`} strokeWidth={2.4} />
                   <span className={`leading-snug text-foreground ${a11y ? "text-xl font-medium" : "text-lg"}`}>{s}</span>
                 </li>
               ))}
@@ -446,10 +446,10 @@ function SegurancaPage() {
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             placeholder="Buscar um golpe..."
-            className={`w-full pr-4 rounded-2xl bg-card text-foreground placeholder:text-muted-foreground focus:outline-none transition ${
+            className={`w-full pr-4 rounded-2xl bg-card text-foreground focus:outline-none transition ${
               a11y
-                ? "h-[68px] text-xl border-4 border-foreground focus:ring-4 focus:ring-foreground"
-                : "h-[60px] text-lg border-2 border-border focus:border-primary focus:ring-4 focus:ring-primary/20"
+                ? "h-[68px] text-xl border-4 border-foreground placeholder:text-foreground focus:ring-4 focus:ring-foreground"
+                : "h-[60px] text-lg border-2 border-border placeholder:text-muted-foreground focus:border-primary focus:ring-4 focus:ring-primary/20"
             }`}
             style={{ paddingLeft: "3.25rem" }}
           />
@@ -457,7 +457,13 @@ function SegurancaPage() {
 
         {/* List */}
         {filtered.length === 0 ? (
-          <div className="rounded-3xl border-2 border-dashed border-border p-6 text-center text-lg text-muted-foreground">
+          <div
+            className={`rounded-3xl border-dashed p-6 text-center font-bold ${
+              a11y
+                ? "border-4 border-foreground text-xl text-foreground"
+                : "border-2 border-border text-lg text-muted-foreground"
+            }`}
+          >
             Nenhum golpe encontrado. Tente outra palavra.
           </div>
         ) : (
@@ -508,27 +514,37 @@ function SegurancaPage() {
           aria-label="Dica final"
           className={
             a11y
-              ? "rounded-[1.75rem] p-6 bg-[oklch(0.97_0.03_88)] border-4 border-foreground"
+              ? "rounded-[1.75rem] p-6 bg-card border-4 border-foreground"
               : "rounded-[1.75rem] p-5 bg-[oklch(0.97_0.03_88)] border-2 border-[oklch(0.87_0.07_88)] shadow-[0_4px_20px_-12px_rgba(0,0,0,0.18)]"
           }
         >
           <div className="flex items-center gap-3 mb-3">
-            <span className="size-12 rounded-2xl bg-[oklch(0.90_0.08_88)] text-[oklch(0.45_0.13_75)] flex items-center justify-center shrink-0">
+            <span
+              className={
+                a11y
+                  ? "size-14 rounded-2xl bg-foreground text-background flex items-center justify-center shrink-0"
+                  : "size-12 rounded-2xl bg-[oklch(0.90_0.08_88)] text-[oklch(0.45_0.13_75)] flex items-center justify-center shrink-0"
+              }
+            >
               <Lightbulb className={a11y ? "size-7" : "size-6"} strokeWidth={2.4} />
             </span>
-            <h2 className={`flex-1 font-extrabold leading-tight text-[oklch(0.25_0.06_75)] ${a11y ? "text-2xl" : "text-xl"}`}>
+            <h2 className={`flex-1 font-extrabold leading-tight ${a11y ? "text-2xl text-foreground" : "text-xl text-[oklch(0.25_0.06_75)]"}`}>
               Dica do dia
             </h2>
             <button
               type="button"
               onClick={speaking ? stopSpeaking : readFinalTip}
               aria-label={speaking ? "Parar dica do dia" : "Ouvir dica do dia"}
-              className="size-12 rounded-full bg-white/80 text-[oklch(0.45_0.13_75)] border border-[oklch(0.84_0.08_88)] hover:bg-[oklch(0.90_0.08_88)] flex items-center justify-center transition active:scale-[0.98] shrink-0"
+              className={
+                a11y
+                  ? "size-14 rounded-full bg-foreground text-background border-4 border-foreground hover:opacity-90 flex items-center justify-center transition active:scale-[0.98] shrink-0"
+                  : "size-12 rounded-full bg-white/80 text-[oklch(0.45_0.13_75)] border border-[oklch(0.84_0.08_88)] hover:bg-[oklch(0.90_0.08_88)] flex items-center justify-center transition active:scale-[0.98] shrink-0"
+              }
             >
-              {speaking ? <Square className="size-5" /> : <Volume2 className="size-5" />}
+              {speaking ? <Square className={a11y ? "size-6" : "size-5"} /> : <Volume2 className={a11y ? "size-6" : "size-5"} />}
             </button>
           </div>
-          <p className={`leading-snug text-[oklch(0.30_0.04_75)] ${a11y ? "text-xl font-medium" : "text-lg font-semibold"}`}>
+          <p className={`leading-snug ${a11y ? "text-xl font-medium text-foreground" : "text-lg font-semibold text-[oklch(0.30_0.04_75)]"}`}>
             Antes de clicar, pagar ou responder, respire fundo e mostre a mensagem para
             uma pessoa de confiança. Golpista trabalha com pressa: quem te apressa, te
             engana.
