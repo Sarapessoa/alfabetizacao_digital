@@ -18,6 +18,7 @@ import {
   Trash2,
   Image as ImageIcon,
   Heart,
+  Eye,
   Info,
   Aperture,
 } from "lucide-react";
@@ -99,6 +100,7 @@ function CameraSimulation() {
   const [selectedAlbum, setSelectedAlbum] = useState<Album | null>(null);
   const [selectedPhoto, setSelectedPhoto] = useState<string | null>(null);
   const [liked, setLiked] = useState(false);
+  const [photoInteracted, setPhotoInteracted] = useState(false);
   const [dialog, setDialog] = useState<null | { title: string; body: string }>(null);
   const { enabled: a11y } = useA11y();
   const navigate = useNavigate();
@@ -423,7 +425,7 @@ function CameraSimulation() {
           </h2>
           <p className={`leading-snug ${a11y ? "text-xl" : "text-lg text-muted-foreground"}`}>
             Você aprendeu a tirar fotos e usar a galeria. Agora pode guardar suas lembranças e
-            mostrar para amigas e pessoas próximas.
+            ver sempre que quiser.
           </p>
           <div className="flex flex-col gap-3 w-full">
             <button
@@ -433,6 +435,7 @@ function CameraSimulation() {
                 setSelectedAlbum(null);
                 setSelectedPhoto(null);
                 setLiked(false);
+                setPhotoInteracted(false);
                 setStage("overview");
               }}
               className={`h-14 rounded-2xl bg-card text-foreground text-lg font-bold hover:bg-muted transition ${a11y ? "border-4 border-foreground" : "border-2 border-border"}`}
@@ -462,15 +465,27 @@ function CameraSimulation() {
         ? "Toque em um álbum para ver as fotos guardadas dentro dele."
         : stage === "sim-album"
           ? "Toque em uma foto para abri-la maior."
-          : "Tente os botões de Compartilhar, Editar ou Apagar abaixo.";
+          : "Tente os botões de Favoritar, Editar ou Apagar abaixo.";
 
   return (
-    <main className="min-h-screen bg-background flex flex-col">
+    <main
+      className={`bg-background flex flex-col ${
+        stage === "sim-photo" ? "h-screen overflow-hidden" : "min-h-screen"
+      }`}
+    >
       {/* Instruction bar */}
       <div className="sticky top-0 z-20 shadow-md">
         <div className={a11y ? "bg-foreground text-background" : "bg-[oklch(0.50_0.17_195)] text-white"}>
-          <div className="w-full max-w-md mx-auto px-4 py-2.5 flex items-center gap-2">
-            <p className={`flex-1 leading-snug font-semibold min-w-0 ${a11y ? "text-base" : "text-sm"}`}>
+          <div
+            className={`w-full max-w-md mx-auto px-4 flex items-center gap-2 ${
+              stage === "sim-photo" ? "py-1.5" : "py-2.5"
+            }`}
+          >
+            <p
+              className={`flex-1 leading-snug font-semibold min-w-0 ${
+                a11y ? (stage === "sim-photo" ? "text-sm" : "text-base") : "text-sm"
+              }`}
+            >
               {tip}
             </p>
             <Link
@@ -491,7 +506,9 @@ function CameraSimulation() {
             aria-valuemax={steps.length}
             aria-valuenow={currentStep}
             aria-label="Progresso da simulação"
-            className="w-full max-w-md mx-auto px-4 py-2.5 flex items-center gap-3"
+            className={`w-full max-w-md mx-auto px-4 flex items-center gap-3 ${
+              stage === "sim-photo" ? "py-1.5" : "py-2.5"
+            }`}
           >
             {steps.map((s, i) => {
               const done = s.n < currentStep;
@@ -551,6 +568,7 @@ function CameraSimulation() {
             onBack={() => setStage("sim-gallery")}
             onPickPhoto={(p) => {
               setSelectedPhoto(p);
+              setPhotoInteracted(false);
               setStage("sim-photo");
             }}
           />
@@ -558,15 +576,26 @@ function CameraSimulation() {
           <SimPhoto
             photo={selectedPhoto ?? PHOTOS[0]}
             liked={liked}
-            onLike={() => setLiked((v) => !v)}
+            interacted={photoInteracted}
+            onLike={() => {
+              setPhotoInteracted(true);
+              setLiked((v) => !v);
+            }}
             onBack={() => setStage("sim-album")}
-            onAction={(d) => setDialog(d)}
+            onAction={(d) => {
+              setPhotoInteracted(true);
+              setDialog(d);
+            }}
             onFinish={() => setStage("done")}
           />
         )}
       </div>
 
-      <div className="fixed right-4 bottom-4 z-30">
+      <div
+        className={`fixed z-30 ${
+          stage === "sim-photo" ? "right-4 top-28" : "right-4 bottom-4"
+        }`}
+      >
         <A11yToggle
           compact
           className={a11y ? "shadow-xl" : "shadow-lg shadow-foreground/20"}
@@ -881,6 +910,7 @@ function SimAlbum({
 function SimPhoto({
   photo,
   liked,
+  interacted,
   onLike,
   onBack,
   onAction,
@@ -888,102 +918,179 @@ function SimPhoto({
 }: {
   photo: string;
   liked: boolean;
+  interacted: boolean;
   onLike: () => void;
   onBack: () => void;
   onAction: (d: { title: string; body: string }) => void;
   onFinish: () => void;
 }) {
   const { enabled: a11y } = useA11y();
+  const actionButtonClass = a11y
+    ? "size-12 rounded-full bg-white text-black border-4 border-white flex items-center justify-center"
+    : "size-10 rounded-full text-white hover:bg-white/10 active:bg-white/15 transition flex items-center justify-center";
+  const bottomActionClass = a11y
+    ? "flex flex-col items-center gap-1 text-white font-extrabold"
+    : "flex flex-col items-center gap-1 text-white/95 active:text-white transition";
+  const bottomLabelClass = a11y ? "text-xs font-extrabold" : "text-[10px] font-semibold";
+
   return (
-    <div className="flex flex-col flex-1 bg-black">
+    <div className="flex flex-col flex-1 bg-black text-white overflow-hidden">
       {/* Top bar */}
-      <div className="px-3 py-2 flex items-center justify-between text-white bg-black">
+      <div className="shrink-0 px-4 py-2 flex items-center justify-between bg-black">
         <button
           type="button"
           onClick={onBack}
           aria-label="Voltar"
-          className={`size-10 rounded-full hover:bg-white/10 flex items-center justify-center ${a11y ? "bg-white text-black" : ""}`}
+          className={actionButtonClass}
         >
-          <ArrowLeft className="size-6" />
+          <ArrowLeft className={a11y ? "size-7" : "size-6"} strokeWidth={2.2} />
         </button>
-        <div className="text-center leading-tight">
-          <p className={`font-bold ${a11y ? "text-base" : "text-sm"}`}>Hoje, 14:30</p>
+        <div className="flex items-center gap-1.5">
+          <button
+            type="button"
+            onClick={() =>
+              onAction({
+                title: "Girar foto",
+                body:
+                  "Este botão serve para girar a imagem quando ela aparece de lado ou de cabeça para baixo.",
+              })
+            }
+            aria-label="Girar foto"
+            className={actionButtonClass}
+          >
+            <RefreshCw className={a11y ? "size-6" : "size-5"} strokeWidth={2.4} />
+          </button>
+          <button
+            type="button"
+            onClick={() =>
+              onAction({
+                title: "Visualizar",
+                body:
+                  "Este botão abre opções de visualização da foto, como ver a imagem com mais detalhes.",
+              })
+            }
+            aria-label="Visualizar foto"
+            className={actionButtonClass}
+          >
+            <Eye className={a11y ? "size-7" : "size-6"} strokeWidth={2.4} />
+          </button>
+          <button
+            type="button"
+            onClick={() =>
+              onAction({
+                title: "Detalhes da foto",
+                body:
+                  "Mostra quando a foto foi tirada, o tamanho do arquivo e em qual álbum ela está guardada.",
+              })
+            }
+            aria-label="Detalhes da foto"
+            className={actionButtonClass}
+          >
+            <Info className={a11y ? "size-6" : "size-5"} strokeWidth={2.4} />
+          </button>
+          <button
+            type="button"
+            onClick={() =>
+              onAction({
+                title: "Mais opções",
+                body:
+                  "Aqui aparecem mais ações, como salvar em outro álbum, definir como papel de parede ou ver outras informações.",
+              })
+            }
+            aria-label="Mais opções"
+            className={actionButtonClass}
+          >
+            <MoreVertical className={a11y ? "size-7" : "size-6"} strokeWidth={2.4} />
+          </button>
         </div>
-        <button
-          type="button"
-          onClick={() =>
-            onAction({
-              title: "Mais opções",
-              body:
-                "Aqui aparecem mais ações como salvar em outro álbum, ver detalhes da foto e definir como papel de parede.",
-            })
-          }
-          aria-label="Mais opções"
-          className={`size-10 rounded-full hover:bg-white/10 flex items-center justify-center ${a11y ? "bg-white text-black" : ""}`}
-        >
-          <MoreVertical className="size-6" />
-        </button>
       </div>
 
       {/* Photo */}
-      <div className="flex-1 flex items-center justify-center bg-black">
+      <div className="flex-1 min-h-0 flex items-center justify-center bg-black">
         <img
           src={photo}
           alt="Foto aberta em tamanho maior"
-          className="w-full aspect-square object-cover"
+          className="w-full max-h-full object-contain"
           width={512}
           height={512}
         />
       </div>
 
-      {/* Like overlay button */}
-      <div className="bg-black px-4 py-2 flex items-center justify-between text-white text-xs">
+      {/* Thumbnails */}
+      <div className="shrink-0 bg-black px-3 pb-2">
+        <div className="flex gap-2 overflow-x-auto pb-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+          {PHOTOS.map((p, idx) => {
+            const selected = p === photo;
+            return (
+              <button
+                key={p}
+                type="button"
+                onClick={() =>
+                  onAction({
+                    title: selected ? "Foto atual" : "Miniatura",
+                    body: selected
+                      ? "Esta é a foto que está aberta agora."
+                      : "Nas galerias, as miniaturas ajudam a passar para outras fotos rapidamente.",
+                  })
+                }
+                aria-label={selected ? "Foto atual" : `Miniatura ${idx + 1}`}
+                className={`relative shrink-0 overflow-hidden rounded-md bg-zinc-900 ${
+                  a11y ? "h-14 w-14" : "h-12 w-12"
+                } ${
+                  selected
+                    ? a11y
+                      ? "ring-4 ring-white"
+                      : "ring-2 ring-white"
+                    : "opacity-75"
+                }`}
+              >
+                <img
+                  src={p}
+                  alt=""
+                  className="absolute inset-0 h-full w-full object-cover"
+                  width={96}
+                  height={128}
+                  loading="lazy"
+                />
+              </button>
+            );
+          })}
+        </div>
+      </div>
+
+      {interacted ? (
+        <div className="shrink-0 bg-black px-5 pb-2">
+          <button
+            type="button"
+            onClick={onFinish}
+            className={`w-full rounded-full font-extrabold transition ${
+              a11y
+                ? "h-11 bg-white text-black border-4 border-white text-base"
+                : "h-9 bg-white/10 text-white border border-white/20 hover:bg-white/15 text-sm"
+            }`}
+          >
+            Concluir simulação
+          </button>
+        </div>
+      ) : null}
+
+      {/* Bottom actions */}
+      <div
+        className={`shrink-0 grid grid-cols-5 items-center px-4 pb-3 pt-2 ${
+          a11y ? "bg-black border-t-4 border-white" : "bg-black border-t border-white/10"
+        }`}
+      >
         <button
           type="button"
           onClick={onLike}
-          aria-label={liked ? "Tirar curtida" : "Curtir foto"}
-          className={`inline-flex items-center gap-2 rounded-full transition ${
-            a11y ? "h-11 px-4 bg-white text-black border-2 border-white text-base" : "h-9 px-3 bg-white/10 hover:bg-white/20"
-          }`}
+          aria-label={liked ? "Tirar dos favoritos" : "Adicionar aos favoritos"}
+          className={`${bottomActionClass} rounded-xl animate-pulse-ring`}
         >
           <Heart
-            className={`size-5 ${liked ? (a11y ? "fill-black text-black" : "fill-rose-500 text-rose-500") : (a11y ? "text-black" : "text-white")}`}
+            className={`${a11y ? "size-7" : "size-6"} ${liked ? "fill-white text-white" : "text-white"}`}
+            strokeWidth={2.2}
           />
-          <span className="font-bold">{liked ? "Favorito" : "Favoritar"}</span>
-        </button>
-        <button
-          type="button"
-          onClick={() =>
-            onAction({
-              title: "Detalhes da foto",
-              body:
-                "Mostra quando e onde a foto foi tirada, o tamanho do arquivo e em qual álbum ela está guardada.",
-            })
-          }
-          className={`inline-flex items-center gap-2 rounded-full transition ${
-            a11y ? "h-11 px-4 bg-white text-black border-2 border-white text-base" : "h-9 px-3 bg-white/10 hover:bg-white/20"
-          }`}
-        >
-          <Info className="size-5" />
-          <span className="font-bold">Detalhes</span>
-        </button>
-      </div>
-
-      {/* Bottom actions */}
-      <div className={`text-white grid grid-cols-3 ${a11y ? "bg-black border-t-4 border-white" : "bg-zinc-900 border-t border-white/10"}`}>
-        <button
-          type="button"
-          onClick={() =>
-            onAction({
-              title: "Compartilhar",
-              body:
-                "Mandar a foto para alguém pelo WhatsApp, e-mail ou outro aplicativo. Você escolhe para quem enviar.",
-            })
-          }
-          className={`flex flex-col items-center gap-1 py-3 hover:bg-white/10 transition ${a11y ? "text-base" : ""}`}
-        >
-          <Share2 className="size-6" />
-          <span className="text-sm font-bold">Compartilhar</span>
+          <span className={bottomLabelClass}>{liked ? "Favorito" : "Favoritar"}</span>
         </button>
         <button
           type="button"
@@ -994,10 +1101,38 @@ function SimPhoto({
                 "Permite recortar a foto, deixar mais clara ou aplicar filtros. A foto original fica salva.",
             })
           }
-          className={`flex flex-col items-center gap-1 py-3 hover:bg-white/10 transition ${a11y ? "border-x-4 border-white text-base" : "border-x border-white/10"}`}
+          className={`${bottomActionClass} rounded-xl animate-pulse-ring`}
         >
-          <Pencil className="size-6" />
-          <span className="text-sm font-bold">Editar</span>
+          <Pencil className={a11y ? "size-7" : "size-6"} strokeWidth={2.2} />
+          <span className={bottomLabelClass}>Editar</span>
+        </button>
+        <button
+          type="button"
+          onClick={() =>
+            onAction({
+              title: "Melhorar foto",
+              body:
+                "Algumas galerias têm ferramentas automáticas para melhorar luz, cor ou nitidez da imagem.",
+            })
+          }
+          className={bottomActionClass}
+        >
+          <Sparkles className={a11y ? "size-7" : "size-6"} strokeWidth={2.2} />
+          <span className={bottomLabelClass}>Melhorar</span>
+        </button>
+        <button
+          type="button"
+          onClick={() =>
+            onAction({
+              title: "Compartilhar",
+              body:
+                "Mandar a foto pelo WhatsApp, e-mail ou outro aplicativo. Você escolhe para quem enviar.",
+            })
+          }
+          className={bottomActionClass}
+        >
+          <Share2 className={a11y ? "size-7" : "size-6"} strokeWidth={2.2} />
+          <span className={bottomLabelClass}>Enviar</span>
         </button>
         <button
           type="button"
@@ -1008,23 +1143,10 @@ function SimPhoto({
                 "Joga a foto na lixeira. Ela ainda fica guardada por um tempo, então dá para recuperar se for sem querer.",
             })
           }
-          className={`flex flex-col items-center gap-1 py-3 hover:bg-white/10 transition ${a11y ? "text-base" : ""}`}
+          className={`${bottomActionClass} rounded-xl animate-pulse-ring`}
         >
-          <Trash2 className="size-6" />
-          <span className="text-sm font-bold">Apagar</span>
-        </button>
-      </div>
-
-      {/* Finish bar */}
-      <div className={`p-4 bg-black sticky bottom-0 ${a11y ? "border-t-4 border-white" : "border-t border-white/10"}`}>
-        <button
-          type="button"
-          onClick={onFinish}
-          className={`w-full h-14 rounded-2xl text-lg font-extrabold hover:opacity-90 transition ${
-            a11y ? "bg-white text-black border-4 border-white" : "bg-success text-white"
-          }`}
-        >
-          Concluir simulação
+          <Trash2 className={a11y ? "size-7" : "size-6"} strokeWidth={2.2} />
+          <span className={bottomLabelClass}>Apagar</span>
         </button>
       </div>
     </div>
