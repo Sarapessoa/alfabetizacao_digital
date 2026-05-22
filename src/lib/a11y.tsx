@@ -38,8 +38,17 @@ export function useA11y() {
   return useContext(A11yContext);
 }
 
-export function A11yToggle() {
+export function A11yToggle({
+  compact = false,
+  className = "",
+}: {
+  compact?: boolean;
+  className?: string;
+}) {
   const { enabled, toggle } = useA11y();
+  const sizeClass = compact ? "h-10 px-3 text-sm" : "h-12 px-4 text-base";
+  const iconClass = compact ? "size-4" : "size-5";
+
   return (
     <button
       type="button"
@@ -50,13 +59,13 @@ export function A11yToggle() {
           ? "Desativar modo acessível com texto maior e alto contraste"
           : "Ativar modo acessível com texto maior e alto contraste"
       }
-      className={`inline-flex items-center gap-2 h-12 px-4 rounded-full text-base font-bold transition active:scale-[0.99] ${
+      className={`inline-flex items-center gap-2 rounded-full font-bold transition active:scale-[0.99] ${sizeClass} ${
         enabled
-          ? "bg-foreground text-background border-2 border-foreground"
+          ? "bg-background text-foreground border-4 border-foreground shadow-[0_0_0_2px_var(--background)]"
           : "bg-card text-foreground border-2 border-border hover:bg-muted"
-      }`}
+      } ${className}`}
     >
-      <Eye className="size-5" />
+      <Eye className={iconClass} />
       {enabled ? "A+" : "A"}
     </button>
   );

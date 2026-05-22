@@ -90,7 +90,7 @@ function ConfigSimulation() {
         <p className={`font-extrabold ${a11y ? "text-sm" : "text-xs"}`}>
           {isDone ? "Simulação concluída! 🎉" : `Etapa ${Math.min(completedCount + 1, steps.length)} de ${steps.length}`}
         </p>
-        <p className={`text-muted-foreground font-medium ${a11y ? "text-sm" : "text-xs"}`}>
+        <p className={`font-medium ${a11y ? "text-sm text-foreground" : "text-xs text-muted-foreground"}`}>
           {isDone ? "100%" : `${Math.round((completedCount / steps.length) * 100)}%`}
         </p>
       </div>
@@ -100,10 +100,10 @@ function ConfigSimulation() {
         aria-valuemax={steps.length}
         aria-valuenow={isDone ? steps.length : completedCount}
         aria-label="Progresso da simulação"
-        className="h-2 w-full rounded-full bg-muted overflow-hidden"
+        className={`h-2 w-full rounded-full overflow-hidden ${a11y ? "bg-background border border-foreground" : "bg-muted"}`}
       >
         <div
-          className="h-full bg-primary transition-all duration-500"
+          className={`h-full transition-all duration-500 ${a11y ? "bg-foreground" : "bg-primary"}`}
           style={{ width: `${(completedCount / steps.length) * 100}%` }}
         />
       </div>
@@ -169,9 +169,9 @@ function ConfigSimulation() {
   // ----- Intro splash -----
   if (stage === "intro") {
     return (
-      <main className="min-h-screen bg-primary flex flex-col items-center justify-center text-primary-foreground">
+      <main className={`min-h-screen flex flex-col items-center justify-center ${a11y ? "bg-foreground text-background" : "bg-primary text-primary-foreground"}`}>
         <div className="flex flex-col items-center gap-4 animate-pulse">
-          <div className="size-24 rounded-full bg-primary-foreground text-primary flex items-center justify-center shadow-2xl">
+          <div className={`size-24 rounded-full flex items-center justify-center shadow-2xl ${a11y ? "bg-background text-foreground" : "bg-primary-foreground text-primary"}`}>
             <Settings className="size-12" strokeWidth={2.6} />
           </div>
           <h1 className="text-4xl font-extrabold tracking-tight">Configurações</h1>
@@ -182,15 +182,17 @@ function ConfigSimulation() {
 
   // ----- Header bar (shared) -----
   const headerBar = (
-    <header className="bg-primary text-primary-foreground px-5 pt-5 pb-6">
+    <header className={`px-5 pt-5 pb-6 ${a11y ? "bg-foreground text-background" : "bg-primary text-primary-foreground"}`}>
       <div className="w-full max-w-md mx-auto flex flex-col gap-4">
         <div className="flex items-center justify-between gap-2">
           <Link
             to="/apps"
             aria-label="Voltar para aplicativos"
-            className="inline-flex items-center gap-2 h-11 px-3 rounded-2xl text-base font-bold hover:bg-primary-foreground/10 transition"
+            className={`inline-flex items-center gap-2 rounded-2xl font-bold transition ${
+              a11y ? "h-14 px-4 text-lg bg-background text-foreground hover:opacity-90" : "h-11 px-3 text-base hover:bg-primary-foreground/10"
+            }`}
           >
-            <ArrowLeft className="size-5" />
+            <ArrowLeft className={a11y ? "size-6" : "size-5"} />
             Voltar
           </Link>
           <div className="flex items-center gap-2">
@@ -199,9 +201,11 @@ function ConfigSimulation() {
               type="button"
               onClick={handleSpeak}
               aria-label={speaking ? "Parar leitura" : "Ouvir"}
-              className="inline-flex items-center gap-2 h-11 px-3 rounded-full bg-primary-foreground text-primary text-base font-bold hover:opacity-90 transition"
+              className={`inline-flex items-center gap-2 rounded-full font-bold hover:opacity-90 transition ${
+                a11y ? "h-14 px-4 bg-background text-foreground text-lg border-4 border-background" : "h-11 px-3 bg-primary-foreground text-primary text-base"
+              }`}
             >
-              {speaking ? <Square className="size-5" /> : <Volume2 className="size-5" />}
+              {speaking ? <Square className={a11y ? "size-6" : "size-5"} /> : <Volume2 className={a11y ? "size-6" : "size-5"} />}
               {speaking ? "Parar" : "Ouvir"}
             </button>
           </div>
@@ -220,20 +224,20 @@ function ConfigSimulation() {
   // ----- Overview screen -----
   if (stage === "overview") {
     return (
-      <main className="min-h-screen bg-muted/40 flex flex-col">
+      <main className={`min-h-screen flex flex-col ${a11y ? "bg-background" : "bg-muted/40"}`}>
         {headerBar}
         <div className="w-full max-w-md mx-auto flex-1 flex flex-col gap-6 px-5 py-6">
           <section
-            className={`rounded-2xl bg-card p-5 border-l-8 border-l-primary shadow-md ${
-              a11y ? "border-2 border-foreground" : "border border-border"
+            className={`rounded-2xl bg-card p-5 ${
+              a11y ? "border-4 border-foreground" : "border border-border border-l-8 border-l-primary shadow-md"
             }`}
           >
-            <h2 className={`font-extrabold text-primary ${a11y ? "text-2xl" : "text-xl"}`}>
+            <h2 className={`font-extrabold ${a11y ? "text-2xl text-foreground" : "text-xl text-primary"}`}>
               O que é parecido?
             </h2>
             <div
-              className={`mt-3 inline-flex items-center gap-2 rounded-full bg-primary/10 text-primary px-3 py-1.5 font-extrabold ${
-                a11y ? "text-lg" : "text-base"
+              className={`mt-3 inline-flex items-center gap-2 rounded-full px-3 py-1.5 font-extrabold ${
+                a11y ? "text-lg bg-foreground text-background" : "text-base bg-primary/10 text-primary"
               }`}
             >
               <SlidersHorizontal className="size-5" />
@@ -244,24 +248,24 @@ function ConfigSimulation() {
                 a11y ? "text-xl text-foreground" : "text-lg text-muted-foreground"
               }`}
             >
-              É como os <strong className="text-primary">botões e ajustes</strong> da sua casa:
+              É como os <strong className={a11y ? "text-foreground" : "text-primary"}>botões e ajustes</strong> da sua casa:
               acende a luz, regula o volume do rádio e arruma as coisas do jeito que você gosta.
             </p>
           </section>
 
           <section
             className={`rounded-2xl bg-card p-5 ${
-              a11y ? "border-2 border-foreground" : "border border-border"
+              a11y ? "border-4 border-foreground" : "border border-border"
             }`}
           >
             <div className="flex items-center justify-between gap-2 mb-2">
               <h2 className={`font-extrabold ${a11y ? "text-2xl" : "text-xl"}`}>Passo a Passo</h2>
-              <p className={`text-muted-foreground font-bold ${a11y ? "text-base" : "text-xs"}`}>
+              <p className={`font-bold ${a11y ? "text-base text-foreground" : "text-xs text-muted-foreground"}`}>
                 Etapa 1 de {steps.length}
               </p>
             </div>
-            <div className="h-2.5 w-full rounded-full bg-muted overflow-hidden mb-4">
-              <div className="h-full bg-primary transition-all duration-500" style={{ width: "25%" }} />
+            <div className={`h-2.5 w-full rounded-full overflow-hidden mb-4 ${a11y ? "bg-background border border-foreground" : "bg-muted"}`}>
+              <div className={`h-full transition-all duration-500 ${a11y ? "bg-foreground" : "bg-primary"}`} style={{ width: "25%" }} />
             </div>
             <ol className="flex flex-col gap-3">
               {[
@@ -275,9 +279,11 @@ function ConfigSimulation() {
                     key={s.n}
                     className={`rounded-2xl p-4 transition ${
                       active
-                        ? "bg-primary/5 border-2 border-primary"
+                        ? a11y
+                          ? "bg-card border-4 border-foreground"
+                          : "bg-primary/5 border-2 border-primary"
                         : a11y
-                          ? "bg-card border-2 border-foreground"
+                          ? "bg-card border-4 border-foreground"
                           : "bg-card border border-border"
                     }`}
                   >
@@ -285,8 +291,12 @@ function ConfigSimulation() {
                       <span
                         className={`size-8 rounded-full inline-flex items-center justify-center font-extrabold ${
                           active
-                            ? "bg-primary text-primary-foreground ring-4 ring-primary/25"
-                            : "bg-muted text-muted-foreground"
+                            ? a11y
+                              ? "bg-foreground text-background ring-4 ring-foreground/25"
+                              : "bg-primary text-primary-foreground ring-4 ring-primary/25"
+                            : a11y
+                              ? "bg-foreground text-background"
+                              : "bg-muted text-muted-foreground"
                         }`}
                       >
                         {s.n}
@@ -309,7 +319,9 @@ function ConfigSimulation() {
           <button
             type="button"
             onClick={() => setStage("intro")}
-            className="inline-flex items-center justify-center gap-2 w-full h-16 rounded-2xl bg-primary text-primary-foreground text-xl font-extrabold shadow-lg shadow-primary/30 hover:bg-primary/90 active:scale-[0.99] transition"
+            className={`inline-flex items-center justify-center gap-2 w-full h-16 rounded-2xl text-xl font-extrabold active:scale-[0.99] transition ${
+              a11y ? "bg-foreground text-background border-4 border-foreground hover:opacity-90" : "bg-primary text-primary-foreground shadow-lg shadow-primary/30 hover:bg-primary/90"
+            }`}
           >
             <Settings className="size-6" />
             Iniciar Simulação Prática
@@ -326,7 +338,7 @@ function ConfigSimulation() {
         {headerBar}
         {Stepper}
         <div className="w-full max-w-md mx-auto flex-1 flex flex-col items-center justify-center gap-6 px-5 py-10 text-center">
-          <div className="size-24 rounded-full bg-success/15 text-success flex items-center justify-center">
+          <div className={`size-24 rounded-full flex items-center justify-center ${a11y ? "bg-foreground text-background" : "bg-success/15 text-success"}`}>
             <CheckCircle2 className="size-14" strokeWidth={2.4} />
           </div>
           <h2 className={`font-extrabold ${a11y ? "text-3xl" : "text-2xl"}`}>
@@ -346,14 +358,14 @@ function ConfigSimulation() {
                 setTextTouched(false);
                 setStage("overview");
               }}
-              className="h-14 rounded-2xl border-2 border-border bg-card text-foreground text-lg font-bold hover:bg-muted transition"
+              className={`h-14 rounded-2xl bg-card text-foreground text-lg font-bold hover:bg-muted transition ${a11y ? "border-4 border-foreground" : "border-2 border-border"}`}
             >
               Repetir simulação
             </button>
             <button
               type="button"
               onClick={() => navigate({ to: "/apps" })}
-              className="h-14 rounded-2xl bg-primary text-primary-foreground text-lg font-extrabold hover:bg-primary/90 transition"
+              className={`h-14 rounded-2xl text-lg font-extrabold transition ${a11y ? "bg-foreground text-background border-4 border-foreground hover:opacity-90" : "bg-primary text-primary-foreground hover:bg-primary/90"}`}
             >
               Ver outros aplicativos
             </button>
@@ -389,7 +401,7 @@ function ConfigSimulation() {
     <main className="min-h-screen bg-background flex flex-col">
       {/* Instruction bar */}
       <div className="sticky top-0 z-20 shadow-md">
-        <div className="bg-primary text-primary-foreground">
+        <div className={a11y ? "bg-foreground text-background" : "bg-primary text-primary-foreground"}>
           <div className="w-full max-w-md mx-auto px-4 py-2.5 flex items-center gap-2">
             <p className={`flex-1 leading-snug font-semibold min-w-0 ${a11y ? "text-base" : "text-sm"}`}>
               {tip}
@@ -397,13 +409,15 @@ function ConfigSimulation() {
             <Link
               to="/apps"
               aria-label="Sair da simulação"
-              className="shrink-0 inline-flex items-center gap-1 h-8 px-3 rounded-full bg-white/20 hover:bg-white/30 text-sm font-bold transition"
+              className={`shrink-0 inline-flex items-center gap-1 rounded-full font-bold transition ${
+                a11y ? "h-10 px-4 bg-background text-foreground text-base" : "h-8 px-3 bg-white/20 hover:bg-white/30 text-sm"
+              }`}
             >
-              <X className="size-4" /> Sair
+              <X className={a11y ? "size-5" : "size-4"} /> Sair
             </Link>
           </div>
         </div>
-        <div className="bg-card border-b border-border">
+        <div className={`bg-card ${a11y ? "border-b-4 border-foreground" : "border-b border-border"}`}>
           <div
             role="progressbar"
             aria-valuemin={0}
@@ -418,18 +432,24 @@ function ConfigSimulation() {
               return (
                 <div key={s.n} className="flex items-center gap-3 flex-1 last:flex-none">
                   <div className="flex items-center gap-1.5 shrink-0">
-                    <span className={`size-6 rounded-full inline-flex items-center justify-center text-xs font-extrabold transition ${
-                      isStepDone ? "bg-success text-white" : active ? "bg-primary text-primary-foreground" : "bg-muted text-muted-foreground"
+                    <span className={`rounded-full inline-flex items-center justify-center font-extrabold transition ${
+                      a11y ? "size-8 text-sm" : "size-6 text-xs"
+                    } ${
+                      a11y
+                        ? isStepDone || active
+                          ? "bg-foreground text-background"
+                          : "bg-background text-foreground border-2 border-foreground"
+                        : isStepDone ? "bg-success text-white" : active ? "bg-primary text-primary-foreground" : "bg-muted text-muted-foreground"
                     }`}>
-                      {isStepDone ? <CheckCircle2 className="size-3.5" /> : s.n}
+                      {isStepDone ? <CheckCircle2 className={a11y ? "size-5" : "size-3.5"} /> : s.n}
                     </span>
-                    <span className={`text-xs font-bold leading-none ${active ? "text-foreground" : "text-muted-foreground"}`}>
+                    <span className={`font-bold leading-none ${a11y ? "text-sm text-foreground" : active ? "text-xs text-foreground" : "text-xs text-muted-foreground"}`}>
                       {s.label}
                     </span>
                   </div>
                   {i < steps.length - 1 && (
-                    <div className="flex-1 h-1 rounded-full bg-muted overflow-hidden">
-                      <div className="h-full bg-success transition-all duration-500" style={{ width: (isDone || done[steps[i].key]) ? "100%" : "0%" }} />
+                    <div className={`flex-1 rounded-full overflow-hidden ${a11y ? "h-1.5 bg-background border border-foreground" : "h-1 bg-muted"}`}>
+                      <div className={`h-full transition-all duration-500 ${a11y ? "bg-foreground" : "bg-success"}`} style={{ width: (isDone || done[steps[i].key]) ? "100%" : "0%" }} />
                     </div>
                   )}
                 </div>
@@ -494,6 +514,13 @@ function ConfigSimulation() {
         )}
       </div>
 
+      <div className="fixed right-4 bottom-4 z-30">
+        <A11yToggle
+          compact
+          className={a11y ? "shadow-xl" : "shadow-lg shadow-foreground/20"}
+        />
+      </div>
+
       {/* Explanation dialog */}
       {dialog && (
         <div
@@ -504,22 +531,26 @@ function ConfigSimulation() {
           onClick={() => setDialog(null)}
         >
           <div
-            className="w-full max-w-md rounded-3xl bg-card border-2 border-border shadow-2xl p-6 flex flex-col gap-3"
+            className={`w-full max-w-md rounded-3xl bg-card p-6 flex flex-col gap-3 ${
+              a11y ? "border-4 border-foreground" : "border-2 border-border shadow-2xl"
+            }`}
             onClick={(e) => e.stopPropagation()}
           >
-            <div className="flex items-center gap-2 text-primary">
-              <Sparkles className="size-6" />
+            <div className={`flex items-center gap-2 ${a11y ? "text-foreground" : "text-primary"}`}>
+              <Sparkles className={a11y ? "size-7" : "size-6"} />
               <h3 id="exp-title" className={`font-extrabold ${a11y ? "text-2xl" : "text-xl"}`}>
                 {dialog.title}
               </h3>
             </div>
-            <p className={`leading-snug ${a11y ? "text-lg" : "text-base text-muted-foreground"}`}>
+            <p className={`leading-snug ${a11y ? "text-xl text-foreground" : "text-base text-muted-foreground"}`}>
               {dialog.body}
             </p>
             <button
               type="button"
               onClick={() => setDialog(null)}
-              className="mt-2 h-12 rounded-full bg-primary text-primary-foreground text-base font-extrabold hover:bg-primary/90 transition"
+              className={`mt-2 rounded-full font-extrabold transition ${
+                a11y ? "h-14 bg-foreground text-background text-lg border-4 border-foreground hover:opacity-90" : "h-12 bg-primary text-primary-foreground text-base hover:bg-primary/90"
+              }`}
             >
               OK, entendi
             </button>
@@ -544,6 +575,7 @@ function SimHome({
   onPick: (k: FuncKey) => void;
   onFinish: () => void;
 }) {
+  const { enabled: a11y } = useA11y();
   const items: {
     key: FuncKey;
     title: string;
@@ -576,9 +608,9 @@ function SimHome({
 
   return (
     <div className="flex flex-col flex-1 bg-background">
-      <div className="px-4 py-3 border-b border-border flex items-center justify-between">
-        <h2 className="text-xl font-extrabold">Ajustes</h2>
-        <User className="size-6 text-foreground" />
+      <div className={`px-4 py-3 flex items-center justify-between ${a11y ? "border-b-4 border-foreground" : "border-b border-border"}`}>
+        <h2 className={`font-extrabold ${a11y ? "text-2xl" : "text-xl"}`}>Ajustes</h2>
+        <User className={a11y ? "size-7 text-foreground" : "size-6 text-foreground"} />
       </div>
       <ul className="flex flex-col">
         {items.map((it) => {
@@ -589,39 +621,47 @@ function SimHome({
               <button
                 type="button"
                 onClick={() => onPick(it.key)}
-                className={`w-full flex items-center gap-4 px-4 py-4 text-left border-b border-border transition ${
-                  isNext
-                    ? "bg-primary/5 animate-pulse-ring"
-                    : isDoneItem
-                      ? "bg-success/5 hover:bg-success/10"
+                className={`w-full flex items-center gap-4 px-4 py-4 text-left transition ${
+                  a11y ? "border-b-4 border-foreground" : "border-b border-border"
+                } ${
+                  a11y
+                    ? isNext
+                      ? "bg-card animate-pulse-ring"
                       : "hover:bg-muted"
+                    : isNext
+                      ? "bg-primary/5 animate-pulse-ring"
+                      : isDoneItem
+                        ? "bg-success/5 hover:bg-success/10"
+                        : "hover:bg-muted"
                 }`}
               >
-                <span className={`size-10 rounded-xl flex items-center justify-center ${it.iconBg}`}>
+                <span className={`rounded-xl flex items-center justify-center ${
+                  a11y ? "size-14 bg-foreground text-background" : `size-10 ${it.iconBg}`
+                }`}>
                   {it.icon}
                 </span>
                 <span className="flex-1 min-w-0">
-                  <span className="block text-lg font-bold">{it.title}</span>
+                  <span className={`block font-bold ${a11y ? "text-2xl" : "text-lg"}`}>{it.title}</span>
                   <span
-                    className={`block text-sm font-bold ${
-                      isDoneItem ? "text-success" : "text-muted-foreground"
+                    className={`block font-bold ${
+                      a11y ? "text-lg text-foreground" : isDoneItem ? "text-sm text-success" : "text-sm text-muted-foreground"
                     }`}
                   >
                     {it.value}
                   </span>
                 </span>
                 {isDoneItem ? (
-                  <span className="inline-flex items-center gap-1 text-success font-extrabold text-sm">
-                    <CheckCircle2 className="size-5" />
+                  <span className={`inline-flex items-center gap-1 font-extrabold ${a11y ? "text-base text-foreground" : "text-sm text-success"}`}>
+                    <CheckCircle2 className={a11y ? "size-6" : "size-5"} />
                     Feito
                   </span>
                 ) : isNext ? (
-                  <span className="inline-flex items-center gap-1 text-primary font-extrabold text-sm">
+                  <span className={`inline-flex items-center gap-1 font-extrabold ${a11y ? "text-base bg-foreground text-background rounded-full px-3 py-1.5" : "text-sm text-primary"}`}>
                     Toque aqui
-                    <ChevronRight className="size-5" />
+                    <ChevronRight className={a11y ? "size-6" : "size-5"} />
                   </span>
                 ) : (
-                  <ChevronRight className="size-5 text-muted-foreground" />
+                  <ChevronRight className={a11y ? "size-6 text-foreground" : "size-5 text-muted-foreground"} />
                 )}
               </button>
             </li>
@@ -634,7 +674,9 @@ function SimHome({
           <button
             type="button"
             onClick={onFinish}
-            className="w-full h-14 rounded-2xl bg-success text-white text-lg font-extrabold shadow-md hover:opacity-90 transition animate-pulse-ring"
+            className={`w-full h-14 rounded-2xl text-lg font-extrabold hover:opacity-90 transition animate-pulse-ring ${
+              a11y ? "bg-foreground text-background border-4 border-foreground" : "bg-success text-white shadow-md"
+            }`}
           >
             Concluir simulação
           </button>
@@ -656,19 +698,23 @@ function SimSound({
   onChange: (v: number) => void;
   onBackToHome: () => void;
 }) {
+  const { enabled: a11y } = useA11y();
   const Icon = volume === 0 ? VolumeX : volume < 50 ? Volume1 : Volume2;
+  const sliderBg = a11y
+    ? `linear-gradient(to right, var(--foreground) 0%, var(--foreground) ${volume}%, var(--background) ${volume}%, var(--background) 100%)`
+    : `linear-gradient(to right, var(--primary) 0%, var(--primary) ${volume}%, var(--muted) ${volume}%, var(--muted) 100%)`;
   return (
     <div className="flex flex-col flex-1 bg-background">
-      <div className="px-4 py-3 border-b border-border flex items-center gap-3">
-        <h2 className="text-xl font-extrabold">Som e Volume</h2>
+      <div className={`px-4 py-3 flex items-center gap-3 ${a11y ? "border-b-4 border-foreground" : "border-b border-border"}`}>
+        <h2 className={`font-extrabold ${a11y ? "text-2xl" : "text-xl"}`}>Som e Volume</h2>
       </div>
       <div className="p-6 flex flex-col gap-8">
-        <div className="rounded-3xl bg-card border-2 border-border p-6 flex flex-col items-center gap-4 shadow-md">
-          <div className="size-24 rounded-full bg-primary/10 text-primary flex items-center justify-center">
+        <div className={`rounded-3xl bg-card p-6 flex flex-col items-center gap-4 ${a11y ? "border-4 border-foreground" : "border-2 border-border shadow-md"}`}>
+          <div className={`size-24 rounded-full flex items-center justify-center ${a11y ? "bg-foreground text-background" : "bg-primary/10 text-primary"}`}>
             <Icon className="size-14" strokeWidth={2.4} />
           </div>
           <p className="text-5xl font-extrabold tabular-nums">{volume}%</p>
-          <p className="text-base font-bold text-muted-foreground">Volume do Toque</p>
+          <p className={`font-bold ${a11y ? "text-xl text-foreground" : "text-base text-muted-foreground"}`}>Volume do Toque</p>
         </div>
 
         <div>
@@ -685,9 +731,9 @@ function SimSound({
             value={volume}
             onChange={(e) => onChange(Number(e.target.value))}
             aria-label="Ajustar volume"
-            className="w-full h-4 rounded-full appearance-none bg-muted accent-primary cursor-pointer"
+            className={`w-full rounded-full appearance-none cursor-pointer ${a11y ? "h-5 border-2 border-foreground accent-foreground" : "h-4 bg-muted accent-primary"}`}
             style={{
-              background: `linear-gradient(to right, var(--primary) 0%, var(--primary) ${volume}%, var(--muted) ${volume}%, var(--muted) 100%)`,
+              background: sliderBg,
             }}
           />
         </div>
@@ -696,7 +742,9 @@ function SimSound({
           type="button"
           onClick={onBackToHome}
           disabled={!touched}
-          className="h-14 rounded-2xl bg-primary text-primary-foreground text-lg font-extrabold shadow-md hover:bg-primary/90 disabled:opacity-50 disabled:cursor-not-allowed transition inline-flex items-center justify-center gap-2"
+          className={`h-14 rounded-2xl text-lg font-extrabold disabled:opacity-50 disabled:cursor-not-allowed transition inline-flex items-center justify-center gap-2 ${
+            a11y ? "bg-foreground text-background border-4 border-foreground hover:opacity-90" : "bg-primary text-primary-foreground shadow-md hover:bg-primary/90"
+          }`}
         >
           <ChevronLeft className="size-5" /> Voltar aos Ajustes
         </button>
@@ -717,19 +765,23 @@ function SimBrightness({
   onChange: (v: number) => void;
   onBackToHome: () => void;
 }) {
+  const { enabled: a11y } = useA11y();
   const previewBg = `oklch(${0.18 + (brightness / 100) * 0.78} 0.02 90)`;
   const previewFg = brightness > 55 ? "oklch(0.2 0 0)" : "oklch(0.95 0 0)";
+  const sliderBg = a11y
+    ? `linear-gradient(to right, var(--foreground) 0%, var(--foreground) ${brightness}%, var(--background) ${brightness}%, var(--background) 100%)`
+    : `linear-gradient(to right, var(--primary) 0%, var(--primary) ${brightness}%, var(--muted) ${brightness}%, var(--muted) 100%)`;
   return (
     <div className="flex flex-col flex-1 bg-background">
-      <div className="px-4 py-3 border-b border-border flex items-center gap-3">
-        <h2 className="text-xl font-extrabold">Tela e Brilho</h2>
+      <div className={`px-4 py-3 flex items-center gap-3 ${a11y ? "border-b-4 border-foreground" : "border-b border-border"}`}>
+        <h2 className={`font-extrabold ${a11y ? "text-2xl" : "text-xl"}`}>Tela e Brilho</h2>
       </div>
       <div className="p-6 flex flex-col gap-6">
         <div
-          className="rounded-3xl border-2 border-border p-6 flex flex-col items-center gap-3 shadow-md transition-colors"
-          style={{ backgroundColor: previewBg, color: previewFg }}
+          className={`rounded-3xl p-6 flex flex-col items-center gap-3 transition-colors ${a11y ? "border-4 border-foreground bg-card text-foreground" : "border-2 border-border shadow-md"}`}
+          style={a11y ? undefined : { backgroundColor: previewBg, color: previewFg }}
         >
-          <Sun className="size-14" strokeWidth={2.4} style={{ color: previewFg }} />
+          <Sun className="size-14" strokeWidth={2.4} style={a11y ? undefined : { color: previewFg }} />
           <p className="text-5xl font-extrabold tabular-nums">{brightness}%</p>
           <p className="text-base font-bold opacity-80">Veja como a tela fica</p>
         </div>
@@ -748,9 +800,9 @@ function SimBrightness({
             value={brightness}
             onChange={(e) => onChange(Number(e.target.value))}
             aria-label="Ajustar brilho"
-            className="w-full h-4 rounded-full appearance-none cursor-pointer accent-primary"
+            className={`w-full rounded-full appearance-none cursor-pointer ${a11y ? "h-5 border-2 border-foreground accent-foreground" : "h-4 accent-primary"}`}
             style={{
-              background: `linear-gradient(to right, var(--primary) 0%, var(--primary) ${brightness}%, var(--muted) ${brightness}%, var(--muted) 100%)`,
+              background: sliderBg,
             }}
           />
         </div>
@@ -759,7 +811,9 @@ function SimBrightness({
           type="button"
           onClick={onBackToHome}
           disabled={!touched}
-          className="h-14 rounded-2xl bg-primary text-primary-foreground text-lg font-extrabold shadow-md hover:bg-primary/90 disabled:opacity-50 disabled:cursor-not-allowed transition inline-flex items-center justify-center gap-2"
+          className={`h-14 rounded-2xl text-lg font-extrabold disabled:opacity-50 disabled:cursor-not-allowed transition inline-flex items-center justify-center gap-2 ${
+            a11y ? "bg-foreground text-background border-4 border-foreground hover:opacity-90" : "bg-primary text-primary-foreground shadow-md hover:bg-primary/90"
+          }`}
         >
           <ChevronLeft className="size-5" /> Voltar aos Ajustes
         </button>
@@ -780,17 +834,18 @@ function SimTextSize({
   onChange: (v: number) => void;
   onBackToHome: () => void;
 }) {
+  const { enabled: a11y } = useA11y();
   const sizes = [14, 18, 22, 28, 34];
   const px = sizes[Math.max(0, Math.min(4, size - 1))];
   const labels = ["Pequena", "Padrão", "Média", "Grande", "Muito grande"];
   return (
     <div className="flex flex-col flex-1 bg-background">
-      <div className="px-4 py-3 border-b border-border flex items-center gap-3">
-        <h2 className="text-xl font-extrabold">Tamanho da Letra</h2>
+      <div className={`px-4 py-3 flex items-center gap-3 ${a11y ? "border-b-4 border-foreground" : "border-b border-border"}`}>
+        <h2 className={`font-extrabold ${a11y ? "text-2xl" : "text-xl"}`}>Tamanho da Letra</h2>
       </div>
       <div className="p-6 flex flex-col gap-6">
-        <div className="rounded-3xl bg-card border-2 border-border p-6 shadow-md">
-          <p className="text-sm font-bold text-muted-foreground uppercase tracking-wide mb-3">
+        <div className={`rounded-3xl bg-card p-6 ${a11y ? "border-4 border-foreground" : "border-2 border-border shadow-md"}`}>
+          <p className={`font-bold uppercase tracking-wide mb-3 ${a11y ? "text-base text-foreground" : "text-sm text-muted-foreground"}`}>
             Veja como a letra fica
           </p>
           <p
@@ -799,18 +854,20 @@ function SimTextSize({
           >
             Bom dia! Hoje é um lindo dia para aprender coisas novas no celular.
           </p>
-          <p className="mt-4 text-sm font-bold text-primary">
+          <p className={`mt-4 font-bold ${a11y ? "text-lg text-foreground" : "text-sm text-primary"}`}>
             Tamanho atual: {labels[size - 1]}
           </p>
         </div>
 
-        <div className="flex items-center justify-between gap-3 bg-card rounded-2xl border-2 border-border p-3">
+        <div className={`flex items-center justify-between gap-3 bg-card rounded-2xl p-3 ${a11y ? "border-4 border-foreground" : "border-2 border-border"}`}>
           <button
             type="button"
             onClick={() => onChange(Math.max(1, size - 1))}
             disabled={size <= 1}
             aria-label="Diminuir letra"
-            className="flex-1 h-16 rounded-xl bg-muted hover:bg-muted/70 disabled:opacity-50 disabled:cursor-not-allowed text-foreground font-extrabold inline-flex items-center justify-center gap-2 transition"
+            className={`flex-1 h-16 rounded-xl disabled:opacity-50 disabled:cursor-not-allowed font-extrabold inline-flex items-center justify-center gap-2 transition ${
+              a11y ? "bg-background text-foreground border-4 border-foreground hover:bg-muted" : "bg-muted hover:bg-muted/70 text-foreground"
+            }`}
           >
             <Type className="size-5" />
             <span className="text-2xl">A−</span>
@@ -821,7 +878,9 @@ function SimTextSize({
                 <span
                   key={i}
                   className={`h-2 w-5 rounded-full transition ${
-                    i <= size ? "bg-primary" : "bg-muted"
+                    a11y
+                      ? i <= size ? "bg-foreground" : "bg-background border border-foreground"
+                      : i <= size ? "bg-primary" : "bg-muted"
                   }`}
                 />
               ))}
@@ -832,7 +891,9 @@ function SimTextSize({
             onClick={() => onChange(Math.min(5, size + 1))}
             disabled={size >= 5}
             aria-label="Aumentar letra"
-            className="flex-1 h-16 rounded-xl bg-primary text-primary-foreground hover:bg-primary/90 disabled:opacity-50 disabled:cursor-not-allowed font-extrabold inline-flex items-center justify-center gap-2 transition ring-2 ring-primary/30"
+            className={`flex-1 h-16 rounded-xl disabled:opacity-50 disabled:cursor-not-allowed font-extrabold inline-flex items-center justify-center gap-2 transition ${
+              a11y ? "bg-foreground text-background border-4 border-foreground hover:opacity-90" : "bg-primary text-primary-foreground hover:bg-primary/90 ring-2 ring-primary/30"
+            }`}
           >
             <Type className="size-6" />
             <span className="text-3xl">A+</span>
@@ -843,7 +904,9 @@ function SimTextSize({
           type="button"
           onClick={onBackToHome}
           disabled={!touched}
-          className="h-14 rounded-2xl bg-primary text-primary-foreground text-lg font-extrabold shadow-md hover:bg-primary/90 disabled:opacity-50 disabled:cursor-not-allowed transition inline-flex items-center justify-center gap-2"
+          className={`h-14 rounded-2xl text-lg font-extrabold disabled:opacity-50 disabled:cursor-not-allowed transition inline-flex items-center justify-center gap-2 ${
+            a11y ? "bg-foreground text-background border-4 border-foreground hover:opacity-90" : "bg-primary text-primary-foreground shadow-md hover:bg-primary/90"
+          }`}
         >
           <ChevronLeft className="size-5" /> Voltar aos Ajustes
         </button>
