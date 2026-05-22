@@ -122,7 +122,7 @@ function InicioPage() {
                 <span className="min-w-0">
                   <span
                     className={`block font-extrabold text-card-foreground leading-tight ${
-                      a11y ? "text-2xl" : "text-2xl"
+                      a11y ? "text-2xl" : "text-xl"
                     }`}
                   >
                     {card.title}
@@ -148,24 +148,40 @@ function InicioPage() {
           })}
         </nav>
 
-        <section className="rounded-[1.75rem] bg-[oklch(0.97_0.03_88)] p-5 border-2 border-[oklch(0.87_0.07_88)] shadow-[0_4px_20px_-12px_rgba(0,0,0,0.18)]">
+        <section
+          className={
+            a11y
+              ? "rounded-2xl bg-card p-5 border-4 border-foreground"
+              : "rounded-[1.75rem] bg-[oklch(0.97_0.03_88)] p-5 border-2 border-[oklch(0.87_0.07_88)] shadow-[0_4px_20px_-12px_rgba(0,0,0,0.18)]"
+          }
+        >
           <div className="flex items-center gap-3">
-            <span className="size-12 rounded-2xl bg-[oklch(0.90_0.08_88)] text-[oklch(0.45_0.13_75)] flex items-center justify-center shrink-0">
+            <span
+              className={
+                a11y
+                  ? "size-14 rounded-xl bg-foreground text-background flex items-center justify-center shrink-0"
+                  : "size-12 rounded-2xl bg-[oklch(0.90_0.08_88)] text-[oklch(0.45_0.13_75)] flex items-center justify-center shrink-0"
+              }
+            >
               <Lightbulb className={a11y ? "size-7" : "size-6"} strokeWidth={2.4} />
             </span>
-            <h2 className={`flex-1 font-extrabold leading-none text-[oklch(0.25_0.06_75)] ${a11y ? "text-2xl" : "text-xl"}`}>
+            <h2 className={`flex-1 font-extrabold leading-none ${a11y ? "text-2xl text-foreground" : "text-xl text-[oklch(0.25_0.06_75)]"}`}>
               Dica do dia
             </h2>
             <button
               type="button"
               onClick={speaking ? stopSpeaking : readTip}
               aria-label={speaking ? "Parar dica do dia" : "Ouvir dica do dia"}
-              className="size-12 rounded-full bg-white/80 text-[oklch(0.45_0.13_75)] border border-[oklch(0.84_0.08_88)] hover:bg-[oklch(0.90_0.08_88)] flex items-center justify-center transition active:scale-[0.98]"
+              className={`rounded-full flex items-center justify-center transition active:scale-[0.98] ${
+                a11y
+                  ? "size-14 bg-foreground text-background border-4 border-foreground hover:opacity-90"
+                  : "size-12 bg-white/80 text-[oklch(0.45_0.13_75)] border border-[oklch(0.84_0.08_88)] hover:bg-[oklch(0.90_0.08_88)]"
+              }`}
             >
-              {speaking ? <Square className="size-5" /> : <Volume2 className="size-5" />}
+              {speaking ? <Square className={a11y ? "size-6" : "size-5"} /> : <Volume2 className={a11y ? "size-6" : "size-5"} />}
             </button>
           </div>
-          <p className={`mt-4 font-semibold leading-snug text-[oklch(0.30_0.04_75)] ${a11y ? "text-xl" : "text-lg"}`}>
+          <p className={`mt-4 font-semibold leading-snug ${a11y ? "text-xl text-foreground" : "text-lg text-[oklch(0.30_0.04_75)]"}`}>
             Não tenha medo de explorar! Você não vai quebrar o celular tocando por aí.
             Quase tudo pode ser desfeito com o botão voltar.
           </p>

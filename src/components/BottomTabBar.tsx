@@ -16,7 +16,9 @@ export function BottomTabBar() {
   return (
     <nav
       aria-label="Navegação principal"
-      className="fixed bottom-0 inset-x-0 z-40 bg-background/95 backdrop-blur border-t-2 border-border"
+      className={`fixed bottom-0 inset-x-0 z-40 bg-background/95 backdrop-blur ${
+        a11y ? "border-t-4 border-foreground" : "border-t-2 border-border"
+      }`}
     >
       <ul className="mx-auto max-w-md grid grid-cols-4">
         {tabs.map(({ to, label, icon: Icon, match }) => {
@@ -27,8 +29,16 @@ export function BottomTabBar() {
                 to={to}
                 onClick={() => window.scrollTo(0, 0)}
                 aria-current={active ? "page" : undefined}
-                className={`flex flex-col items-center justify-center gap-1 py-2.5 transition ${
-                  active ? "text-primary" : "text-muted-foreground hover:text-foreground"
+                className={`flex flex-col items-center justify-center gap-1 transition ${
+                  a11y ? "py-3" : "py-2.5"
+                } ${
+                  a11y
+                    ? active
+                      ? "bg-foreground text-background"
+                      : "text-foreground hover:bg-muted"
+                    : active
+                      ? "text-primary"
+                      : "text-muted-foreground hover:text-foreground"
                 }`}
               >
                 <Icon
