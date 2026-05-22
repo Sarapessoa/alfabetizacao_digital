@@ -4,6 +4,8 @@ import {
   Search,
   ChevronRight,
   Lightbulb,
+  Square,
+  Volume2,
   LayoutGrid,
   Power,
   Hand,
@@ -441,6 +443,14 @@ function GlossarioPage() {
     }
   };
 
+  const readTip = () => {
+    speak({
+      file: "glossario-dica-dia.mp3",
+      text:
+        "Dica do dia. Os símbolos são como placas de trânsito: uma vez que você aprende o que significam, eles aparecem em vários lugares e ajudam a se virar sozinha.",
+    });
+  };
+
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase();
     let list = TERMS;
@@ -600,15 +610,27 @@ function GlossarioPage() {
               aria-label="Dica do dia"
               className={
                 a11y
-                  ? "rounded-3xl p-6 bg-foreground text-background border-4 border-foreground"
-                  : "rounded-3xl p-5 bg-primary text-primary-foreground shadow-lg shadow-primary/30"
+                  ? "rounded-[1.75rem] p-6 bg-[oklch(0.97_0.03_88)] border-4 border-foreground"
+                  : "rounded-[1.75rem] p-5 bg-[oklch(0.97_0.03_88)] border-2 border-[oklch(0.87_0.07_88)] shadow-[0_4px_20px_-12px_rgba(0,0,0,0.18)]"
               }
             >
-              <div className="flex items-center gap-2 mb-2">
-                <Lightbulb className="size-6" strokeWidth={2.4} />
-                <h2 className={`font-extrabold ${a11y ? "text-2xl" : "text-xl"}`}>Dica do dia!</h2>
+              <div className="flex items-center gap-3 mb-3">
+                <span className="size-12 rounded-2xl bg-[oklch(0.90_0.08_88)] text-[oklch(0.45_0.13_75)] flex items-center justify-center shrink-0">
+                  <Lightbulb className={a11y ? "size-7" : "size-6"} strokeWidth={2.4} />
+                </span>
+                <h2 className={`flex-1 font-extrabold leading-none text-[oklch(0.25_0.06_75)] ${a11y ? "text-2xl" : "text-xl"}`}>
+                  Dica do dia
+                </h2>
+                <button
+                  type="button"
+                  onClick={speaking ? stopSpeaking : readTip}
+                  aria-label={speaking ? "Parar dica do dia" : "Ouvir dica do dia"}
+                  className="size-12 rounded-full bg-white/80 text-[oklch(0.45_0.13_75)] border border-[oklch(0.84_0.08_88)] hover:bg-[oklch(0.90_0.08_88)] flex items-center justify-center transition active:scale-[0.98]"
+                >
+                  {speaking ? <Square className="size-5" /> : <Volume2 className="size-5" />}
+                </button>
               </div>
-              <p className={`leading-snug ${a11y ? "text-xl font-medium" : "text-lg"}`}>
+              <p className={`leading-snug text-[oklch(0.30_0.04_75)] ${a11y ? "text-xl font-medium" : "text-lg font-semibold"}`}>
                 Os símbolos são como placas de trânsito: uma vez que você aprende o que significam, eles aparecem em
                 vários lugares e ajudam a se virar sozinha.
               </p>

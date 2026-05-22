@@ -16,6 +16,8 @@ import {
   ChevronRight,
   Search,
   Lightbulb,
+  Square,
+  Volume2,
 } from "lucide-react";
 import { useA11y } from "../lib/a11y";
 import { useAudioTts } from "../lib/tts";
@@ -245,6 +247,14 @@ function SegurancaPage() {
     }
   };
 
+  const readFinalTip = () => {
+    speak({
+      file: "seguranca-dica-final.mp3",
+      text:
+        "Na dúvida, não decida sozinha. Antes de clicar, pagar ou responder, respire fundo e mostre a mensagem para uma pessoa de confiança. Golpista trabalha com pressa: quem te apressa, te engana.",
+    });
+  };
+
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase();
     if (!q) return SCAMS;
@@ -397,14 +407,22 @@ function SegurancaPage() {
           className={
             a11y
               ? "rounded-3xl p-6 bg-foreground text-background border-4 border-foreground"
-              : "rounded-3xl p-5 bg-destructive text-destructive-foreground shadow-lg shadow-destructive/30"
+              : "rounded-[1.75rem] p-5 bg-[oklch(0.98_0.01_245)] text-foreground border-2 border-[oklch(0.84_0.03_245)] shadow-[0_4px_20px_-12px_rgba(0,0,0,0.18)]"
           }
         >
-          <div className="flex items-center gap-2 mb-2">
-            <ShieldAlert className="size-7" strokeWidth={2.4} />
+          <div className="flex items-center gap-3 mb-3">
+            <span
+              className={
+                a11y
+                  ? "size-12 rounded-xl bg-background text-foreground flex items-center justify-center shrink-0"
+                  : "size-12 rounded-2xl bg-[oklch(0.92_0.04_245)] text-[oklch(0.38_0.09_245)] flex items-center justify-center shrink-0"
+              }
+            >
+              <ShieldAlert className={a11y ? "size-7" : "size-6"} strokeWidth={2.4} />
+            </span>
             <h2 className={`font-extrabold ${a11y ? "text-2xl" : "text-xl"}`}>Regra de Ouro</h2>
           </div>
-          <p className={`leading-snug ${a11y ? "text-xl font-medium" : "text-lg"}`}>
+          <p className={`leading-snug ${a11y ? "text-xl font-medium" : "text-lg text-[oklch(0.30_0.03_245)] font-semibold"}`}>
             Bancos, lojas e órgãos do governo nunca pedem senha, código de SMS ou
             PIX urgente por telefone, mensagem ou e-mail. Na dúvida, desligue e pergunte
             a alguém de confiança.
@@ -490,17 +508,27 @@ function SegurancaPage() {
           aria-label="Dica final"
           className={
             a11y
-              ? "rounded-3xl p-6 bg-card border-4 border-foreground"
-              : "rounded-3xl p-5 bg-info/10 border-2 border-info/30"
+              ? "rounded-[1.75rem] p-6 bg-[oklch(0.97_0.03_88)] border-4 border-foreground"
+              : "rounded-[1.75rem] p-5 bg-[oklch(0.97_0.03_88)] border-2 border-[oklch(0.87_0.07_88)] shadow-[0_4px_20px_-12px_rgba(0,0,0,0.18)]"
           }
         >
-          <div className="flex items-center gap-2 mb-2">
-            <Lightbulb className={`size-6 ${a11y ? "text-foreground" : "text-info"}`} strokeWidth={2.4} />
-            <h2 className={`font-extrabold ${a11y ? "text-2xl text-foreground" : "text-xl text-foreground"}`}>
-              Na dúvida, não decida sozinha
+          <div className="flex items-center gap-3 mb-3">
+            <span className="size-12 rounded-2xl bg-[oklch(0.90_0.08_88)] text-[oklch(0.45_0.13_75)] flex items-center justify-center shrink-0">
+              <Lightbulb className={a11y ? "size-7" : "size-6"} strokeWidth={2.4} />
+            </span>
+            <h2 className={`flex-1 font-extrabold leading-tight text-[oklch(0.25_0.06_75)] ${a11y ? "text-2xl" : "text-xl"}`}>
+              Dica do dia
             </h2>
+            <button
+              type="button"
+              onClick={speaking ? stopSpeaking : readFinalTip}
+              aria-label={speaking ? "Parar dica do dia" : "Ouvir dica do dia"}
+              className="size-12 rounded-full bg-white/80 text-[oklch(0.45_0.13_75)] border border-[oklch(0.84_0.08_88)] hover:bg-[oklch(0.90_0.08_88)] flex items-center justify-center transition active:scale-[0.98] shrink-0"
+            >
+              {speaking ? <Square className="size-5" /> : <Volume2 className="size-5" />}
+            </button>
           </div>
-          <p className={`leading-snug ${a11y ? "text-xl text-foreground font-medium" : "text-lg text-foreground"}`}>
+          <p className={`leading-snug text-[oklch(0.30_0.04_75)] ${a11y ? "text-xl font-medium" : "text-lg font-semibold"}`}>
             Antes de clicar, pagar ou responder, respire fundo e mostre a mensagem para
             uma pessoa de confiança. Golpista trabalha com pressa: quem te apressa, te
             engana.

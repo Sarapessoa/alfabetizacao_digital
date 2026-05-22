@@ -2,7 +2,7 @@
 
 Coloque os arquivos gerados em `public/audio/tts/`. A coluna `arquivo` já está com nomes estáveis sugeridos. Estes são os textos chamados pelo TTS atual, não todos os textos visuais da interface.
 
-Total: 88 arquivos.
+Total: 92 arquivos.
 
 | # | arquivo | onde | texto |
 |---:|---|---|---|
@@ -94,3 +94,7 @@ Total: 88 arquivos.
 | 86 | `glossario-termo-duas-etapas.mp3` | Glossário / termo: Verificação em duas etapas | Verificação em duas etapas. É uma proteção extra: além da senha, o aplicativo manda um código no celular para confirmar que é você. Onde aparece: Dentro das configurações do WhatsApp, do Instagram e do email.. Exemplo: Ative no WhatsApp para ninguém conseguir entrar na sua conta de outro celular. |
 | 87 | `glossario-termo-bloquear.mp3` | Glossário / termo: Bloquear | Bloquear. Quando você bloqueia uma pessoa, ela não consegue mais te mandar mensagens nem te ligar. É como fechar a porta para alguém. Onde aparece: Dentro da conversa da pessoa, no menu de opções.. Exemplo: Se um número estranho ficar te mandando golpe, bloqueie sem medo. |
 | 88 | `glossario-termo-golpe.mp3` | Glossário / termo: Golpe / Phishing | Golpe / Phishing. São mensagens, ligações ou e-mails que tentam te enganar para roubar seu dinheiro ou sua senha. Pedem coisas urgentes ou prometem prêmios. Onde aparece: Pode chegar por SMS, WhatsApp, e-mail ou ligação.. Exemplo: Se chegar uma mensagem dizendo que você ganhou um prêmio, desconfie e não toque no link. |
+| 89 | `inicio-tela.mp3` | Início / botão Ouvir | Bem-vindo! Escolha um dos caminhos abaixo para começar: aplicativos, glossário digital ou segurança e golpes. Dica do dia: não tenha medo de explorar. Quase tudo pode ser desfeito com o botão voltar. |
+| 90 | `glossario-dica-dia.mp3` | Glossário / dica do dia | Dica do dia. Os símbolos são como placas de trânsito: uma vez que você aprende o que significam, eles aparecem em vários lugares e ajudam a se virar sozinha. |
+| 91 | `seguranca-dica-final.mp3` | Segurança / dica do dia | Na dúvida, não decida sozinha. Antes de clicar, pagar ou responder, respire fundo e mostre a mensagem para uma pessoa de confiança. Golpista trabalha com pressa: quem te apressa, te engana. |
+| 92 | `inicio-dica-dia.mp3` | Início / dica do dia | Dica do dia. Não tenha medo de explorar. Você não vai quebrar o celular tocando por aí. Quase tudo pode ser desfeito com o botão voltar. |

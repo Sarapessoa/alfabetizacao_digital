@@ -11,6 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as SegurancaRouteImport } from './routes/seguranca'
 import { Route as LoginRouteImport } from './routes/login'
+import { Route as InicioRouteImport } from './routes/inicio'
 import { Route as GlossarioRouteImport } from './routes/glossario'
 import { Route as AppsRouteImport } from './routes/apps'
 import { Route as IndexRouteImport } from './routes/index'
@@ -30,6 +31,11 @@ const SegurancaRoute = SegurancaRouteImport.update({
 const LoginRoute = LoginRouteImport.update({
   id: '/login',
   path: '/login',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const InicioRoute = InicioRouteImport.update({
+  id: '/inicio',
+  path: '/inicio',
   getParentRoute: () => rootRouteImport,
 } as any)
 const GlossarioRoute = GlossarioRouteImport.update({
@@ -87,6 +93,7 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/apps': typeof AppsRouteWithChildren
   '/glossario': typeof GlossarioRoute
+  '/inicio': typeof InicioRoute
   '/login': typeof LoginRoute
   '/seguranca': typeof SegurancaRoute
   '/apps/camera': typeof AppsCameraRoute
@@ -101,6 +108,7 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/apps': typeof AppsRouteWithChildren
   '/glossario': typeof GlossarioRoute
+  '/inicio': typeof InicioRoute
   '/login': typeof LoginRoute
   '/seguranca': typeof SegurancaRoute
   '/apps/camera': typeof AppsCameraRoute
@@ -116,6 +124,7 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/apps': typeof AppsRouteWithChildren
   '/glossario': typeof GlossarioRoute
+  '/inicio': typeof InicioRoute
   '/login': typeof LoginRoute
   '/seguranca': typeof SegurancaRoute
   '/apps/camera': typeof AppsCameraRoute
@@ -132,6 +141,7 @@ export interface FileRouteTypes {
     | '/'
     | '/apps'
     | '/glossario'
+    | '/inicio'
     | '/login'
     | '/seguranca'
     | '/apps/camera'
@@ -146,6 +156,7 @@ export interface FileRouteTypes {
     | '/'
     | '/apps'
     | '/glossario'
+    | '/inicio'
     | '/login'
     | '/seguranca'
     | '/apps/camera'
@@ -160,6 +171,7 @@ export interface FileRouteTypes {
     | '/'
     | '/apps'
     | '/glossario'
+    | '/inicio'
     | '/login'
     | '/seguranca'
     | '/apps/camera'
@@ -175,6 +187,7 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AppsRoute: typeof AppsRouteWithChildren
   GlossarioRoute: typeof GlossarioRoute
+  InicioRoute: typeof InicioRoute
   LoginRoute: typeof LoginRoute
   SegurancaRoute: typeof SegurancaRoute
 }
@@ -193,6 +206,13 @@ declare module '@tanstack/react-router' {
       path: '/login'
       fullPath: '/login'
       preLoaderRoute: typeof LoginRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/inicio': {
+      id: '/inicio'
+      path: '/inicio'
+      fullPath: '/inicio'
+      preLoaderRoute: typeof InicioRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/glossario': {
@@ -294,6 +314,7 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AppsRoute: AppsRouteWithChildren,
   GlossarioRoute: GlossarioRoute,
+  InicioRoute: InicioRoute,
   LoginRoute: LoginRoute,
   SegurancaRoute: SegurancaRoute,
 }

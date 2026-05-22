@@ -39,7 +39,7 @@ function LoginPage() {
     }
     setError("");
     saveSession(email);
-    navigate({ to: "/apps" });
+    navigate({ to: "/inicio" });
   };
 
   return (

@@ -1,8 +1,9 @@
 import { Link, useLocation } from "@tanstack/react-router";
-import { Smartphone, BookOpen, ShieldCheck } from "lucide-react";
+import { BookOpen, Home, ShieldCheck, Smartphone } from "lucide-react";
 import { useA11y } from "../lib/a11y";
 
 const tabs = [
+  { to: "/inicio" as const, label: "Início", icon: Home, match: "/inicio" },
   { to: "/apps" as const, label: "Aplicativos", icon: Smartphone, match: "/apps" },
   { to: "/glossario" as const, label: "Glossário", icon: BookOpen, match: "/glossario" },
   { to: "/seguranca" as const, label: "Segurança", icon: ShieldCheck, match: "/seguranca" },
@@ -17,7 +18,7 @@ export function BottomTabBar() {
       aria-label="Navegação principal"
       className="fixed bottom-0 inset-x-0 z-40 bg-background/95 backdrop-blur border-t-2 border-border"
     >
-      <ul className="mx-auto max-w-md grid grid-cols-3">
+      <ul className="mx-auto max-w-md grid grid-cols-4">
         {tabs.map(({ to, label, icon: Icon, match }) => {
           const active = location.pathname === match || location.pathname.startsWith(match + "/");
           return (
@@ -31,10 +32,10 @@ export function BottomTabBar() {
                 }`}
               >
                 <Icon
-                  className={a11y ? "size-8" : "size-7"}
+                  className={a11y ? "size-7" : "size-6"}
                   strokeWidth={active ? 2.6 : 2.2}
                 />
-                <span className={`font-bold leading-none ${a11y ? "text-base" : "text-sm"}`}>
+                <span className={`font-bold leading-none ${a11y ? "text-sm" : "text-xs"}`}>
                   {label}
                 </span>
               </Link>
