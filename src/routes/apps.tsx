@@ -147,7 +147,7 @@ function AppsPage() {
     : "size-13 rounded-xl flex items-center justify-center";
   const iconClass = a11y ? "size-9" : "size-7";
   const titleClass = a11y
-    ? "text-2xl font-extrabold text-foreground leading-tight truncate"
+    ? "text-2xl font-extrabold text-foreground leading-tight"
     : "text-xl font-extrabold text-card-foreground leading-none truncate";
   const analogyIconClass = a11y ? "size-5 shrink-0" : "size-4 shrink-0";
   const descClass = a11y
@@ -201,10 +201,10 @@ function AppsPage() {
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             placeholder="Qual aplicativo você quer aprender?"
-            className={`w-full pr-4 rounded-2xl bg-card text-foreground placeholder:text-muted-foreground focus:outline-none transition ${
+            className={`w-full pr-4 rounded-2xl bg-card text-foreground focus:outline-none transition ${
               a11y
-                ? "h-[68px] text-xl border-4 border-foreground focus:ring-4 focus:ring-foreground"
-                : "h-[60px] text-lg border-2 border-border focus:border-primary focus:ring-4 focus:ring-primary/20"
+                ? "h-[68px] text-xl border-4 border-foreground placeholder:text-foreground focus:ring-4 focus:ring-foreground"
+                : "h-[60px] text-lg border-2 border-border placeholder:text-muted-foreground focus:border-primary focus:ring-4 focus:ring-primary/20"
             }`}
             style={{ paddingLeft: "3.25rem" }}
           />
@@ -213,7 +213,13 @@ function AppsPage() {
         {/* List */}
         <nav aria-label="Lista de aplicativos" className="flex flex-col gap-4">
           {filtered.length === 0 ? (
-            <div className="rounded-3xl border-2 border-dashed border-border p-6 text-center text-lg text-muted-foreground">
+            <div
+              className={`rounded-3xl border-dashed p-6 text-center font-bold ${
+                a11y
+                  ? "border-4 border-foreground text-xl text-foreground"
+                  : "border-2 border-border text-lg text-muted-foreground"
+              }`}
+            >
               Nenhum aplicativo encontrado. Tente outra palavra.
             </div>
           ) : (
