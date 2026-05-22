@@ -73,7 +73,11 @@ function GoogleSimulation() {
         <p className={`font-extrabold ${a11y ? "text-sm" : "text-xs"}`}>
           {isDone ? "Simulação concluída! 🎉" : `Etapa ${currentStep} de ${steps.length}`}
         </p>
-        <p className={`text-muted-foreground font-medium ${a11y ? "text-sm" : "text-xs"}`}>
+        <p
+          className={`font-medium ${
+            a11y ? "text-sm text-foreground" : "text-xs text-muted-foreground"
+          }`}
+        >
           {isDone ? "100%" : `${Math.round((currentStep / steps.length) * 100)}%`}
         </p>
       </div>
@@ -83,10 +87,12 @@ function GoogleSimulation() {
         aria-valuemax={steps.length}
         aria-valuenow={isDone ? steps.length : currentStep}
         aria-label="Progresso da simulação"
-        className="h-2 w-full rounded-full bg-muted overflow-hidden"
+        className={`h-2 w-full rounded-full overflow-hidden ${
+          a11y ? "bg-background border border-foreground" : "bg-muted"
+        }`}
       >
         <div
-          className="h-full bg-info transition-all duration-500"
+          className={`h-full transition-all duration-500 ${a11y ? "bg-foreground" : "bg-info"}`}
           style={{ width: `${((isDone ? steps.length : currentStep) / steps.length) * 100}%` }}
         />
       </div>
@@ -142,9 +148,19 @@ function GoogleSimulation() {
   // ----- Intro splash -----
   if (stage === "intro") {
     return (
-      <main className="min-h-screen bg-info flex flex-col items-center justify-center text-info-foreground">
+      <main
+        className={`min-h-screen flex flex-col items-center justify-center ${
+          a11y ? "bg-foreground text-background" : "bg-info text-info-foreground"
+        }`}
+      >
         <div className="flex flex-col items-center gap-4 animate-pulse">
-          <div className="size-24 rounded-full bg-info-foreground text-info flex items-center justify-center shadow-2xl">
+          <div
+            className={`size-24 rounded-full flex items-center justify-center shadow-2xl ${
+              a11y
+                ? "bg-background text-foreground border-4 border-background"
+                : "bg-info-foreground text-info"
+            }`}
+          >
             <Search className="size-12" strokeWidth={2.8} />
           </div>
           <h1 className="text-4xl font-extrabold tracking-tight">Google</h1>
@@ -155,13 +171,19 @@ function GoogleSimulation() {
 
   // ----- Header bar (shared) -----
   const headerBar = (
-    <header className="bg-info text-info-foreground px-5 pt-5 pb-6">
+    <header
+      className={`${a11y ? "bg-foreground text-background" : "bg-info text-info-foreground"} px-5 pt-5 pb-6`}
+    >
       <div className="w-full max-w-md mx-auto flex flex-col gap-4">
         <div className="flex items-center justify-between gap-2">
           <Link
             to="/apps"
             aria-label="Voltar para aplicativos"
-            className="inline-flex items-center gap-2 h-11 px-3 rounded-2xl text-base font-bold hover:bg-info-foreground/10 transition"
+            className={`inline-flex items-center gap-2 px-3 rounded-2xl font-bold transition ${
+              a11y
+                ? "h-12 bg-background text-foreground border-2 border-background text-lg"
+                : "h-11 text-base hover:bg-info-foreground/10"
+            }`}
           >
             <ArrowLeft className="size-5" />
             Voltar
@@ -172,7 +194,11 @@ function GoogleSimulation() {
               type="button"
               onClick={handleSpeak}
               aria-label={speaking ? "Parar leitura" : "Ouvir"}
-              className="inline-flex items-center gap-2 h-11 px-3 rounded-full bg-info-foreground text-info text-base font-bold hover:opacity-90 transition"
+              className={`inline-flex items-center gap-2 px-3 rounded-full font-bold hover:opacity-90 transition ${
+                a11y
+                  ? "h-12 bg-background text-foreground border-2 border-background text-lg"
+                  : "h-11 bg-info-foreground text-info text-base"
+              }`}
             >
               {speaking ? <Square className="size-5" /> : <Volume2 className="size-5" />}
               {speaking ? "Parar" : "Ouvir"}
@@ -193,20 +219,20 @@ function GoogleSimulation() {
   // ----- Overview screen -----
   if (stage === "overview") {
     return (
-      <main className="min-h-screen bg-muted/40 flex flex-col">
+      <main className={`min-h-screen flex flex-col ${a11y ? "bg-background" : "bg-muted/40"}`}>
         {headerBar}
         <div className="w-full max-w-md mx-auto flex-1 flex flex-col gap-6 px-5 py-6">
           <section
-            className={`rounded-2xl bg-card p-5 border-l-8 border-l-info shadow-md ${
-              a11y ? "border-2 border-foreground" : "border border-border"
+            className={`rounded-2xl bg-card p-5 shadow-md ${
+              a11y ? "border-4 border-foreground" : "border border-border border-l-8 border-l-info"
             }`}
           >
-            <h2 className={`font-extrabold text-info ${a11y ? "text-2xl" : "text-xl"}`}>
+            <h2 className={`font-extrabold ${a11y ? "text-2xl text-foreground" : "text-xl text-info"}`}>
               O que é parecido?
             </h2>
             <div
-              className={`mt-3 inline-flex items-center gap-2 rounded-full bg-info/10 text-info px-3 py-1.5 font-extrabold ${
-                a11y ? "text-lg" : "text-base"
+              className={`mt-3 inline-flex items-center gap-2 rounded-full px-3 py-1.5 font-extrabold ${
+                a11y ? "text-lg bg-foreground text-background" : "text-base bg-info/10 text-info"
               }`}
             >
               <BookOpen className="size-5" />
@@ -224,12 +250,12 @@ function GoogleSimulation() {
 
           <section
             className={`rounded-2xl bg-card p-5 ${
-              a11y ? "border-2 border-foreground" : "border border-border"
+              a11y ? "border-4 border-foreground" : "border border-border"
             }`}
           >
             <div className="flex items-center justify-between gap-2 mb-2">
               <h2 className={`font-extrabold ${a11y ? "text-2xl" : "text-xl"}`}>Passo a Passo</h2>
-              <p className={`text-muted-foreground font-bold ${a11y ? "text-base" : "text-xs"}`}>
+              <p className={`font-bold ${a11y ? "text-base text-foreground" : "text-xs text-muted-foreground"}`}>
                 Etapa {currentStep} de {steps.length}
               </p>
             </div>
@@ -239,10 +265,12 @@ function GoogleSimulation() {
               aria-valuemax={steps.length}
               aria-valuenow={currentStep}
               aria-label="Progresso da simulação"
-              className="h-2.5 w-full rounded-full bg-muted overflow-hidden mb-4"
+              className={`h-2.5 w-full rounded-full overflow-hidden mb-4 ${
+                a11y ? "bg-background border border-foreground" : "bg-muted"
+              }`}
             >
               <div
-                className="h-full bg-info transition-all duration-500"
+                className={`h-full transition-all duration-500 ${a11y ? "bg-foreground" : "bg-info"}`}
                 style={{ width: `${(currentStep / steps.length) * 100}%` }}
               />
             </div>
@@ -270,23 +298,25 @@ function GoogleSimulation() {
                   <li
                     key={s.n}
                     className={`rounded-2xl p-4 transition ${
-                      active
-                        ? "bg-info/5 border-2 border-info"
-                        : done
-                          ? "bg-success/5 border border-success/40"
-                          : a11y
-                            ? "bg-card border-2 border-foreground"
+                      a11y
+                        ? "bg-card border-4 border-foreground"
+                        : active
+                          ? "bg-info/5 border-2 border-info"
+                          : done
+                            ? "bg-success/5 border border-success/40"
                             : "bg-card border border-border"
                     }`}
                   >
                     <div className="flex items-center gap-3">
                       <span
                         className={`size-8 rounded-full inline-flex items-center justify-center font-extrabold ${
-                          done
-                            ? "bg-success text-white"
-                            : active
-                              ? "bg-info text-info-foreground ring-4 ring-info/25"
-                              : "bg-muted text-muted-foreground"
+                          a11y
+                            ? "bg-foreground text-background"
+                            : done
+                              ? "bg-success text-white"
+                              : active
+                                ? "bg-info text-info-foreground ring-4 ring-info/25"
+                                : "bg-muted text-muted-foreground"
                         }`}
                       >
                         {done ? <CheckCircle2 className="size-4" /> : s.n}
@@ -309,7 +339,11 @@ function GoogleSimulation() {
           <button
             type="button"
             onClick={() => setStage("intro")}
-            className="inline-flex items-center justify-center gap-2 w-full h-16 rounded-2xl bg-info text-info-foreground text-xl font-extrabold shadow-lg shadow-info/30 hover:bg-info/90 active:scale-[0.99] transition"
+            className={`inline-flex items-center justify-center gap-2 w-full h-16 rounded-2xl text-xl font-extrabold active:scale-[0.99] transition ${
+              a11y
+                ? "bg-foreground text-background border-4 border-foreground"
+                : "bg-info text-info-foreground shadow-lg shadow-info/30 hover:bg-info/90"
+            }`}
           >
             <Search className="size-6" />
             Iniciar Simulação Prática
@@ -326,7 +360,13 @@ function GoogleSimulation() {
         {headerBar}
         {Stepper}
         <div className="w-full max-w-md mx-auto flex-1 flex flex-col items-center justify-center gap-6 px-5 py-10 text-center">
-          <div className="size-24 rounded-full bg-success/15 text-success flex items-center justify-center">
+          <div
+            className={`size-24 rounded-full flex items-center justify-center ${
+              a11y
+                ? "bg-background text-foreground border-4 border-foreground"
+                : "bg-success/15 text-success"
+            }`}
+          >
             <CheckCircle2 className="size-14" strokeWidth={2.4} />
           </div>
           <h2 className={`font-extrabold ${a11y ? "text-3xl" : "text-2xl"}`}>
@@ -343,14 +383,22 @@ function GoogleSimulation() {
                 setQuery("");
                 setStage("overview");
               }}
-              className="h-14 rounded-2xl border-2 border-border bg-card text-foreground text-lg font-bold hover:bg-muted transition"
+              className={`h-14 rounded-2xl text-lg font-bold transition ${
+                a11y
+                  ? "border-4 border-foreground bg-background text-foreground"
+                  : "border-2 border-border bg-card text-foreground hover:bg-muted"
+              }`}
             >
               Repetir simulação
             </button>
             <button
               type="button"
               onClick={() => navigate({ to: "/apps" })}
-              className="h-14 rounded-2xl bg-info text-info-foreground text-lg font-extrabold hover:bg-info/90 transition"
+              className={`h-14 rounded-2xl text-lg font-extrabold transition ${
+                a11y
+                  ? "bg-foreground text-background border-4 border-foreground"
+                  : "bg-info text-info-foreground hover:bg-info/90"
+              }`}
             >
               Ver outros aplicativos
             </button>
@@ -370,13 +418,13 @@ function GoogleSimulation() {
 
   return (
     <main
-      className={`bg-[#f4f5f4] flex flex-col ${
+      className={`${a11y ? "bg-background" : "bg-[#f4f5f4]"} flex flex-col ${
         stage === "sim-page" ? "h-screen overflow-hidden" : "min-h-screen"
       }`}
     >
       {/* Instruction bar */}
       <div className="sticky top-0 z-30 shrink-0 shadow-md">
-        <div className="bg-info text-white">
+        <div className={a11y ? "bg-foreground text-background" : "bg-info text-white"}>
           <div className="w-full max-w-md mx-auto px-4 py-2.5 flex items-center gap-2">
             <p className={`flex-1 leading-snug font-semibold min-w-0 ${a11y ? "text-base" : "text-sm"}`}>
               {tip}
@@ -384,13 +432,17 @@ function GoogleSimulation() {
             <Link
               to="/apps"
               aria-label="Sair da simulação"
-              className="shrink-0 inline-flex items-center gap-1 h-8 px-3 rounded-full bg-white/20 hover:bg-white/30 text-sm font-bold transition"
+              className={`shrink-0 inline-flex items-center gap-1 px-3 rounded-full font-bold transition ${
+                a11y
+                  ? "h-10 bg-background text-foreground border-2 border-background text-base"
+                  : "h-8 bg-white/20 hover:bg-white/30 text-sm"
+              }`}
             >
               <X className="size-4" /> Sair
             </Link>
           </div>
         </div>
-        <div className="bg-white border-b border-[#dfe4e0]">
+        <div className={`bg-white ${a11y ? "border-b-4 border-foreground" : "border-b border-[#dfe4e0]"}`}>
           <div
             role="progressbar"
             aria-valuemin={0}
@@ -405,18 +457,22 @@ function GoogleSimulation() {
               return (
                 <div key={s.n} className="flex items-center gap-3 flex-1 last:flex-none">
                   <div className="flex items-center gap-1.5 shrink-0">
-                    <span className={`size-6 rounded-full inline-flex items-center justify-center text-xs font-extrabold transition ${
-                      done ? "bg-success text-white" : active ? "bg-info text-white" : "bg-muted text-muted-foreground"
+                    <span className={`rounded-full inline-flex items-center justify-center font-extrabold transition ${
+                      a11y
+                        ? "size-8 bg-foreground text-background text-sm"
+                        : `size-6 text-xs ${done ? "bg-success text-white" : active ? "bg-info text-white" : "bg-muted text-muted-foreground"}`
                     }`}>
                       {done ? <CheckCircle2 className="size-3.5" /> : s.n}
                     </span>
-                    <span className={`text-xs font-bold leading-none ${active ? "text-foreground" : "text-muted-foreground"}`}>
+                    <span className={`font-bold leading-none ${
+                      a11y ? "text-sm text-foreground" : `text-xs ${active ? "text-foreground" : "text-muted-foreground"}`
+                    }`}>
                       {s.label}
                     </span>
                   </div>
                   {i < steps.length - 1 && (
-                    <div className="flex-1 h-1 rounded-full bg-muted overflow-hidden">
-                      <div className="h-full bg-success transition-all duration-500" style={{ width: done ? "100%" : "0%" }} />
+                    <div className={`flex-1 h-1 rounded-full overflow-hidden ${a11y ? "bg-background border border-foreground" : "bg-muted"}`}>
+                      <div className={`h-full transition-all duration-500 ${a11y ? "bg-foreground" : "bg-success"}`} style={{ width: done ? "100%" : "0%" }} />
                     </div>
                   )}
                 </div>
@@ -462,10 +518,12 @@ function GoogleSimulation() {
           onClick={() => setDialog(null)}
         >
           <div
-            className="w-full max-w-md rounded-3xl bg-card border-2 border-border shadow-2xl p-6 flex flex-col gap-3"
+            className={`w-full max-w-md rounded-3xl bg-card shadow-2xl p-6 flex flex-col gap-3 ${
+              a11y ? "border-4 border-foreground" : "border-2 border-border"
+            }`}
             onClick={(e) => e.stopPropagation()}
           >
-            <div className="flex items-center gap-2 text-info">
+            <div className={`flex items-center gap-2 ${a11y ? "text-foreground" : "text-info"}`}>
               <Sparkles className="size-6" />
               <h3 id="exp-title" className={`font-extrabold ${a11y ? "text-2xl" : "text-xl"}`}>
                 {dialog.title}
@@ -477,13 +535,21 @@ function GoogleSimulation() {
             <button
               type="button"
               onClick={() => setDialog(null)}
-              className="mt-2 h-12 rounded-full bg-info text-info-foreground text-base font-extrabold hover:bg-info/90 transition"
+              className={`mt-2 h-12 rounded-full text-base font-extrabold transition ${
+                a11y
+                  ? "bg-foreground text-background border-4 border-foreground"
+                  : "bg-info text-info-foreground hover:bg-info/90"
+              }`}
             >
               OK, entendi
             </button>
           </div>
         </div>
       )}
+
+      <div className="fixed right-4 bottom-4 z-30">
+        <A11yToggle compact className={a11y ? "shadow-xl" : "shadow-lg shadow-foreground/20"} />
+      </div>
     </main>
   );
 }
@@ -514,6 +580,7 @@ function SimSearch({
   onSearch: () => void;
   suggested: string;
 }) {
+  const { enabled: a11y } = useA11y();
   const runTutorialSearch = () => {
     setQuery(suggested);
     onSearch();
@@ -540,15 +607,27 @@ function SimSearch({
   ];
 
   return (
-    <div className="flex flex-col bg-[#f4f5f4] flex-1 px-4 pt-5 pb-5 overflow-y-auto">
+    <div
+      className={`flex flex-col flex-1 px-4 pt-5 pb-5 overflow-y-auto ${
+        a11y ? "bg-background" : "bg-[#f4f5f4]"
+      }`}
+    >
       {/* Google app top bar */}
-      <div className="flex items-center justify-between text-[#343a38]">
+      <div className={`flex items-center justify-between ${a11y ? "text-foreground" : "text-[#343a38]"}`}>
         <Home className="size-7" strokeWidth={2.6} />
         <div className="flex items-center gap-5">
-          <span className="size-9 rounded-full bg-[#607d6b] text-white flex items-center justify-center text-lg font-bold">
+          <span
+            className={`size-9 rounded-full flex items-center justify-center text-lg font-bold ${
+              a11y ? "bg-foreground text-background" : "bg-[#607d6b] text-white"
+            }`}
+          >
             A
           </span>
-          <span className="size-7 rounded-lg border-2 border-[#343a38] flex items-center justify-center text-base font-extrabold">
+          <span
+            className={`size-7 rounded-lg border-2 flex items-center justify-center text-base font-extrabold ${
+              a11y ? "border-foreground text-foreground" : "border-[#343a38]"
+            }`}
+          >
             9
           </span>
           <MoreVertical className="size-7" strokeWidth={2.6} />
@@ -580,7 +659,11 @@ function SimSearch({
             onClick={runTutorialSearch}
             onFocus={() => undefined}
             placeholder="Pesquise no Google..."
-            className="w-full h-16 pl-16 pr-24 rounded-full bg-[#e4e8e5] text-[#343a38] placeholder:text-[#69716d] text-lg focus:outline-none animate-pulse-ring cursor-text shadow-sm"
+            className={`w-full h-16 pl-16 pr-24 rounded-full text-lg focus:outline-none animate-pulse-ring cursor-text shadow-sm ${
+              a11y
+                ? "bg-background text-foreground placeholder:text-foreground border-4 border-foreground"
+                : "bg-[#e4e8e5] text-[#343a38] placeholder:text-[#69716d]"
+            }`}
             onKeyDown={(e) => {
               if (e.key === "Enter") {
                 e.preventDefault();
@@ -588,7 +671,11 @@ function SimSearch({
               }
             }}
           />
-          <div className="absolute right-5 top-1/2 -translate-y-1/2 flex items-center gap-4 text-[#343a38]">
+          <div
+            className={`absolute right-5 top-1/2 -translate-y-1/2 flex items-center gap-4 ${
+              a11y ? "text-foreground" : "text-[#343a38]"
+            }`}
+          >
             <Mic className="size-7" strokeWidth={2.4} />
             <Camera className="size-7" strokeWidth={2.4} />
           </div>
@@ -600,7 +687,11 @@ function SimSearch({
         <button
           type="button"
           onClick={runTutorialSearch}
-          className="h-12 rounded-full bg-[#e4e8e5] text-[#343a38] flex items-center justify-center gap-2 text-base font-bold"
+          className={`h-12 rounded-full flex items-center justify-center gap-2 font-bold ${
+            a11y
+              ? "bg-background text-foreground border-4 border-foreground text-lg"
+              : "bg-[#e4e8e5] text-[#343a38] text-base"
+          }`}
         >
           <Sparkles className="size-5" />
           Modo IA
@@ -608,7 +699,11 @@ function SimSearch({
         <button
           type="button"
           onClick={runTutorialSearch}
-          className="h-12 rounded-full bg-[#e4e8e5] text-[#343a38] flex items-center justify-center gap-2 text-base font-bold"
+          className={`h-12 rounded-full flex items-center justify-center gap-2 font-bold ${
+            a11y
+              ? "bg-background text-foreground border-4 border-foreground text-lg"
+              : "bg-[#e4e8e5] text-[#343a38] text-base"
+          }`}
         >
           <Lock className="size-5" />
           Modo anônimo
@@ -616,7 +711,11 @@ function SimSearch({
       </div>
 
       {/* Guided shortcuts */}
-      <section className="mt-6 rounded-3xl bg-white px-4 py-4 overflow-hidden border border-[#dfe4e0]">
+      <section
+        className={`mt-6 rounded-3xl bg-white px-4 py-4 overflow-hidden ${
+          a11y ? "border-4 border-foreground" : "border border-[#dfe4e0]"
+        }`}
+      >
         <div className="flex justify-between gap-5 overflow-x-auto pb-1">
           {shortcuts.map(({ label, icon: Icon, tone }) => (
             <button
@@ -625,21 +724,27 @@ function SimSearch({
               onClick={runTutorialSearch}
               className="shrink-0 flex flex-col items-center gap-2 min-w-14"
             >
-              <span className="size-12 rounded-full bg-[#f4f5f4] flex items-center justify-center">
-                <Icon className={`size-6 ${tone}`} />
+              <span
+                className={`size-12 rounded-full flex items-center justify-center ${
+                  a11y ? "bg-foreground text-background" : "bg-[#f4f5f4]"
+                }`}
+              >
+                <Icon className={`size-6 ${a11y ? "" : tone}`} />
               </span>
-              <span className="text-xs text-[#4c5550] font-semibold">{label}</span>
+              <span className={`font-semibold ${a11y ? "text-sm text-foreground" : "text-xs text-[#4c5550]"}`}>
+                {label}
+              </span>
             </button>
           ))}
         </div>
       </section>
 
-      <p className="mt-3 text-xs text-[#69716d] text-center">
+      <p className={`mt-3 text-center ${a11y ? "text-base text-foreground" : "text-xs text-[#69716d]"}`}>
         Toque na barra para aparecer{" "}
         <button
           type="button"
           onClick={runTutorialSearch}
-          className="font-extrabold text-info underline underline-offset-2"
+          className={`font-extrabold underline underline-offset-2 ${a11y ? "text-foreground" : "text-info"}`}
         >
           "{suggested}"
         </button>
@@ -651,33 +756,45 @@ function SimSearch({
         {news.map((item) => (
           <article
             key={item.title}
-            className="rounded-3xl bg-white overflow-hidden shadow-sm border border-[#dfe4e0]"
+            className={`rounded-3xl bg-white overflow-hidden shadow-sm ${
+              a11y ? "border-4 border-foreground" : "border border-[#dfe4e0]"
+            }`}
           >
             <div className="p-4">
               <div className="grid grid-cols-[1fr_88px] gap-3 items-start">
-                <h3 className="text-xl leading-snug font-normal text-[#343a38]">{item.title}</h3>
+                <h3 className={`${a11y ? "text-2xl" : "text-xl"} leading-snug font-normal text-[#343a38]`}>
+                  {item.title}
+                </h3>
                 <div
                   aria-hidden="true"
-                  className={`h-20 rounded-2xl border border-[#dfe4e0] flex items-center justify-center ${
-                    item.kind === "tea"
-                      ? "bg-gradient-to-br from-[#f4ead6] to-[#dce9df]"
-                      : "bg-gradient-to-br from-[#e3ebef] to-[#e7e2da]"
+                  className={`h-20 rounded-2xl flex items-center justify-center ${
+                    a11y
+                      ? "bg-background border-4 border-foreground"
+                      : `border border-[#dfe4e0] ${
+                          item.kind === "tea"
+                            ? "bg-gradient-to-br from-[#f4ead6] to-[#dce9df]"
+                            : "bg-gradient-to-br from-[#e3ebef] to-[#e7e2da]"
+                        }`
                   }`}
                 >
                   {item.kind === "tea" ? (
-                    <BookOpen className="size-8 text-success" />
+                    <BookOpen className={`size-8 ${a11y ? "text-foreground" : "text-success"}`} />
                   ) : (
-                    <Sparkles className="size-8 text-info" />
+                    <Sparkles className={`size-8 ${a11y ? "text-foreground" : "text-info"}`} />
                   )}
                 </div>
               </div>
-              <div className="mt-4 flex items-center gap-2 text-[#69716d]">
-                <span className="size-6 rounded-full bg-[#607d6b] text-white text-xs font-bold flex items-center justify-center">
+              <div className={`mt-4 flex items-center gap-2 ${a11y ? "text-foreground" : "text-[#69716d]"}`}>
+                <span
+                  className={`size-6 rounded-full text-xs font-bold flex items-center justify-center ${
+                    a11y ? "bg-foreground text-background" : "bg-[#607d6b] text-white"
+                  }`}
+                >
                   {item.source.charAt(0)}
                 </span>
-                <span className="text-sm font-medium">{item.source}</span>
+                <span className={`${a11y ? "text-base" : "text-sm"} font-medium`}>{item.source}</span>
                 <span className="text-sm">· {item.age}</span>
-                <div className="ml-auto flex items-center gap-4 text-[#343a38]">
+                <div className={`ml-auto flex items-center gap-4 ${a11y ? "text-foreground" : "text-[#343a38]"}`}>
                   <Share2 className="size-5" />
                   <MoreVertical className="size-5" />
                 </div>
@@ -702,6 +819,7 @@ function SimResults({
   onPickResult: () => void;
   onExplain: (d: { title: string; body: string }) => void;
 }) {
+  const { enabled: a11y } = useA11y();
   const results = [
     {
       site: "receitasdadonarosa.com.br",
@@ -736,36 +854,60 @@ function SimResults({
   ];
 
   return (
-    <div className="flex flex-col bg-[#f4f5f4] flex-1 overflow-y-auto">
+    <div className={`flex flex-col flex-1 overflow-y-auto ${a11y ? "bg-background" : "bg-[#f4f5f4]"}`}>
       {/* Browser-like top bar */}
-      <div className="sticky top-0 z-10 bg-[#f4f5f4] border-b border-[#dfe4e0]">
+      <div
+        className={`sticky top-0 z-10 ${
+          a11y ? "bg-background border-b-4 border-foreground" : "bg-[#f4f5f4] border-b border-[#dfe4e0]"
+        }`}
+      >
         <div className="px-4 pt-4 pb-3 flex items-center gap-3">
-          <Home className="size-6 shrink-0 text-[#343a38]" strokeWidth={2.6} />
-          <div className="flex-1 h-10 rounded-full bg-[#e4e8e5] px-3 flex items-center gap-2 text-[#4d5551] min-w-0">
+          <Home className={`size-6 shrink-0 ${a11y ? "text-foreground" : "text-[#343a38]"}`} strokeWidth={2.6} />
+          <div
+            className={`flex-1 h-10 rounded-full px-3 flex items-center gap-2 min-w-0 ${
+              a11y ? "bg-background text-foreground border-4 border-foreground" : "bg-[#e4e8e5] text-[#4d5551]"
+            }`}
+          >
             <span className="text-base leading-none">⌘</span>
             <span className="text-sm truncate">google.com/search?q=Como+fazer+chá</span>
           </div>
-          <span className="size-7 rounded-lg border-2 border-[#343a38] flex items-center justify-center text-sm font-extrabold text-[#343a38]">
+          <span
+            className={`size-7 rounded-lg border-2 flex items-center justify-center text-sm font-extrabold ${
+              a11y ? "border-foreground text-foreground" : "border-[#343a38] text-[#343a38]"
+            }`}
+          >
             9
           </span>
-          <MoreVertical className="size-6 shrink-0 text-[#343a38]" strokeWidth={2.6} />
+          <MoreVertical className={`size-6 shrink-0 ${a11y ? "text-foreground" : "text-[#343a38]"}`} strokeWidth={2.6} />
         </div>
 
         <div className="px-4 pb-3">
           <div className="flex items-center justify-between px-1">
-            <Sparkles className="size-6 text-[#56635d]" />
+            <Sparkles className={`size-6 ${a11y ? "text-foreground" : "text-[#56635d]"}`} />
             <GoogleLogo className="text-3xl" />
-            <span className="size-9 rounded-full bg-[#607d6b] text-white flex items-center justify-center text-lg font-bold ring-4 ring-[#d8e2dc]">
+            <span
+              className={`size-9 rounded-full flex items-center justify-center text-lg font-bold ${
+                a11y
+                  ? "bg-foreground text-background border-2 border-foreground"
+                  : "bg-[#607d6b] text-white ring-4 ring-[#d8e2dc]"
+              }`}
+            >
               A
             </span>
           </div>
 
-          <div className="mt-3 h-12 rounded-full bg-white shadow-md px-4 flex items-center gap-3">
-            <Search className="size-5 text-[#69716d]" />
-            <span className="flex-1 text-base text-[#1f2422] truncate">{query}</span>
-            <X className="size-5 text-[#343a38]" />
-            <span className="h-7 w-px bg-[#dfe4e0]" />
-            <Mic className="size-5 text-[#343a38]" />
+          <div
+            className={`mt-3 h-12 rounded-full bg-white px-4 flex items-center gap-3 ${
+              a11y ? "border-4 border-foreground" : "shadow-md"
+            }`}
+          >
+            <Search className={`size-5 ${a11y ? "text-foreground" : "text-[#69716d]"}`} />
+            <span className={`flex-1 truncate ${a11y ? "text-lg text-foreground" : "text-base text-[#1f2422]"}`}>
+              {query}
+            </span>
+            <X className={`size-5 ${a11y ? "text-foreground" : "text-[#343a38]"}`} />
+            <span className={`h-7 w-px ${a11y ? "bg-foreground" : "bg-[#dfe4e0]"}`} />
+            <Mic className={`size-5 ${a11y ? "text-foreground" : "text-[#343a38]"}`} />
           </div>
         </div>
       </div>
@@ -774,41 +916,55 @@ function SimResults({
         <button
           type="button"
           onClick={onPickResult}
-          className="mx-3 mb-3 block w-[calc(100%-1.5rem)] rounded-2xl text-left px-3 py-4 bg-white border border-[#dfe4e0] animate-pulse-ring"
+          className={`mx-3 mb-3 block w-[calc(100%-1.5rem)] rounded-2xl text-left px-3 py-4 bg-white animate-pulse-ring ${
+            a11y ? "border-4 border-foreground" : "border border-[#dfe4e0]"
+          }`}
         >
           <div className="flex items-start gap-3">
-            <span className="size-10 rounded-full bg-[#f4f5f4] border border-[#dfe4e0] flex items-center justify-center text-success">
+            <span
+              className={`size-10 rounded-full flex items-center justify-center ${
+                a11y
+                  ? "bg-foreground text-background border-2 border-foreground"
+                  : "bg-[#f4f5f4] border border-[#dfe4e0] text-success"
+              }`}
+            >
               <BookOpen className="size-5" />
             </span>
             <div className="min-w-0 flex-1">
               <div className="flex items-start gap-2">
                 <div className="min-w-0 flex-1">
-                  <p className="text-base text-[#1f2422]">{results[0].name}</p>
-                  <p className="text-sm text-[#5f6763] truncate">https://www.{results[0].site}</p>
+                  <p className={`${a11y ? "text-lg" : "text-base"} text-[#1f2422]`}>{results[0].name}</p>
+                  <p className={`${a11y ? "text-base text-foreground" : "text-sm text-[#5f6763]"} truncate`}>
+                    https://www.{results[0].site}
+                  </p>
                 </div>
-                <MoreVertical className="size-5 text-[#69716d] shrink-0" />
+                <MoreVertical className={`size-5 shrink-0 ${a11y ? "text-foreground" : "text-[#69716d]"}`} />
               </div>
-              <h3 className="mt-3 text-xl leading-tight font-normal text-[#1558c8]">
+              <h3 className={`mt-3 leading-tight font-normal ${a11y ? "text-2xl text-foreground underline" : "text-xl text-[#1558c8]"}`}>
                 {results[0].title}
               </h3>
-              <p className="mt-2 text-sm leading-snug text-[#5f6763]">
+              <p className={`mt-2 leading-snug ${a11y ? "text-base text-foreground" : "text-sm text-[#5f6763]"}`}>
                 <span>{results[0].date} - </span>
                 {results[0].desc}
               </p>
-              <span className="mt-3 inline-flex items-center gap-1 bg-yellow-500 text-black text-sm font-extrabold px-2 py-1 rounded-full shadow animate-bounce">
+              <span
+                className={`mt-3 inline-flex items-center gap-1 font-extrabold px-2 py-1 rounded-full shadow animate-bounce ${
+                  a11y ? "bg-foreground text-background text-base" : "bg-yellow-500 text-black text-sm"
+                }`}
+              >
                 Toque aqui
               </span>
             </div>
           </div>
         </button>
 
-        <div className="h-3 bg-[#eef0f1]" />
+        <div className={`h-3 ${a11y ? "bg-foreground" : "bg-[#eef0f1]"}`} />
 
         <section className="px-4 py-5 bg-white">
-          <h3 className="text-2xl leading-tight font-semibold text-[#1f2422]">
+          <h3 className={`${a11y ? "text-3xl" : "text-2xl"} leading-tight font-semibold text-[#1f2422]`}>
             As pessoas também perguntam
           </h3>
-          <div className="mt-4 border-t border-[#d7dcda]">
+          <div className={`mt-4 ${a11y ? "border-t-4 border-foreground" : "border-t border-[#d7dcda]"}`}>
             {questions.map((question) => (
               <button
                 key={question}
@@ -820,10 +976,16 @@ function SimResults({
                       "No Google real, tocar aqui abre uma resposta curta. Nesta simulação, vamos continuar usando o primeiro link destacado.",
                   })
                 }
-                className="w-full py-3.5 border-b border-[#d7dcda] flex items-center gap-3 text-left"
+                className={`w-full py-3.5 flex items-center gap-3 text-left ${
+                  a11y ? "border-b-4 border-foreground" : "border-b border-[#d7dcda]"
+                }`}
               >
-                <span className="flex-1 text-lg leading-snug text-[#1f2422]">{question}</span>
-                <span className="size-9 rounded-full bg-[#f1f3f2] flex items-center justify-center text-[#69716d] shrink-0">
+                <span className={`flex-1 leading-snug text-[#1f2422] ${a11y ? "text-xl" : "text-lg"}`}>{question}</span>
+                <span
+                  className={`size-9 rounded-full flex items-center justify-center shrink-0 ${
+                    a11y ? "bg-foreground text-background" : "bg-[#f1f3f2] text-[#69716d]"
+                  }`}
+                >
                   <ChevronDown className="size-5" />
                 </span>
               </button>
@@ -831,7 +993,7 @@ function SimResults({
           </div>
         </section>
 
-        <div className="h-3 bg-[#eef0f1]" />
+        <div className={`h-3 ${a11y ? "bg-foreground" : "bg-[#eef0f1]"}`} />
 
         {results.slice(1).map((r) => (
           <button
@@ -844,24 +1006,32 @@ function SimResults({
                   "Você pode tocar em outros links azuis no Google. Para esta simulação, vamos usar o primeiro resultado, que está destacado.",
               })
             }
-            className="w-full text-left px-4 py-5 bg-white border-b border-[#dfe4e0]"
+            className={`w-full text-left px-4 py-5 bg-white ${
+              a11y ? "border-b-4 border-foreground" : "border-b border-[#dfe4e0]"
+            }`}
           >
             <div className="flex items-start gap-3">
-              <span className="size-10 rounded-full bg-[#607d6b] text-white flex items-center justify-center font-extrabold">
+              <span
+                className={`size-10 rounded-full flex items-center justify-center font-extrabold ${
+                  a11y ? "bg-foreground text-background" : "bg-[#607d6b] text-white"
+                }`}
+              >
                 {r.name.charAt(0)}
               </span>
               <div className="min-w-0 flex-1">
                 <div className="flex items-start gap-2">
                   <div className="min-w-0 flex-1">
-                    <p className="text-base text-[#1f2422]">{r.name}</p>
-                    <p className="text-sm text-[#5f6763] truncate">https://{r.site}</p>
+                    <p className={`${a11y ? "text-lg" : "text-base"} text-[#1f2422]`}>{r.name}</p>
+                    <p className={`${a11y ? "text-base text-foreground" : "text-sm text-[#5f6763]"} truncate`}>
+                      https://{r.site}
+                    </p>
                   </div>
-                  <MoreVertical className="size-5 text-[#69716d] shrink-0" />
+                  <MoreVertical className={`size-5 shrink-0 ${a11y ? "text-foreground" : "text-[#69716d]"}`} />
                 </div>
-                <h3 className="mt-3 text-xl leading-tight font-normal text-[#1558c8]">
+                <h3 className={`mt-3 leading-tight font-normal ${a11y ? "text-2xl text-foreground underline" : "text-xl text-[#1558c8]"}`}>
                   {r.title}
                 </h3>
-                <p className="mt-2 text-sm leading-snug text-[#5f6763]">
+                <p className={`mt-2 leading-snug ${a11y ? "text-base text-foreground" : "text-sm text-[#5f6763]"}`}>
                   <span>{r.date} - </span>
                   {r.desc}
                 </p>
@@ -871,7 +1041,7 @@ function SimResults({
         ))}
 
         <section className="px-4 py-5 bg-white">
-          <h3 className="text-2xl leading-tight font-semibold text-[#1f2422]">
+          <h3 className={`${a11y ? "text-3xl" : "text-2xl"} leading-tight font-semibold text-[#1f2422]`}>
             Outras pessoas pesquisaram
           </h3>
           <div className="mt-4 flex gap-3 overflow-x-auto pb-1">
@@ -879,7 +1049,11 @@ function SimResults({
               (q) => (
                 <span
                   key={q}
-                  className="shrink-0 px-3 py-2 rounded-full border border-[#d7dcda] text-[#1558c8] text-sm font-semibold"
+                  className={`shrink-0 px-3 py-2 rounded-full font-semibold ${
+                    a11y
+                      ? "border-4 border-foreground text-foreground text-base"
+                      : "border border-[#d7dcda] text-[#1558c8] text-sm"
+                  }`}
                 >
                   {q}
                 </span>
@@ -902,31 +1076,51 @@ function SimPage({
   onBack: () => void;
   onFinish: () => void;
 }) {
+  const { enabled: a11y } = useA11y();
+
   return (
     <div className="flex flex-col bg-white flex-1 overflow-y-auto">
       <div className="sticky top-0 z-20">
         {/* Browser bar */}
-        <div className="px-4 py-3 bg-[#f26a21] flex items-center gap-3 text-[#25211f]">
+        <div
+          className={`px-4 py-3 flex items-center gap-3 ${
+            a11y ? "bg-foreground text-background" : "bg-[#f26a21] text-[#25211f]"
+          }`}
+        >
           <button
             type="button"
             onClick={onBack}
-            className="inline-flex items-center justify-center size-8 rounded-md hover:bg-white/15 transition"
+            className={`inline-flex items-center justify-center size-8 rounded-md transition ${
+              a11y ? "bg-background text-foreground border-2 border-background" : "hover:bg-white/15"
+            }`}
             aria-label="Voltar para os resultados"
           >
             <Home className="size-6" strokeWidth={2.6} />
           </button>
-          <div className="flex-1 h-10 px-3 rounded-full bg-white/25 flex items-center gap-2 min-w-0 text-[#4a352d]">
+          <div
+            className={`flex-1 h-10 px-3 rounded-full flex items-center gap-2 min-w-0 ${
+              a11y ? "bg-background text-foreground border-2 border-background" : "bg-white/25 text-[#4a352d]"
+            }`}
+          >
             <Lock className="size-4 shrink-0" />
             <span className="truncate text-sm">receitasdadonarosa.com.br</span>
           </div>
-          <span className="size-8 rounded-lg border-2 border-[#25211f] flex items-center justify-center text-sm font-extrabold">
+          <span
+            className={`size-8 rounded-lg border-2 flex items-center justify-center text-sm font-extrabold ${
+              a11y ? "border-background text-background" : "border-[#25211f]"
+            }`}
+          >
             9
           </span>
           <MoreVertical className="size-6 shrink-0" strokeWidth={2.6} />
         </div>
 
         {/* Site header */}
-        <div className="h-20 px-4 bg-white shadow-md flex items-center justify-between">
+        <div
+          className={`h-20 px-4 bg-white shadow-md flex items-center justify-between ${
+            a11y ? "border-b-4 border-foreground" : ""
+          }`}
+        >
           <button
             type="button"
             className="size-10 flex flex-col justify-center gap-1.5"
@@ -937,14 +1131,22 @@ function SimPage({
             <span className="h-1 w-8 rounded-full bg-[#343a38]" />
           </button>
           <div className="flex items-center gap-3">
-            <span className="size-11 rounded-full bg-white shadow-md flex items-center justify-center text-[#f26a21]">
+            <span
+              className={`size-11 rounded-full bg-white shadow-md flex items-center justify-center ${
+                a11y ? "text-foreground border-2 border-foreground" : "text-[#f26a21]"
+              }`}
+            >
               <Search className="size-6" />
             </span>
-            <span className="text-2xl font-extrabold tracking-tight text-[#f26a21]">
+            <span className={`text-2xl font-extrabold tracking-tight ${a11y ? "text-foreground" : "text-[#f26a21]"}`}>
               RECEITAS DA ROSA
             </span>
           </div>
-          <span className="size-11 rounded-full bg-white shadow-md flex items-center justify-center text-[#f26a21]">
+          <span
+            className={`size-11 rounded-full bg-white shadow-md flex items-center justify-center ${
+              a11y ? "text-foreground border-2 border-foreground" : "text-[#f26a21]"
+            }`}
+          >
             <User className="size-6" />
           </span>
         </div>
@@ -953,80 +1155,98 @@ function SimPage({
       {/* Page content */}
       <article className="bg-white flex-1">
         <div className="px-5 pt-6 pb-4">
-          <p className="text-xs text-muted-foreground font-bold">
+          <p className={`${a11y ? "text-base text-foreground" : "text-xs text-muted-foreground"} font-bold`}>
             Receitas &gt; Chás e bebidas
           </p>
-          <h2 className="mt-8 text-center text-3xl font-extrabold leading-tight text-[#3a3a3a]">
+          <h2 className={`mt-8 text-center font-extrabold leading-tight text-[#3a3a3a] ${a11y ? "text-4xl" : "text-3xl"}`}>
             Chá de camomila: veja como fazer do jeito certo e aproveitar seus benefícios
           </h2>
-          <p className="mt-8 text-center text-base text-[#4d5551]">
+          <p className={`mt-8 text-center ${a11y ? "text-lg text-foreground" : "text-base text-[#4d5551]"}`}>
             Atualizado em 23/05/2024 às 15:57
           </p>
           <button
             type="button"
-            className="mx-auto mt-4 flex items-center gap-2 text-[#4d5551] text-base"
+            className={`mx-auto mt-4 flex items-center gap-2 ${a11y ? "text-foreground text-lg" : "text-[#4d5551] text-base"}`}
           >
             <Share2 className="size-5" />
             Compartilhar
           </button>
 
-          <div className="mt-6 rounded-lg bg-white shadow-lg border border-[#eef0f1] p-4">
+          <div
+            className={`mt-6 rounded-lg bg-white shadow-lg p-4 ${
+              a11y ? "border-4 border-foreground" : "border border-[#eef0f1]"
+            }`}
+          >
             <div className="flex items-center gap-3">
-              <span className="size-14 rounded-full bg-[#d8e2dc] flex items-center justify-center text-[#607d6b] font-extrabold">
+              <span
+                className={`size-14 rounded-full flex items-center justify-center font-extrabold ${
+                  a11y ? "bg-foreground text-background" : "bg-[#d8e2dc] text-[#607d6b]"
+                }`}
+              >
                 DR
               </span>
-              <p className="text-base text-[#3a3a3a]">
+              <p className={`${a11y ? "text-lg" : "text-base"} text-[#3a3a3a]`}>
                 Por <span className="underline">Dona Rosa</span>
               </p>
             </div>
-            <p className="mt-3 text-base leading-relaxed text-[#4d5551]">
+            <p className={`mt-3 leading-relaxed ${a11y ? "text-lg text-foreground" : "text-base text-[#4d5551]"}`}>
               Uma explicação simples para preparar o chá com calma e segurança.
             </p>
           </div>
         </div>
 
         <section className="px-5 py-5">
-          <p className="text-2xl leading-snug font-extrabold text-[#3a3a3a]">
+          <p className={`${a11y ? "text-3xl" : "text-2xl"} leading-snug font-extrabold text-[#3a3a3a]`}>
             O chá de camomila é conhecido por ajudar no bem-estar, mas o preparo
             correto deixa a bebida mais agradável.
           </p>
 
-          <div className="mt-6 aspect-[4/3] rounded-sm bg-gradient-to-br from-[#f4ead6] to-[#dce9df] border border-[#dfe4e0] flex items-center justify-center overflow-hidden">
+          <div
+            className={`mt-6 aspect-[4/3] rounded-sm flex items-center justify-center overflow-hidden ${
+              a11y
+                ? "bg-background border-4 border-foreground"
+                : "bg-gradient-to-br from-[#f4ead6] to-[#dce9df] border border-[#dfe4e0]"
+            }`}
+          >
             <div className="text-center">
               <BookOpen className="mx-auto size-16 text-[#607d6b]" />
               <p className="mt-2 text-sm font-bold text-[#607d6b]">Foto do chá de camomila</p>
             </div>
           </div>
 
-          <p className="mt-6 text-xl leading-relaxed text-[#3a3a3a]">
+          <p className={`${a11y ? "text-2xl" : "text-xl"} mt-6 leading-relaxed text-[#3a3a3a]`}>
             A camomila é uma planta delicada. Para preparar o chá, aqueça a água
             e desligue o fogo antes de colocar as flores. Assim, o sabor fica
             suave e a bebida pode ser tomada com mais tranquilidade.
           </p>
 
-          <h3 className="mt-8 text-2xl font-extrabold text-[#3a3a3a]">
+          <h3 className={`${a11y ? "text-3xl" : "text-2xl"} mt-8 font-extrabold text-[#3a3a3a]`}>
             Como preparar o chá de camomila
           </h3>
-          <p className="mt-4 text-xl leading-relaxed text-[#3a3a3a]">
+          <p className={`${a11y ? "text-2xl" : "text-xl"} mt-4 leading-relaxed text-[#3a3a3a]`}>
             Coloque uma xícara de água para aquecer. Quando começar a ferver,
             desligue o fogo. Acrescente uma colher de chá de flores de camomila,
             tampe a xícara e espere de 5 a 10 minutos. Depois, coe e beba morno.
           </p>
 
-          <h3 className="mt-8 text-2xl font-extrabold text-[#3a3a3a]">
+          <h3 className={`${a11y ? "text-3xl" : "text-2xl"} mt-8 font-extrabold text-[#3a3a3a]`}>
             Benefícios do chá de camomila
           </h3>
-          <p className="mt-4 text-xl leading-relaxed text-[#3a3a3a]">
+          <p className={`${a11y ? "text-2xl" : "text-xl"} mt-4 leading-relaxed text-[#3a3a3a]`}>
             O chá de camomila pode ajudar a relaxar e trazer uma sensação de
             conforto. Se você usa remédios ou tem alguma dúvida de saúde, converse
             com a equipe do lar antes de tomar com frequência.
           </p>
 
-          <div className="mt-8 rounded-2xl bg-info/5 border-2 border-info p-4">
-            <p className="text-sm font-bold text-info">
+          <div
+            className={`mt-8 rounded-2xl p-4 ${
+              a11y ? "bg-background border-4 border-foreground" : "bg-info/5 border-2 border-info"
+            }`}
+          >
+            <p className={`font-bold ${a11y ? "text-base text-foreground" : "text-sm text-info"}`}>
               Você pesquisou: <span className="font-extrabold">"{query}"</span>
             </p>
-            <p className="mt-1 text-sm text-muted-foreground leading-snug">
+            <p className={`mt-1 leading-snug ${a11y ? "text-base text-foreground" : "text-sm text-muted-foreground"}`}>
               Encontrou a resposta no site. Quando terminar de ler, toque no botão abaixo.
             </p>
           </div>
@@ -1034,11 +1254,19 @@ function SimPage({
       </article>
 
       {/* Finish bar */}
-      <div className="mt-auto p-4 border-t border-[#dfe4e0] bg-[#f4f5f4] sticky bottom-0">
+      <div
+        className={`mt-auto p-4 sticky bottom-0 ${
+          a11y ? "bg-background border-t-4 border-foreground" : "border-t border-[#dfe4e0] bg-[#f4f5f4]"
+        }`}
+      >
         <button
           type="button"
           onClick={onFinish}
-          className="w-full h-14 rounded-2xl bg-success text-white text-lg font-extrabold hover:opacity-90 transition"
+          className={`w-full h-14 rounded-2xl text-lg font-extrabold hover:opacity-90 transition ${
+            a11y
+              ? "bg-foreground text-background border-4 border-foreground"
+              : "bg-success text-white"
+          }`}
         >
           Concluir simulação
         </button>
