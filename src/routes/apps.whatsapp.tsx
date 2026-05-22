@@ -26,6 +26,7 @@ import {
   CheckCheck,
 } from "lucide-react";
 import { A11yToggle, useA11y } from "../lib/a11y";
+import { markSimulationCompleted } from "../lib/simulationProgress";
 import { useAudioTts } from "../lib/tts";
 
 export const Route = createFileRoute("/apps/whatsapp")({
@@ -184,6 +185,10 @@ function WhatsappSimulation() {
     if (stage !== "intro") return;
     const t = setTimeout(() => setStage("sim-chats"), 1800);
     return () => clearTimeout(t);
+  }, [stage]);
+
+  useEffect(() => {
+    if (stage === "done") markSimulationCompleted("whatsapp");
   }, [stage]);
 
   // Call ringing timer (auto-answer after a beat then count duration)

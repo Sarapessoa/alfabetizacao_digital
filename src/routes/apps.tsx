@@ -3,6 +3,7 @@ import { createFileRoute, Link, Outlet, useLocation } from "@tanstack/react-rout
 import {
   Search,
   ChevronRight,
+  CheckCircle2,
   Play,
   Globe,
   Camera,
@@ -15,6 +16,8 @@ import {
   SlidersHorizontal,
 } from "lucide-react";
 import { useA11y } from "../lib/a11y";
+import type { SimulationId } from "../lib/simulationProgress";
+import { useSimulationProgress } from "../lib/simulationProgress";
 import { useAudioTts } from "../lib/tts";
 import { BottomTabBar } from "../components/BottomTabBar";
 import { PageHeader } from "../components/PageHeader";
@@ -43,6 +46,7 @@ type AppItem = {
   description: string;
   icon: React.ComponentType<{ className?: string; strokeWidth?: number }>;
   tone: Tone;
+  simulationId?: SimulationId;
   to?:
     | "/apps/youtube"
     | "/apps/google"
@@ -60,6 +64,7 @@ const apps: AppItem[] = [
     description: "Ajuste o som, o brilho e o tamanho da letra do celular.",
     icon: Settings,
     tone: "primary",
+    simulationId: "configuracoes",
     to: "/apps/configuracoes",
   },
   {
@@ -70,6 +75,7 @@ const apps: AppItem[] = [
     description: "Tire fotos e veja todas as suas lembranças guardadas.",
     icon: Camera,
     tone: "teal",
+    simulationId: "camera",
     to: "/apps/camera",
   },
   {
@@ -80,6 +86,7 @@ const apps: AppItem[] = [
     description: "Pergunte qualquer coisa e receba uma resposta na hora.",
     icon: Globe,
     tone: "info",
+    simulationId: "google",
     to: "/apps/google",
   },
   {
@@ -90,6 +97,7 @@ const apps: AppItem[] = [
     description: "Assista vídeos de tudo: novelas, receitas, música e notícias.",
     icon: Play,
     tone: "destructive",
+    simulationId: "youtube",
     to: "/apps/youtube",
   },
   {
@@ -97,9 +105,10 @@ const apps: AppItem[] = [
     analogy: "Como cartas, telegramas e SMS",
     shortAnalogy: "Cartas e SMS",
     analogyIcon: Mail,
-    description: "Envie mensagens, fotos e faça chamadas para amigas e pessoas próximas.",
+    description: "Envie mensagens, fotos e faça chamadas para pessoas de confiança.",
     icon: MessageCircle,
     tone: "success",
+    simulationId: "whatsapp",
     to: "/apps/whatsapp",
   },
 ];
@@ -120,6 +129,7 @@ function AppsPage() {
   const [query, setQuery] = useState("");
   const [speaking, setSpeaking] = useState(false);
   const { enabled: a11y } = useA11y();
+  const progress = useSimulationProgress();
   const { speak, stopSpeaking } = useAudioTts({ setSpeaking });
 
   const readScreen = () =>
@@ -228,6 +238,9 @@ function AppsPage() {
               const Icon = app.icon;
               const Analogy = app.analogyIcon;
               const available = Boolean(app.to);
+              const completed = app.simulationId
+                ? Boolean(progress[app.simulationId]?.completed)
+                : false;
               if (!available) {
                 return (
                   <div
@@ -264,7 +277,7 @@ function AppsPage() {
                   key={app.name}
                   to={app.to!}
                   className={cardBase}
-                  aria-label={`${app.name}, ${app.analogy}. ${app.description}`}
+                  aria-label={`${app.name}, ${completed ? "simulação concluída. " : ""}${app.analogy}. ${app.description}`}
                 >
                   <div
                     className={
@@ -274,7 +287,21 @@ function AppsPage() {
                     <Icon className={iconClass} strokeWidth={a11y ? 2.6 : 2.2} />
                   </div>
                   <div className="min-w-0 flex flex-col gap-2 self-center">
-                    <h2 className={titleClass}>{app.name}</h2>
+                    <div className="flex min-w-0 flex-wrap items-center gap-2">
+                      <h2 className={titleClass}>{app.name}</h2>
+                      {completed ? (
+                        <span
+                          className={
+                            a11y
+                              ? "inline-flex shrink-0 items-center gap-1.5 rounded-full bg-foreground px-3 py-1 text-base font-extrabold leading-none text-background"
+                              : "inline-flex shrink-0 items-center gap-1.5 rounded-full border border-[oklch(0.62_0.16_150/0.45)] bg-[oklch(0.95_0.04_150)] px-2.5 py-1 text-xs font-extrabold leading-none text-[oklch(0.36_0.13_150)]"
+                          }
+                        >
+                          <CheckCircle2 className={a11y ? "size-5" : "size-4"} strokeWidth={2.8} />
+                          Concluído
+                        </span>
+                      ) : null}
+                    </div>
                     <span
                       className={
                         a11y

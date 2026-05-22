@@ -24,6 +24,7 @@ import {
   User,
 } from "lucide-react";
 import { A11yToggle, useA11y } from "../lib/a11y";
+import { markSimulationCompleted } from "../lib/simulationProgress";
 import { useAudioTts } from "../lib/tts";
 
 export const Route = createFileRoute("/apps/google")({
@@ -104,6 +105,10 @@ function GoogleSimulation() {
     if (stage !== "intro") return;
     const t = setTimeout(() => setStage("sim-search"), 1800);
     return () => clearTimeout(t);
+  }, [stage]);
+
+  useEffect(() => {
+    if (stage === "done") markSimulationCompleted("google");
   }, [stage]);
 
   const { speak, stopSpeaking } = useAudioTts({ setSpeaking });

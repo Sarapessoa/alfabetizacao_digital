@@ -27,6 +27,7 @@ import {
   VolumeX,
 } from "lucide-react";
 import { A11yToggle, useA11y } from "../lib/a11y";
+import { markSimulationCompleted } from "../lib/simulationProgress";
 import { useAudioTts } from "../lib/tts";
 import boloImg from "../assets/yt-bolo.jpg";
 import croceImg from "../assets/yt-croche.jpg";
@@ -116,6 +117,10 @@ function YouTubeSimulation() {
     if (stage !== "intro") return;
     const t = setTimeout(() => setStage("sim-home"), 1800);
     return () => clearTimeout(t);
+  }, [stage]);
+
+  useEffect(() => {
+    if (stage === "done") markSimulationCompleted("youtube");
   }, [stage]);
 
   const { speak, stopSpeaking } = useAudioTts({ setSpeaking });

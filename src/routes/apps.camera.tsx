@@ -22,6 +22,7 @@ import {
   Aperture,
 } from "lucide-react";
 import { A11yToggle, useA11y } from "../lib/a11y";
+import { markSimulationCompleted } from "../lib/simulationProgress";
 import { useAudioTts } from "../lib/tts";
 import religious1 from "@/assets/religious-1.jpg";
 import religious2 from "@/assets/religious-2.jpg";
@@ -149,6 +150,10 @@ function CameraSimulation() {
     if (stage !== "intro") return;
     const t = setTimeout(() => setStage("sim-camera"), 1800);
     return () => clearTimeout(t);
+  }, [stage]);
+
+  useEffect(() => {
+    if (stage === "done") markSimulationCompleted("camera");
   }, [stage]);
 
   // Reset flash after taking photo
