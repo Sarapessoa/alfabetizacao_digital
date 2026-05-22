@@ -10,15 +10,12 @@ import {
   Sparkles,
   ChevronRight,
   ChevronLeft,
-  Wifi,
   Sun,
   Type,
   SlidersHorizontal,
-  Lock,
   User,
   Volume1,
   VolumeX,
-  Check,
 } from "lucide-react";
 import { A11yToggle, useA11y } from "../lib/a11y";
 import { useAudioTts } from "../lib/tts";
@@ -31,7 +28,7 @@ export const Route = createFileRoute("/apps/configuracoes")({
       {
         name: "description",
         content:
-          "Aprenda a mexer nas Configurações do celular: conectar no Wi-Fi, ajustar som, brilho e tamanho da letra, com simulação prática passo a passo.",
+          "Aprenda a mexer nas Configurações do celular: ajustar som, brilho e tamanho da letra, com simulação prática passo a passo.",
       },
     ],
   }),
@@ -41,23 +38,14 @@ type Stage =
   | "intro"
   | "overview"
   | "sim-home"
-  | "sim-wifi"
   | "sim-sound"
   | "sim-brightness"
   | "sim-textsize"
   | "done";
 
-type FuncKey = "wifi" | "sound" | "brightness" | "text";
+type FuncKey = "sound" | "brightness" | "text";
 
-type WifiNetwork = { ssid: string; locked: boolean; bars: 1 | 2 | 3 };
-
-const NETWORKS: WifiNetwork[] = [
-  { ssid: "Casa_Maria", locked: true, bars: 3 },
-  { ssid: "Vivo-Fibra-2G", locked: true, bars: 2 },
-  { ssid: "NET_Vizinho", locked: true, bars: 1 },
-];
-
-const FUNC_ORDER: FuncKey[] = ["wifi", "sound", "brightness", "text"];
+const FUNC_ORDER: FuncKey[] = ["sound", "brightness", "text"];
 
 function ConfigSimulation() {
   const [stage, setStage] = useState<Stage>("overview");
@@ -67,17 +55,11 @@ function ConfigSimulation() {
 
   // completion flags
   const [done, setDone] = useState<Record<FuncKey, boolean>>({
-    wifi: false,
     sound: false,
     brightness: false,
     text: false,
   });
 
-  // wifi sub-state
-  const [wifiOn, setWifiOn] = useState(false);
-  const [wifiPicked, setWifiPicked] = useState<WifiNetwork | null>(null);
-  const [wifiPassword, setWifiPassword] = useState("");
-  const [wifiConnected, setWifiConnected] = useState(false);
   // sound
   const [volume, setVolume] = useState(30);
   const [volumeTouched, setVolumeTouched] = useState(false);
@@ -91,27 +73,14 @@ function ConfigSimulation() {
   const [dialog, setDialog] = useState<null | { title: string; body: string }>(null);
 
   const steps = [
-    { n: 1, label: "Wi-Fi", key: "wifi" as FuncKey },
-    { n: 2, label: "Som", key: "sound" as FuncKey },
-    { n: 3, label: "Brilho", key: "brightness" as FuncKey },
-    { n: 4, label: "Letra", key: "text" as FuncKey },
+    { n: 1, label: "Som", key: "sound" as FuncKey },
+    { n: 2, label: "Brilho", key: "brightness" as FuncKey },
+    { n: 3, label: "Letra", key: "text" as FuncKey },
   ];
 
   const completedCount = FUNC_ORDER.filter((k) => done[k]).length;
   const nextFunc: FuncKey | null =
     FUNC_ORDER.find((k) => !done[k]) ?? null;
-  const currentStep =
-    stage === "overview"
-      ? 1
-      : stage === "sim-home"
-        ? Math.min(completedCount + 1, steps.length)
-        : stage === "sim-wifi"
-          ? 1
-          : stage === "sim-sound"
-            ? 2
-            : stage === "sim-brightness"
-              ? 3
-              : 4;
   const isDone = stage === "done";
   const allDone = completedCount === FUNC_ORDER.length;
 
@@ -158,8 +127,6 @@ function ConfigSimulation() {
         return allDone
           ? "Você concluiu todos os ajustes. Toque em concluir simulação."
           : "Esta é a tela de Ajustes. Toque na opção que está piscando para começar.";
-      case "sim-wifi":
-        return "Wi-Fi. Toque no botão verde para LIGAR o Wi-Fi, escolha sua rede e digite a senha.";
       case "sim-sound":
         return "Som. Arraste a barrinha para ajustar o volume, depois toque em Continuar.";
       case "sim-brightness":
@@ -181,8 +148,6 @@ function ConfigSimulation() {
         return allDone
           ? "configuracoes-home-concluiu-ajustes.mp3"
           : "configuracoes-home-ajustes.mp3";
-      case "sim-wifi":
-        return "configuracoes-wifi.mp3";
       case "sim-sound":
         return "configuracoes-som.mp3";
       case "sim-brightness":
@@ -300,10 +265,9 @@ function ConfigSimulation() {
             </div>
             <ol className="flex flex-col gap-3">
               {[
-                { n: 1, t: "Conectar no Wi-Fi", d: "Ligue o Wi-Fi, escolha a sua rede e digite a senha para usar a internet sem gastar dados." },
-                { n: 2, t: "Ajustar o Som", d: "Arraste a barrinha para deixar o volume mais alto ou mais baixo, do jeito que você ouve melhor." },
-                { n: 3, t: "Ajustar o Brilho", d: "Arraste a barrinha para deixar a tela mais clara ou mais escura, conforme a luz do ambiente." },
-                { n: 4, t: "Aumentar a Letra", d: "Use os botões A menos e A mais para deixar as palavras maiores e mais fáceis de ler." },
+                { n: 1, t: "Ajustar o Som", d: "Arraste a barrinha para deixar o volume mais alto ou mais baixo, do jeito que você ouve melhor." },
+                { n: 2, t: "Ajustar o Brilho", d: "Arraste a barrinha para deixar a tela mais clara ou mais escura, conforme a luz do ambiente." },
+                { n: 3, t: "Aumentar a Letra", d: "Use os botões A menos e A mais para deixar as palavras maiores e mais fáceis de ler." },
               ].map((s) => {
                 const active = s.n === 1;
                 return (
@@ -369,18 +333,14 @@ function ConfigSimulation() {
             Muito bem! Você conseguiu!
           </h2>
           <p className={`leading-snug ${a11y ? "text-xl" : "text-lg text-muted-foreground"}`}>
-            Você aprendeu a conectar no Wi-Fi e a ajustar o som, o brilho e o tamanho da letra.
-            Agora pode deixar o celular do seu jeitinho.
+            Você aprendeu a ajustar o som, o brilho e o tamanho da letra. Agora pode
+            deixar o celular do seu jeitinho.
           </p>
           <div className="flex flex-col gap-3 w-full">
             <button
               type="button"
               onClick={() => {
-                setDone({ wifi: false, sound: false, brightness: false, text: false });
-                setWifiOn(false);
-                setWifiPicked(null);
-                setWifiPassword("");
-                setWifiConnected(false);
+                setDone({ sound: false, brightness: false, text: false });
                 setVolumeTouched(false);
                 setBrightnessTouched(false);
                 setTextTouched(false);
@@ -408,24 +368,14 @@ function ConfigSimulation() {
     stage === "sim-home"
       ? allDone
         ? "Você concluiu todos os ajustes! Toque em Concluir simulação."
-        : nextFunc === "wifi"
-          ? "Toque em Wi-Fi (está piscando) para começar."
-          : nextFunc === "sound"
-            ? "Agora toque em Som para ajustar o volume."
-            : nextFunc === "brightness"
-              ? "Agora toque em Tela e Brilho."
-              : "Por último, toque em Tamanho da Letra."
-      : stage === "sim-wifi"
-        ? !wifiOn
-          ? "Toque no botão (cinza) ao lado de Wi-Fi para LIGAR."
-          : !wifiPicked
-            ? "Escolha a sua rede de Wi-Fi (a primeira tem o sinal mais forte)."
-            : !wifiConnected
-              ? "Digite a senha e toque em Conectar. (Já está digitada para você.)"
-              : "Pronto, conectado! Toque em Voltar aos Ajustes."
-        : stage === "sim-sound"
-          ? volumeTouched
-            ? "Quando estiver bom, toque em Voltar aos Ajustes."
+        : nextFunc === "sound"
+          ? "Toque em Som (está piscando) para ajustar o volume."
+          : nextFunc === "brightness"
+            ? "Agora toque em Tela e Brilho."
+            : "Por último, toque em Tamanho da Letra."
+      : stage === "sim-sound"
+        ? volumeTouched
+          ? "Quando estiver bom, toque em Voltar aos Ajustes."
             : "Arraste a barrinha do volume para a direita ou esquerda."
           : stage === "sim-brightness"
             ? brightnessTouched
@@ -496,30 +446,11 @@ function ConfigSimulation() {
             nextFunc={nextFunc}
             allDone={allDone}
             onPick={(k) => {
-              if (k === "wifi") setStage("sim-wifi");
-              else if (k === "sound") setStage("sim-sound");
+              if (k === "sound") setStage("sim-sound");
               else if (k === "brightness") setStage("sim-brightness");
               else setStage("sim-textsize");
             }}
             onFinish={() => setStage("done")}
-          />
-        ) : stage === "sim-wifi" ? (
-          <SimWifi
-            wifiOn={wifiOn}
-            picked={wifiPicked}
-            password={wifiPassword}
-            connected={wifiConnected}
-            onToggle={() => setWifiOn((v) => !v)}
-            onPick={(n) => {
-              setWifiPicked(n);
-              setWifiPassword("larmaria123");
-            }}
-            onPasswordChange={setWifiPassword}
-            onConnect={() => setWifiConnected(true)}
-            onBackToHome={() => {
-              setDone((d) => ({ ...d, wifi: true }));
-              goHome();
-            }}
           />
         ) : stage === "sim-sound" ? (
           <SimSound
@@ -621,13 +552,6 @@ function SimHome({
     iconBg: string;
   }[] = [
     {
-      key: "wifi",
-      title: "Wi-Fi",
-      value: done.wifi ? "Conectado" : "Desligado",
-      icon: <Wifi className="size-6 text-white" />,
-      iconBg: "bg-primary",
-    },
-    {
       key: "sound",
       title: "Som",
       value: done.sound ? "Ajustado" : "Padrão",
@@ -714,170 +638,6 @@ function SimHome({
           >
             Concluir simulação
           </button>
-        </div>
-      )}
-    </div>
-  );
-}
-
-/* ---------- Wi-Fi screen ---------- */
-function SimWifi({
-  wifiOn,
-  picked,
-  password,
-  connected,
-  onToggle,
-  onPick,
-  onPasswordChange,
-  onConnect,
-  onBackToHome,
-}: {
-  wifiOn: boolean;
-  picked: WifiNetwork | null;
-  password: string;
-  connected: boolean;
-  onToggle: () => void;
-  onPick: (n: WifiNetwork) => void;
-  onPasswordChange: (s: string) => void;
-  onConnect: () => void;
-  onBackToHome: () => void;
-}) {
-  // Password / connected sub-screen
-  if (picked) {
-    return (
-      <div className="flex flex-col flex-1 bg-background">
-        <div className="px-4 py-3 border-b border-border flex items-center gap-3">
-          <h2 className="text-xl font-extrabold">{picked.ssid}</h2>
-        </div>
-        <div className="p-5 flex flex-col gap-5">
-          {!connected ? (
-            <>
-              <div>
-                <label htmlFor="wifi-pass" className="text-base font-extrabold text-foreground block mb-2">
-                  Senha do Wi-Fi
-                </label>
-                <input
-                  id="wifi-pass"
-                  type="text"
-                  value={password}
-                  onChange={(e) => onPasswordChange(e.target.value)}
-                  className="w-full h-14 px-4 rounded-2xl border-2 border-border bg-card text-lg font-mono focus:outline-none focus:border-primary focus:ring-4 focus:ring-primary/20"
-                  aria-label="Digite a senha do Wi-Fi"
-                />
-                <p className="text-sm text-muted-foreground mt-2">
-                  A senha geralmente fica embaixo do roteador (a caixinha do Wi-Fi).
-                </p>
-              </div>
-              <button
-                type="button"
-                onClick={onConnect}
-                disabled={password.length < 4}
-                className="h-14 rounded-2xl bg-primary text-primary-foreground text-lg font-extrabold shadow-md hover:bg-primary/90 disabled:opacity-50 disabled:cursor-not-allowed transition animate-pulse-ring"
-              >
-                Conectar
-              </button>
-            </>
-          ) : (
-            <div className="flex flex-col items-center gap-4 text-center py-6">
-              <div className="size-20 rounded-full bg-success/15 text-success flex items-center justify-center">
-                <Check className="size-12" strokeWidth={2.6} />
-              </div>
-              <h3 className="text-2xl font-extrabold text-success">Conectado!</h3>
-              <p className="text-lg text-muted-foreground">
-                Agora o celular está usando a internet do Wi-Fi <strong>{picked.ssid}</strong>.
-              </p>
-              <button
-                type="button"
-                onClick={onBackToHome}
-                className="mt-2 w-full h-14 rounded-2xl bg-success text-white text-lg font-extrabold hover:opacity-90 transition animate-pulse-ring inline-flex items-center justify-center gap-2"
-              >
-                <ChevronLeft className="size-5" /> Voltar aos Ajustes
-              </button>
-            </div>
-          )}
-        </div>
-      </div>
-    );
-  }
-
-  // Wi-Fi page (toggle + networks if on)
-  return (
-    <div className="flex flex-col flex-1 bg-background">
-      <div className="px-4 py-3 border-b border-border flex items-center gap-3">
-        <h2 className="text-xl font-extrabold">Wi-Fi</h2>
-      </div>
-
-      {/* Toggle row */}
-      <div className="px-4 py-4 flex items-center justify-between border-b border-border bg-card">
-        <div className="flex items-center gap-3">
-          <Wifi className={`size-6 ${wifiOn ? "text-primary" : "text-muted-foreground"}`} />
-          <div>
-            <p className="text-lg font-extrabold leading-tight">Wi-Fi</p>
-            <p className="text-sm font-bold text-muted-foreground">
-              {wifiOn ? "Ligado" : "Desligado"}
-            </p>
-          </div>
-        </div>
-        <button
-          type="button"
-          onClick={onToggle}
-          aria-pressed={wifiOn}
-          aria-label="Ligar ou desligar Wi-Fi"
-          className={`relative w-20 h-11 rounded-full transition shadow-inner ${
-            wifiOn
-              ? "bg-success"
-              : "bg-muted animate-pulse-ring"
-          }`}
-        >
-          <span
-            className={`absolute top-1 size-9 rounded-full bg-white shadow-md transition-all ${
-              wifiOn ? "left-10" : "left-1"
-            }`}
-          />
-        </button>
-      </div>
-
-      {/* Networks (only if on) */}
-      {wifiOn ? (
-        <div className="px-4 py-3">
-          <p className="text-sm text-muted-foreground font-bold uppercase tracking-wide mb-2">
-            Redes disponíveis
-          </p>
-          <ul className="flex flex-col rounded-2xl overflow-hidden border border-border bg-card">
-            {NETWORKS.map((n, idx) => {
-              const isFirst = idx === 0;
-              return (
-                <li key={n.ssid}>
-                  <button
-                    type="button"
-                    onClick={() => onPick(n)}
-                    className={`w-full flex items-center justify-between gap-3 px-4 py-4 text-left transition border-b border-border last:border-b-0 ${
-                      isFirst ? "bg-primary/5 animate-pulse-ring" : "hover:bg-muted"
-                    }`}
-                  >
-                    <div className="flex items-center gap-3 min-w-0">
-                      <Wifi className="size-5 text-foreground shrink-0" />
-                      <span className="text-lg font-bold truncate">{n.ssid}</span>
-                    </div>
-                    <div className="flex items-center gap-2 shrink-0">
-                      {n.locked && <Lock className="size-4 text-muted-foreground" />}
-                      <span className="text-sm font-bold text-muted-foreground">
-                        {"●".repeat(n.bars)}
-                        <span className="opacity-30">{"●".repeat(3 - n.bars)}</span>
-                      </span>
-                    </div>
-                  </button>
-                </li>
-              );
-            })}
-          </ul>
-        </div>
-      ) : (
-        <div className="px-6 py-10 text-center text-muted-foreground">
-          <Wifi className="size-12 mx-auto mb-3 opacity-40" />
-          <p className="text-base font-bold">
-            Toque no botão acima para LIGAR o Wi-Fi e ver as redes disponíveis.
-          </p>
         </div>
       )}
     </div>
