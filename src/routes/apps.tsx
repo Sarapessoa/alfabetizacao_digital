@@ -57,7 +57,7 @@ const apps: AppItem[] = [
     analogy: "Como o painel de ajustes da casa",
     shortAnalogy: "Painel de ajustes",
     analogyIcon: SlidersHorizontal,
-    description: "Ajuste o Wi-Fi, o som, o brilho e o tamanho da letra do celular.",
+    description: "Ajuste o som, o brilho e o tamanho da letra do celular.",
     icon: Settings,
     tone: "primary",
     to: "/apps/configuracoes",

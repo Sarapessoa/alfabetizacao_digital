@@ -124,7 +124,7 @@ function CameraSimulation() {
         <p className={`font-extrabold ${a11y ? "text-sm" : "text-xs"}`}>
           {isDone ? "Simulação concluída! 🎉" : `Etapa ${currentStep} de ${steps.length}`}
         </p>
-        <p className={`text-muted-foreground font-medium ${a11y ? "text-sm" : "text-xs"}`}>
+        <p className={`font-medium ${a11y ? "text-sm text-foreground" : "text-xs text-muted-foreground"}`}>
           {isDone ? "100%" : `${Math.round((currentStep / steps.length) * 100)}%`}
         </p>
       </div>
@@ -134,10 +134,10 @@ function CameraSimulation() {
         aria-valuemax={steps.length}
         aria-valuenow={isDone ? steps.length : currentStep}
         aria-label="Progresso da simulação"
-        className="h-2 w-full rounded-full bg-muted overflow-hidden"
+        className={`h-2 w-full rounded-full overflow-hidden ${a11y ? "bg-background border border-foreground" : "bg-muted"}`}
       >
         <div
-          className="h-full bg-[oklch(0.50_0.17_195)] transition-all duration-500"
+          className={`h-full transition-all duration-500 ${a11y ? "bg-foreground" : "bg-[oklch(0.50_0.17_195)]"}`}
           style={{ width: `${((isDone ? steps.length : currentStep) / steps.length) * 100}%` }}
         />
       </div>
@@ -204,9 +204,9 @@ function CameraSimulation() {
   // ----- Intro splash -----
   if (stage === "intro") {
     return (
-      <main className="min-h-screen bg-[oklch(0.50_0.17_195)] flex flex-col items-center justify-center text-white">
+      <main className={`min-h-screen flex flex-col items-center justify-center ${a11y ? "bg-foreground text-background" : "bg-[oklch(0.50_0.17_195)] text-white"}`}>
         <div className="flex flex-col items-center gap-4 animate-pulse">
-          <div className="size-24 rounded-full bg-white text-[oklch(0.50_0.17_195)] flex items-center justify-center shadow-2xl">
+          <div className={`size-24 rounded-full flex items-center justify-center shadow-2xl ${a11y ? "bg-background text-foreground" : "bg-white text-[oklch(0.50_0.17_195)]"}`}>
             <Camera className="size-12" strokeWidth={2.6} />
           </div>
           <h1 className="text-4xl font-extrabold tracking-tight">Câmera</h1>
@@ -217,15 +217,17 @@ function CameraSimulation() {
 
   // ----- Header bar (shared) -----
   const headerBar = (
-    <header className="bg-[oklch(0.50_0.17_195)] text-white px-5 pt-5 pb-6">
+    <header className={`px-5 pt-5 pb-6 ${a11y ? "bg-foreground text-background" : "bg-[oklch(0.50_0.17_195)] text-white"}`}>
       <div className="w-full max-w-md mx-auto flex flex-col gap-4">
         <div className="flex items-center justify-between gap-2">
           <Link
             to="/apps"
             aria-label="Voltar para aplicativos"
-            className="inline-flex items-center gap-2 h-11 px-3 rounded-2xl text-base font-bold hover:bg-white/10 transition"
+            className={`inline-flex items-center gap-2 rounded-2xl font-bold transition ${
+              a11y ? "h-14 px-4 text-lg bg-background text-foreground hover:opacity-90" : "h-11 px-3 text-base hover:bg-white/10"
+            }`}
           >
-            <ArrowLeft className="size-5" />
+            <ArrowLeft className={a11y ? "size-6" : "size-5"} />
             Voltar
           </Link>
           <div className="flex items-center gap-2">
@@ -234,9 +236,11 @@ function CameraSimulation() {
               type="button"
               onClick={handleSpeak}
               aria-label={speaking ? "Parar leitura" : "Ouvir"}
-              className="inline-flex items-center gap-2 h-11 px-3 rounded-full bg-white text-[oklch(0.50_0.17_195)] text-base font-bold hover:opacity-90 transition"
+              className={`inline-flex items-center gap-2 rounded-full font-bold hover:opacity-90 transition ${
+                a11y ? "h-14 px-4 bg-background text-foreground text-lg border-4 border-background" : "h-11 px-3 bg-white text-[oklch(0.50_0.17_195)] text-base"
+              }`}
             >
-              {speaking ? <Square className="size-5" /> : <Volume2 className="size-5" />}
+              {speaking ? <Square className={a11y ? "size-6" : "size-5"} /> : <Volume2 className={a11y ? "size-6" : "size-5"} />}
               {speaking ? "Parar" : "Ouvir"}
             </button>
           </div>
@@ -255,20 +259,20 @@ function CameraSimulation() {
   // ----- Overview screen -----
   if (stage === "overview") {
     return (
-      <main className="min-h-screen bg-muted/40 flex flex-col">
+      <main className={`min-h-screen flex flex-col ${a11y ? "bg-background" : "bg-muted/40"}`}>
         {headerBar}
         <div className="w-full max-w-md mx-auto flex-1 flex flex-col gap-6 px-5 py-6">
           <section
-            className={`rounded-2xl bg-card p-5 border-l-8 border-l-[oklch(0.50_0.17_195)] shadow-md ${
-              a11y ? "border-2 border-foreground" : "border border-border"
+            className={`rounded-2xl bg-card p-5 ${
+              a11y ? "border-4 border-foreground" : "border border-border border-l-8 border-l-[oklch(0.50_0.17_195)] shadow-md"
             }`}
           >
-            <h2 className={`font-extrabold text-[oklch(0.50_0.17_195)] ${a11y ? "text-2xl" : "text-xl"}`}>
+            <h2 className={`font-extrabold ${a11y ? "text-2xl text-foreground" : "text-xl text-[oklch(0.50_0.17_195)]"}`}>
               O que é parecido?
             </h2>
             <div
-              className={`mt-3 inline-flex items-center gap-2 rounded-full bg-[oklch(0.50_0.17_195)]/10 text-[oklch(0.50_0.17_195)] px-3 py-1.5 font-extrabold ${
-                a11y ? "text-lg" : "text-base"
+              className={`mt-3 inline-flex items-center gap-2 rounded-full px-3 py-1.5 font-extrabold ${
+                a11y ? "text-lg bg-foreground text-background" : "text-base bg-[oklch(0.50_0.17_195)]/10 text-[oklch(0.50_0.17_195)]"
               }`}
             >
               <Album className="size-5" />
@@ -279,20 +283,20 @@ function CameraSimulation() {
                 a11y ? "text-xl text-foreground" : "text-lg text-muted-foreground"
               }`}
             >
-              É como ter uma <strong className="text-[oklch(0.50_0.17_195)]">câmera</strong> para tirar fotos e
-              um <strong className="text-[oklch(0.50_0.17_195)]">álbum</strong> que guarda todas as suas
+              É como ter uma <strong className={a11y ? "text-foreground" : "text-[oklch(0.50_0.17_195)]"}>câmera</strong> para tirar fotos e
+              um <strong className={a11y ? "text-foreground" : "text-[oklch(0.50_0.17_195)]"}>álbum</strong> que guarda todas as suas
               lembranças, tudo dentro do celular.
             </p>
           </section>
 
           <section
             className={`rounded-2xl bg-card p-5 ${
-              a11y ? "border-2 border-foreground" : "border border-border"
+              a11y ? "border-4 border-foreground" : "border border-border"
             }`}
           >
             <div className="flex items-center justify-between gap-2 mb-2">
               <h2 className={`font-extrabold ${a11y ? "text-2xl" : "text-xl"}`}>Passo a Passo</h2>
-              <p className={`text-muted-foreground font-bold ${a11y ? "text-base" : "text-xs"}`}>
+              <p className={`font-bold ${a11y ? "text-base text-foreground" : "text-xs text-muted-foreground"}`}>
                 Etapa {currentStep} de {steps.length}
               </p>
             </div>
@@ -302,10 +306,10 @@ function CameraSimulation() {
               aria-valuemax={steps.length}
               aria-valuenow={currentStep}
               aria-label="Progresso da simulação"
-              className="h-2.5 w-full rounded-full bg-muted overflow-hidden mb-4"
+              className={`h-2.5 w-full rounded-full overflow-hidden mb-4 ${a11y ? "bg-background border border-foreground" : "bg-muted"}`}
             >
               <div
-                className="h-full bg-[oklch(0.50_0.17_195)] transition-all duration-500"
+                className={`h-full transition-all duration-500 ${a11y ? "bg-foreground" : "bg-[oklch(0.50_0.17_195)]"}`}
                 style={{ width: `${(currentStep / steps.length) * 100}%` }}
               />
             </div>
@@ -339,11 +343,15 @@ function CameraSimulation() {
                     key={s.n}
                     className={`rounded-2xl p-4 transition ${
                       active
-                        ? "bg-[oklch(0.50_0.17_195)]/5 border-2 border-[oklch(0.50_0.17_195)]"
+                        ? a11y
+                          ? "bg-card border-4 border-foreground"
+                          : "bg-[oklch(0.50_0.17_195)]/5 border-2 border-[oklch(0.50_0.17_195)]"
                         : done
-                          ? "bg-success/5 border border-success/40"
+                          ? a11y
+                            ? "bg-card border-4 border-foreground"
+                            : "bg-success/5 border border-success/40"
                           : a11y
-                            ? "bg-card border-2 border-foreground"
+                            ? "bg-card border-4 border-foreground"
                             : "bg-card border border-border"
                     }`}
                   >
@@ -351,10 +359,16 @@ function CameraSimulation() {
                       <span
                         className={`size-8 rounded-full inline-flex items-center justify-center font-extrabold ${
                           done
-                            ? "bg-success text-white"
+                            ? a11y
+                              ? "bg-foreground text-background"
+                              : "bg-success text-white"
                             : active
-                              ? "bg-[oklch(0.50_0.17_195)] text-white ring-4 ring-[oklch(0.50_0.17_195)]/25"
-                              : "bg-muted text-muted-foreground"
+                              ? a11y
+                                ? "bg-foreground text-background ring-4 ring-foreground/25"
+                                : "bg-[oklch(0.50_0.17_195)] text-white ring-4 ring-[oklch(0.50_0.17_195)]/25"
+                              : a11y
+                                ? "bg-foreground text-background"
+                                : "bg-muted text-muted-foreground"
                         }`}
                       >
                         {done ? <CheckCircle2 className="size-4" /> : s.n}
@@ -377,7 +391,9 @@ function CameraSimulation() {
           <button
             type="button"
             onClick={() => setStage("intro")}
-            className="inline-flex items-center justify-center gap-2 w-full h-16 rounded-2xl bg-[oklch(0.50_0.17_195)] text-white text-xl font-extrabold shadow-lg shadow-[oklch(0.50_0.17_195)]/30 hover:bg-[oklch(0.50_0.17_195)]/90 active:scale-[0.99] transition"
+            className={`inline-flex items-center justify-center gap-2 w-full h-16 rounded-2xl text-xl font-extrabold active:scale-[0.99] transition ${
+              a11y ? "bg-foreground text-background border-4 border-foreground hover:opacity-90" : "bg-[oklch(0.50_0.17_195)] text-white shadow-lg shadow-[oklch(0.50_0.17_195)]/30 hover:bg-[oklch(0.50_0.17_195)]/90"
+            }`}
           >
             <Camera className="size-6" />
             Iniciar Simulação Prática
@@ -394,7 +410,7 @@ function CameraSimulation() {
         {headerBar}
         {Stepper}
         <div className="w-full max-w-md mx-auto flex-1 flex flex-col items-center justify-center gap-6 px-5 py-10 text-center">
-          <div className="size-24 rounded-full bg-success/15 text-success flex items-center justify-center">
+          <div className={`size-24 rounded-full flex items-center justify-center ${a11y ? "bg-foreground text-background" : "bg-success/15 text-success"}`}>
             <CheckCircle2 className="size-14" strokeWidth={2.4} />
           </div>
           <h2 className={`font-extrabold ${a11y ? "text-3xl" : "text-2xl"}`}>
@@ -414,14 +430,14 @@ function CameraSimulation() {
                 setLiked(false);
                 setStage("overview");
               }}
-              className="h-14 rounded-2xl border-2 border-border bg-card text-foreground text-lg font-bold hover:bg-muted transition"
+              className={`h-14 rounded-2xl bg-card text-foreground text-lg font-bold hover:bg-muted transition ${a11y ? "border-4 border-foreground" : "border-2 border-border"}`}
             >
               Repetir simulação
             </button>
             <button
               type="button"
               onClick={() => navigate({ to: "/apps" })}
-              className="h-14 rounded-2xl bg-[oklch(0.50_0.17_195)] text-white text-lg font-extrabold hover:bg-[oklch(0.50_0.17_195)]/90 transition"
+              className={`h-14 rounded-2xl text-lg font-extrabold transition ${a11y ? "bg-foreground text-background border-4 border-foreground hover:opacity-90" : "bg-[oklch(0.50_0.17_195)] text-white hover:bg-[oklch(0.50_0.17_195)]/90"}`}
             >
               Ver outros aplicativos
             </button>
@@ -447,7 +463,7 @@ function CameraSimulation() {
     <main className="min-h-screen bg-background flex flex-col">
       {/* Instruction bar */}
       <div className="sticky top-0 z-20 shadow-md">
-        <div className="bg-[oklch(0.50_0.17_195)] text-white">
+        <div className={a11y ? "bg-foreground text-background" : "bg-[oklch(0.50_0.17_195)] text-white"}>
           <div className="w-full max-w-md mx-auto px-4 py-2.5 flex items-center gap-2">
             <p className={`flex-1 leading-snug font-semibold min-w-0 ${a11y ? "text-base" : "text-sm"}`}>
               {tip}
@@ -455,13 +471,15 @@ function CameraSimulation() {
             <Link
               to="/apps"
               aria-label="Sair da simulação"
-              className="shrink-0 inline-flex items-center gap-1 h-8 px-3 rounded-full bg-white/20 hover:bg-white/30 text-sm font-bold transition"
+              className={`shrink-0 inline-flex items-center gap-1 rounded-full font-bold transition ${
+                a11y ? "h-10 px-4 bg-background text-foreground text-base" : "h-8 px-3 bg-white/20 hover:bg-white/30 text-sm"
+              }`}
             >
-              <X className="size-4" /> Sair
+              <X className={a11y ? "size-5" : "size-4"} /> Sair
             </Link>
           </div>
         </div>
-        <div className="bg-card border-b border-border">
+        <div className={`bg-card ${a11y ? "border-b-4 border-foreground" : "border-b border-border"}`}>
           <div
             role="progressbar"
             aria-valuemin={0}
@@ -476,18 +494,24 @@ function CameraSimulation() {
               return (
                 <div key={s.n} className="flex items-center gap-3 flex-1 last:flex-none">
                   <div className="flex items-center gap-1.5 shrink-0">
-                    <span className={`size-6 rounded-full inline-flex items-center justify-center text-xs font-extrabold transition ${
-                      done ? "bg-success text-white" : active ? "bg-[oklch(0.50_0.17_195)] text-white" : "bg-muted text-muted-foreground"
+                    <span className={`rounded-full inline-flex items-center justify-center font-extrabold transition ${
+                      a11y ? "size-8 text-sm" : "size-6 text-xs"
+                    } ${
+                      a11y
+                        ? done || active
+                          ? "bg-foreground text-background"
+                          : "bg-background text-foreground border-2 border-foreground"
+                        : done ? "bg-success text-white" : active ? "bg-[oklch(0.50_0.17_195)] text-white" : "bg-muted text-muted-foreground"
                     }`}>
-                      {done ? <CheckCircle2 className="size-3.5" /> : s.n}
+                      {done ? <CheckCircle2 className={a11y ? "size-5" : "size-3.5"} /> : s.n}
                     </span>
-                    <span className={`text-xs font-bold leading-none ${active ? "text-foreground" : "text-muted-foreground"}`}>
+                    <span className={`font-bold leading-none ${a11y ? "text-sm text-foreground" : active ? "text-xs text-foreground" : "text-xs text-muted-foreground"}`}>
                       {s.label}
                     </span>
                   </div>
                   {i < steps.length - 1 && (
-                    <div className="flex-1 h-1 rounded-full bg-muted overflow-hidden">
-                      <div className="h-full bg-success transition-all duration-500" style={{ width: done ? "100%" : "0%" }} />
+                    <div className={`flex-1 rounded-full overflow-hidden ${a11y ? "h-1.5 bg-background border border-foreground" : "h-1 bg-muted"}`}>
+                      <div className={`h-full transition-all duration-500 ${a11y ? "bg-foreground" : "bg-success"}`} style={{ width: done ? "100%" : "0%" }} />
                     </div>
                   )}
                 </div>
@@ -537,6 +561,13 @@ function CameraSimulation() {
         )}
       </div>
 
+      <div className="fixed right-4 bottom-4 z-30">
+        <A11yToggle
+          compact
+          className={a11y ? "shadow-xl" : "shadow-lg shadow-foreground/20"}
+        />
+      </div>
+
       {/* Explanation dialog */}
       {dialog && (
         <div
@@ -547,22 +578,26 @@ function CameraSimulation() {
           onClick={() => setDialog(null)}
         >
           <div
-            className="w-full max-w-md rounded-3xl bg-card border-2 border-border shadow-2xl p-6 flex flex-col gap-3"
+            className={`w-full max-w-md rounded-3xl bg-card p-6 flex flex-col gap-3 ${
+              a11y ? "border-4 border-foreground" : "border-2 border-border shadow-2xl"
+            }`}
             onClick={(e) => e.stopPropagation()}
           >
-            <div className="flex items-center gap-2 text-[oklch(0.50_0.17_195)]">
-              <Sparkles className="size-6" />
+            <div className={`flex items-center gap-2 ${a11y ? "text-foreground" : "text-[oklch(0.50_0.17_195)]"}`}>
+              <Sparkles className={a11y ? "size-7" : "size-6"} />
               <h3 id="exp-title" className={`font-extrabold ${a11y ? "text-2xl" : "text-xl"}`}>
                 {dialog.title}
               </h3>
             </div>
-            <p className={`leading-snug ${a11y ? "text-lg" : "text-base text-muted-foreground"}`}>
+            <p className={`leading-snug ${a11y ? "text-xl text-foreground" : "text-base text-muted-foreground"}`}>
               {dialog.body}
             </p>
             <button
               type="button"
               onClick={() => setDialog(null)}
-              className="mt-2 h-12 rounded-full bg-[oklch(0.50_0.17_195)] text-white text-base font-extrabold hover:bg-[oklch(0.50_0.17_195)]/90 transition"
+              className={`mt-2 rounded-full font-extrabold transition ${
+                a11y ? "h-14 bg-foreground text-background text-lg border-4 border-foreground hover:opacity-90" : "h-12 bg-[oklch(0.50_0.17_195)] text-white text-base hover:bg-[oklch(0.50_0.17_195)]/90"
+              }`}
             >
               OK, entendi
             </button>
@@ -585,6 +620,7 @@ function SimCamera({
   onShoot: () => void;
   onOpenGallery: () => void;
 }) {
+  const { enabled: a11y } = useA11y();
   return (
     <div className="flex flex-col flex-1 bg-black">
       {/* Viewfinder */}
@@ -598,7 +634,7 @@ function SimCamera({
         />
         {/* Focus frame */}
         <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-          <div className="size-44 rounded-3xl border-2 border-white/60" />
+          <div className={`size-44 rounded-3xl ${a11y ? "border-4 border-white" : "border-2 border-white/60"}`} />
         </div>
         {/* Flash overlay */}
         {flash && <div className="absolute inset-0 bg-white animate-pulse" />}
@@ -606,12 +642,12 @@ function SimCamera({
         <div className="absolute top-3 left-0 right-0 flex justify-between px-4 text-white">
           <button
             type="button"
-            className="size-10 rounded-full bg-black/40 flex items-center justify-center"
+            className={`size-10 rounded-full flex items-center justify-center ${a11y ? "bg-white text-black border-4 border-black" : "bg-black/40"}`}
             aria-label="Flash"
           >
             <Aperture className="size-5" />
           </button>
-          <span className="px-3 py-1 rounded-full bg-black/40 text-xs font-bold">FOTO</span>
+          <span className={`px-3 py-1 rounded-full font-bold ${a11y ? "bg-white text-black text-sm border-2 border-black" : "bg-black/40 text-xs"}`}>FOTO</span>
         </div>
       </div>
 
@@ -622,7 +658,9 @@ function SimCamera({
           type="button"
           onClick={photoTaken ? onOpenGallery : undefined}
           aria-label="Abrir galeria"
-          className={`size-14 rounded-full overflow-hidden border-2 border-white/70 transition ${
+          className={`size-14 rounded-full overflow-hidden transition ${
+            a11y ? "border-4 border-white" : "border-2 border-white/70"
+          } ${
             photoTaken
               ? "animate-pulse-ring cursor-pointer"
               : "opacity-50 cursor-not-allowed"
@@ -649,7 +687,9 @@ function SimCamera({
           type="button"
           onClick={onShoot}
           aria-label="Tirar foto"
-          className={`size-20 rounded-full bg-white border-4 border-white/40 transition active:scale-95 ${
+          className={`size-20 rounded-full bg-white transition active:scale-95 ${
+            a11y ? "border-4 border-black ring-4 ring-white" : "border-4 border-white/40"
+          } ${
             photoTaken ? "ring-4 ring-white/20" : "animate-pulse-ring"
           }`}
         >
@@ -660,7 +700,7 @@ function SimCamera({
         <button
           type="button"
           aria-label="Trocar câmera"
-          className="size-14 rounded-full bg-zinc-700 text-white flex items-center justify-center"
+          className={`size-14 rounded-full flex items-center justify-center ${a11y ? "bg-white text-black border-4 border-black" : "bg-zinc-700 text-white"}`}
         >
           <RefreshCw className="size-6" />
         </button>
@@ -677,10 +717,11 @@ function SimGallery({
   onPickAlbum: (a: Album) => void;
   onExplain: (d: { title: string; body: string }) => void;
 }) {
+  const { enabled: a11y } = useA11y();
   return (
     <div className="flex flex-col flex-1 bg-background">
       {/* Top bar */}
-      <div className="px-4 py-3 border-b border-border flex items-center justify-between">
+      <div className={`px-4 py-3 flex items-center justify-between ${a11y ? "border-b-4 border-foreground" : "border-b border-border"}`}>
         <button
           type="button"
           aria-label="Câmera"
@@ -691,11 +732,11 @@ function SimGallery({
                 "Esse botãozinho de câmera abre a câmera de novo. Por agora, vamos seguir explorando a galeria.",
             })
           }
-          className="size-10 rounded-full hover:bg-muted flex items-center justify-center"
+          className={`size-10 rounded-full hover:bg-muted flex items-center justify-center ${a11y ? "border-2 border-foreground" : ""}`}
         >
           <Camera className="size-6 text-foreground" />
         </button>
-        <h2 className="text-xl font-extrabold">Galeria</h2>
+        <h2 className={`font-extrabold ${a11y ? "text-2xl" : "text-xl"}`}>Galeria</h2>
         <button
           type="button"
           aria-label="Buscar"
@@ -705,7 +746,7 @@ function SimGallery({
               body: "A lupa serve para procurar fotos por data ou local. Não é preciso agora.",
             })
           }
-          className="size-10 rounded-full hover:bg-muted flex items-center justify-center"
+          className={`size-10 rounded-full hover:bg-muted flex items-center justify-center ${a11y ? "border-2 border-foreground" : ""}`}
         >
           <Search className="size-5 text-foreground" />
         </button>
@@ -721,11 +762,17 @@ function SimGallery({
               type="button"
               onClick={() => onPickAlbum(a)}
               className={`flex flex-col items-start gap-2 rounded-2xl p-2 text-left transition ${
-                isFirst ? "animate-pulse-ring bg-[oklch(0.50_0.17_195)]/5" : "hover:bg-muted"
+                a11y ? "border-4 border-foreground" : ""
+              } ${
+                isFirst
+                  ? a11y
+                    ? "animate-pulse-ring bg-card"
+                    : "animate-pulse-ring bg-[oklch(0.50_0.17_195)]/5"
+                  : "hover:bg-muted"
               }`}
             >
               <div
-                className="relative aspect-square w-full rounded-xl overflow-hidden bg-muted shadow-md"
+                className={`relative aspect-square w-full rounded-xl overflow-hidden bg-muted ${a11y ? "border-4 border-foreground" : "shadow-md"}`}
               >
                 <img
                   src={a.cover}
@@ -736,14 +783,16 @@ function SimGallery({
                   loading="lazy"
                 />
                 {isFirst && (
-                  <span className="absolute bottom-2 left-2 inline-flex items-center gap-1 bg-[oklch(0.50_0.17_195)] text-white text-xs font-extrabold px-2 py-1 rounded-full shadow z-10">
+                  <span className={`absolute bottom-2 left-2 inline-flex items-center gap-1 font-extrabold px-2 py-1 rounded-full z-10 ${
+                    a11y ? "bg-foreground text-background text-base border-2 border-background" : "bg-[oklch(0.50_0.17_195)] text-white text-xs shadow"
+                  }`}>
                     Toque aqui
                   </span>
                 )}
               </div>
               <div className="px-1">
-                <p className="text-base font-extrabold leading-tight">{a.name}</p>
-                <p className="text-xs text-muted-foreground font-medium">{a.count} fotos</p>
+                <p className={`font-extrabold leading-tight ${a11y ? "text-xl" : "text-base"}`}>{a.name}</p>
+                <p className={`font-medium ${a11y ? "text-base text-foreground" : "text-xs text-muted-foreground"}`}>{a.count} fotos</p>
               </div>
             </button>
           );
@@ -763,25 +812,26 @@ function SimAlbum({
   onBack: () => void;
   onPickPhoto: (p: string) => void;
 }) {
+  const { enabled: a11y } = useA11y();
   return (
     <div className="flex flex-col flex-1 bg-background">
       {/* Top bar */}
-      <div className="px-4 py-3 border-b border-border flex items-center justify-between">
+      <div className={`px-4 py-3 flex items-center justify-between ${a11y ? "border-b-4 border-foreground" : "border-b border-border"}`}>
         <Camera className="size-6 text-foreground" />
-        <h2 className="text-xl font-extrabold">Galeria</h2>
+        <h2 className={`font-extrabold ${a11y ? "text-2xl" : "text-xl"}`}>Galeria</h2>
         <Search className="size-5 text-foreground" />
       </div>
       {/* Album header */}
-      <div className="px-4 py-3 border-b border-border flex items-center gap-3">
+      <div className={`px-4 py-3 flex items-center gap-3 ${a11y ? "border-b-4 border-foreground" : "border-b border-border"}`}>
         <button
           type="button"
           onClick={onBack}
           aria-label="Voltar para os álbuns"
-          className="size-10 rounded-full hover:bg-muted flex items-center justify-center"
+          className={`size-10 rounded-full hover:bg-muted flex items-center justify-center ${a11y ? "border-2 border-foreground" : ""}`}
         >
           <ChevronLeft className="size-6 text-foreground" />
         </button>
-        <h3 className="text-lg font-extrabold">{album.name}</h3>
+        <h3 className={`font-extrabold ${a11y ? "text-xl" : "text-lg"}`}>{album.name}</h3>
       </div>
       {/* Photos grid */}
       <div className="p-3 grid grid-cols-3 gap-2">
@@ -793,6 +843,8 @@ function SimAlbum({
               type="button"
               onClick={() => onPickPhoto(p)}
               className={`relative aspect-square rounded-md overflow-hidden bg-muted transition ${
+                a11y ? "border-4 border-foreground" : ""
+              } ${
                 isFirst ? "animate-pulse-ring" : "hover:opacity-90"
               }`}
               aria-label={`Foto ${idx + 1}`}
@@ -806,7 +858,9 @@ function SimAlbum({
                 loading="lazy"
               />
               {isFirst && (
-                <span className="absolute bottom-1 left-1 right-1 bg-[oklch(0.50_0.17_195)] text-white text-[10px] font-extrabold px-1 py-0.5 rounded-full text-center z-10">
+                <span className={`absolute bottom-1 left-1 right-1 font-extrabold px-1 py-0.5 rounded-full text-center z-10 ${
+                  a11y ? "bg-foreground text-background text-sm border-2 border-background" : "bg-[oklch(0.50_0.17_195)] text-white text-[10px]"
+                }`}>
                   Toque aqui
                 </span>
               )}
@@ -834,6 +888,7 @@ function SimPhoto({
   onAction: (d: { title: string; body: string }) => void;
   onFinish: () => void;
 }) {
+  const { enabled: a11y } = useA11y();
   return (
     <div className="flex flex-col flex-1 bg-black">
       {/* Top bar */}
@@ -842,12 +897,12 @@ function SimPhoto({
           type="button"
           onClick={onBack}
           aria-label="Voltar"
-          className="size-10 rounded-full hover:bg-white/10 flex items-center justify-center"
+          className={`size-10 rounded-full hover:bg-white/10 flex items-center justify-center ${a11y ? "bg-white text-black" : ""}`}
         >
           <ArrowLeft className="size-6" />
         </button>
         <div className="text-center leading-tight">
-          <p className="text-sm font-bold">Hoje, 14:30</p>
+          <p className={`font-bold ${a11y ? "text-base" : "text-sm"}`}>Hoje, 14:30</p>
         </div>
         <button
           type="button"
@@ -859,7 +914,7 @@ function SimPhoto({
             })
           }
           aria-label="Mais opções"
-          className="size-10 rounded-full hover:bg-white/10 flex items-center justify-center"
+          className={`size-10 rounded-full hover:bg-white/10 flex items-center justify-center ${a11y ? "bg-white text-black" : ""}`}
         >
           <MoreVertical className="size-6" />
         </button>
@@ -882,10 +937,12 @@ function SimPhoto({
           type="button"
           onClick={onLike}
           aria-label={liked ? "Tirar curtida" : "Curtir foto"}
-          className="inline-flex items-center gap-2 h-9 px-3 rounded-full bg-white/10 hover:bg-white/20 transition"
+          className={`inline-flex items-center gap-2 rounded-full transition ${
+            a11y ? "h-11 px-4 bg-white text-black border-2 border-white text-base" : "h-9 px-3 bg-white/10 hover:bg-white/20"
+          }`}
         >
           <Heart
-            className={`size-5 ${liked ? "fill-rose-500 text-rose-500" : "text-white"}`}
+            className={`size-5 ${liked ? (a11y ? "fill-black text-black" : "fill-rose-500 text-rose-500") : (a11y ? "text-black" : "text-white")}`}
           />
           <span className="font-bold">{liked ? "Favorito" : "Favoritar"}</span>
         </button>
@@ -898,7 +955,9 @@ function SimPhoto({
                 "Mostra quando e onde a foto foi tirada, o tamanho do arquivo e em qual álbum ela está guardada.",
             })
           }
-          className="inline-flex items-center gap-2 h-9 px-3 rounded-full bg-white/10 hover:bg-white/20 transition"
+          className={`inline-flex items-center gap-2 rounded-full transition ${
+            a11y ? "h-11 px-4 bg-white text-black border-2 border-white text-base" : "h-9 px-3 bg-white/10 hover:bg-white/20"
+          }`}
         >
           <Info className="size-5" />
           <span className="font-bold">Detalhes</span>
@@ -906,7 +965,7 @@ function SimPhoto({
       </div>
 
       {/* Bottom actions */}
-      <div className="bg-zinc-900 text-white grid grid-cols-3 border-t border-white/10">
+      <div className={`text-white grid grid-cols-3 ${a11y ? "bg-black border-t-4 border-white" : "bg-zinc-900 border-t border-white/10"}`}>
         <button
           type="button"
           onClick={() =>
@@ -916,7 +975,7 @@ function SimPhoto({
                 "Mandar a foto para alguém pelo WhatsApp, e-mail ou outro aplicativo. Você escolhe para quem enviar.",
             })
           }
-          className="flex flex-col items-center gap-1 py-3 hover:bg-white/10 transition"
+          className={`flex flex-col items-center gap-1 py-3 hover:bg-white/10 transition ${a11y ? "text-base" : ""}`}
         >
           <Share2 className="size-6" />
           <span className="text-sm font-bold">Compartilhar</span>
@@ -930,7 +989,7 @@ function SimPhoto({
                 "Permite recortar a foto, deixar mais clara ou aplicar filtros. A foto original fica salva.",
             })
           }
-          className="flex flex-col items-center gap-1 py-3 hover:bg-white/10 transition border-x border-white/10"
+          className={`flex flex-col items-center gap-1 py-3 hover:bg-white/10 transition ${a11y ? "border-x-4 border-white text-base" : "border-x border-white/10"}`}
         >
           <Pencil className="size-6" />
           <span className="text-sm font-bold">Editar</span>
@@ -944,7 +1003,7 @@ function SimPhoto({
                 "Joga a foto na lixeira. Ela ainda fica guardada por um tempo, então dá para recuperar se for sem querer.",
             })
           }
-          className="flex flex-col items-center gap-1 py-3 hover:bg-white/10 transition"
+          className={`flex flex-col items-center gap-1 py-3 hover:bg-white/10 transition ${a11y ? "text-base" : ""}`}
         >
           <Trash2 className="size-6" />
           <span className="text-sm font-bold">Apagar</span>
@@ -952,11 +1011,13 @@ function SimPhoto({
       </div>
 
       {/* Finish bar */}
-      <div className="p-4 border-t border-white/10 bg-black sticky bottom-0">
+      <div className={`p-4 bg-black sticky bottom-0 ${a11y ? "border-t-4 border-white" : "border-t border-white/10"}`}>
         <button
           type="button"
           onClick={onFinish}
-          className="w-full h-14 rounded-2xl bg-success text-white text-lg font-extrabold hover:opacity-90 transition"
+          className={`w-full h-14 rounded-2xl text-lg font-extrabold hover:opacity-90 transition ${
+            a11y ? "bg-white text-black border-4 border-white" : "bg-success text-white"
+          }`}
         >
           Concluir simulação
         </button>
