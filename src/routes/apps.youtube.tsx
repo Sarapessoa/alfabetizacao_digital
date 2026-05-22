@@ -83,7 +83,11 @@ function YouTubeSimulation() {
         <p className={`font-extrabold ${a11y ? "text-sm" : "text-xs"}`}>
           {isDone ? "Simulação concluída! 🎉" : `Etapa ${currentStep} de ${steps.length}`}
         </p>
-        <p className={`text-muted-foreground font-medium ${a11y ? "text-sm" : "text-xs"}`}>
+        <p
+          className={`font-medium ${
+            a11y ? "text-sm text-foreground" : "text-xs text-muted-foreground"
+          }`}
+        >
           {isDone ? "100%" : `${Math.round((currentStep / steps.length) * 100)}%`}
         </p>
       </div>
@@ -93,10 +97,14 @@ function YouTubeSimulation() {
         aria-valuemax={steps.length}
         aria-valuenow={isDone ? steps.length : currentStep}
         aria-label="Progresso da simulação"
-        className="h-2 w-full rounded-full bg-muted overflow-hidden"
+        className={`h-2 w-full rounded-full overflow-hidden ${
+          a11y ? "bg-background border border-foreground" : "bg-muted"
+        }`}
       >
         <div
-          className="h-full bg-destructive transition-all duration-500"
+          className={`h-full transition-all duration-500 ${
+            a11y ? "bg-foreground" : "bg-destructive"
+          }`}
           style={{ width: `${((isDone ? steps.length : currentStep) / steps.length) * 100}%` }}
         />
       </div>
@@ -148,9 +156,19 @@ function YouTubeSimulation() {
   // ----- Intro splash -----
   if (stage === "intro") {
     return (
-      <main className="min-h-screen bg-destructive flex flex-col items-center justify-center text-destructive-foreground">
+      <main
+        className={`min-h-screen flex flex-col items-center justify-center ${
+          a11y ? "bg-foreground text-background" : "bg-destructive text-destructive-foreground"
+        }`}
+      >
         <div className="flex flex-col items-center gap-4 animate-pulse">
-          <div className="size-24 rounded-full bg-destructive-foreground text-destructive flex items-center justify-center shadow-2xl">
+          <div
+            className={`size-24 rounded-full flex items-center justify-center shadow-2xl ${
+              a11y
+                ? "bg-background text-foreground border-4 border-background"
+                : "bg-destructive-foreground text-destructive"
+            }`}
+          >
             <Play className="size-12 ml-1" strokeWidth={2.5} fill="currentColor" />
           </div>
           <h1 className="text-4xl font-extrabold tracking-tight">YouTube</h1>
@@ -161,13 +179,21 @@ function YouTubeSimulation() {
 
   // ----- Header bar (shared) -----
   const headerBar = (
-    <header className="bg-destructive text-destructive-foreground px-5 pt-5 pb-6">
+    <header
+      className={`px-5 pt-5 pb-6 ${
+        a11y ? "bg-foreground text-background" : "bg-destructive text-destructive-foreground"
+      }`}
+    >
       <div className="w-full max-w-md mx-auto flex flex-col gap-4">
         <div className="flex items-center justify-between gap-2">
           <Link
             to="/apps"
             aria-label="Voltar para aplicativos"
-            className="inline-flex items-center gap-2 h-11 px-3 rounded-2xl text-base font-bold hover:bg-destructive-foreground/10 transition"
+            className={`inline-flex items-center gap-2 px-3 rounded-2xl font-bold transition ${
+              a11y
+                ? "h-12 bg-background text-foreground border-2 border-background text-lg"
+                : "h-11 text-base hover:bg-destructive-foreground/10"
+            }`}
           >
             <ArrowLeft className="size-5" />
             Voltar
@@ -178,7 +204,11 @@ function YouTubeSimulation() {
               type="button"
               onClick={handleSpeak}
               aria-label={speaking ? "Parar leitura" : "Ouvir"}
-              className="inline-flex items-center gap-2 h-11 px-3 rounded-full bg-destructive-foreground text-destructive text-base font-bold hover:opacity-90 transition"
+              className={`inline-flex items-center gap-2 px-3 rounded-full font-bold hover:opacity-90 transition ${
+                a11y
+                  ? "h-12 bg-background text-foreground border-2 border-background text-lg"
+                  : "h-11 bg-destructive-foreground text-destructive text-base"
+              }`}
             >
               {speaking ? <Square className="size-5" /> : <Volume2 className="size-5" />}
               {speaking ? "Parar" : "Ouvir"}
@@ -199,20 +229,28 @@ function YouTubeSimulation() {
   // ----- Overview screen -----
   if (stage === "overview") {
     return (
-      <main className="min-h-screen bg-muted/40 flex flex-col">
+      <main className={`min-h-screen flex flex-col ${a11y ? "bg-background" : "bg-muted/40"}`}>
         {headerBar}
         <div className="w-full max-w-md mx-auto flex-1 flex flex-col gap-6 px-5 py-6">
           <section
-            className={`rounded-2xl bg-card p-5 border-l-8 border-l-destructive shadow-md ${
-              a11y ? "border-2 border-foreground" : "border border-border"
+            className={`rounded-2xl bg-card p-5 shadow-md ${
+              a11y
+                ? "border-4 border-foreground"
+                : "border border-border border-l-8 border-l-destructive"
             }`}
           >
-            <h2 className={`font-extrabold text-destructive ${a11y ? "text-2xl" : "text-xl"}`}>
+            <h2
+              className={`font-extrabold ${
+                a11y ? "text-2xl text-foreground" : "text-xl text-destructive"
+              }`}
+            >
               O que é parecido?
             </h2>
             <div
-              className={`mt-3 inline-flex items-center gap-2 rounded-full bg-destructive/10 text-destructive px-3 py-1.5 font-extrabold ${
-                a11y ? "text-lg" : "text-base"
+              className={`mt-3 inline-flex items-center gap-2 rounded-full px-3 py-1.5 font-extrabold ${
+                a11y
+                  ? "text-lg bg-foreground text-background"
+                  : "text-base bg-destructive/10 text-destructive"
               }`}
             >
               <Tv className="size-5" />
@@ -230,12 +268,16 @@ function YouTubeSimulation() {
 
           <section
             className={`rounded-2xl bg-card p-5 ${
-              a11y ? "border-2 border-foreground" : "border border-border"
+              a11y ? "border-4 border-foreground" : "border border-border"
             }`}
           >
             <div className="flex items-center justify-between gap-2 mb-2">
               <h2 className={`font-extrabold ${a11y ? "text-2xl" : "text-xl"}`}>Passo a Passo</h2>
-              <p className={`text-muted-foreground font-bold ${a11y ? "text-base" : "text-xs"}`}>
+              <p
+                className={`font-bold ${
+                  a11y ? "text-base text-foreground" : "text-xs text-muted-foreground"
+                }`}
+              >
                 Etapa {currentStep} de {steps.length}
               </p>
             </div>
@@ -245,10 +287,14 @@ function YouTubeSimulation() {
               aria-valuemax={steps.length}
               aria-valuenow={currentStep}
               aria-label="Progresso da simulação"
-              className="h-2.5 w-full rounded-full bg-muted overflow-hidden mb-4"
+              className={`h-2.5 w-full rounded-full overflow-hidden mb-4 ${
+                a11y ? "bg-background border border-foreground" : "bg-muted"
+              }`}
             >
               <div
-                className="h-full bg-destructive transition-all duration-500"
+                className={`h-full transition-all duration-500 ${
+                  a11y ? "bg-foreground" : "bg-destructive"
+                }`}
                 style={{ width: `${(currentStep / steps.length) * 100}%` }}
               />
             </div>
@@ -256,7 +302,7 @@ function YouTubeSimulation() {
               {[
                 { n: 1, t: "Abra o Aplicativo", d: "Procure o ícone vermelho na sua tela inicial e toque nele." },
                 { n: 2, t: "Escolha um Vídeo", d: "Toque na imagem do vídeo que você quer assistir." },
-                { n: 3, t: "Curta e Compartilhe", d: "Dê um joinha ou compartilhe com uma amiga." },
+                { n: 3, t: "Curta e Compartilhe", d: "Dê um joinha ou compartilhe com uma pessoa de confiança." },
               ].map((s) => {
                 const done = s.n < currentStep;
                 const active = s.n === currentStep;
@@ -264,23 +310,25 @@ function YouTubeSimulation() {
                   <li
                     key={s.n}
                     className={`rounded-2xl p-4 transition ${
-                      active
-                        ? "bg-destructive/5 border-2 border-destructive"
-                        : done
-                          ? "bg-success/5 border border-success/40"
-                          : a11y
-                            ? "bg-card border-2 border-foreground"
+                      a11y
+                        ? "bg-card border-4 border-foreground"
+                        : active
+                          ? "bg-destructive/5 border-2 border-destructive"
+                          : done
+                            ? "bg-success/5 border border-success/40"
                             : "bg-card border border-border"
                     }`}
                   >
                     <div className="flex items-center gap-3">
                       <span
                         className={`size-8 rounded-full inline-flex items-center justify-center font-extrabold ${
-                          done
-                            ? "bg-success text-white"
-                            : active
-                              ? "bg-destructive text-destructive-foreground ring-4 ring-destructive/25"
-                              : "bg-muted text-muted-foreground"
+                          a11y
+                            ? "bg-foreground text-background"
+                            : done
+                              ? "bg-success text-white"
+                              : active
+                                ? "bg-destructive text-destructive-foreground ring-4 ring-destructive/25"
+                                : "bg-muted text-muted-foreground"
                         }`}
                       >
                         {done ? <CheckCircle2 className="size-4" /> : s.n}
@@ -303,7 +351,11 @@ function YouTubeSimulation() {
           <button
             type="button"
             onClick={() => setStage("intro")}
-            className="inline-flex items-center justify-center gap-2 w-full h-16 rounded-2xl bg-destructive text-destructive-foreground text-xl font-extrabold shadow-lg shadow-destructive/30 hover:bg-destructive/90 active:scale-[0.99] transition"
+            className={`inline-flex items-center justify-center gap-2 w-full h-16 rounded-2xl text-xl font-extrabold active:scale-[0.99] transition ${
+              a11y
+                ? "bg-foreground text-background border-4 border-foreground"
+                : "bg-destructive text-destructive-foreground shadow-lg shadow-destructive/30 hover:bg-destructive/90"
+            }`}
           >
             <Play className="size-6" fill="currentColor" />
             Iniciar Simulação Prática
@@ -320,7 +372,13 @@ function YouTubeSimulation() {
         {headerBar}
         {Stepper}
         <div className="w-full max-w-md mx-auto flex-1 flex flex-col items-center justify-center gap-6 px-5 py-10 text-center">
-          <div className="size-24 rounded-full bg-success/15 text-success flex items-center justify-center">
+          <div
+            className={`size-24 rounded-full flex items-center justify-center ${
+              a11y
+                ? "bg-background text-foreground border-4 border-foreground"
+                : "bg-success/15 text-success"
+            }`}
+          >
             <CheckCircle2 className="size-14" strokeWidth={2.4} />
           </div>
           <h2 className={`font-extrabold ${a11y ? "text-3xl" : "text-2xl"}`}>
@@ -337,14 +395,22 @@ function YouTubeSimulation() {
                 setLiked(false);
                 setStage("overview");
               }}
-              className="h-14 rounded-2xl border-2 border-border bg-card text-foreground text-lg font-bold hover:bg-muted transition"
+              className={`h-14 rounded-2xl text-lg font-bold transition ${
+                a11y
+                  ? "border-4 border-foreground bg-background text-foreground"
+                  : "border-2 border-border bg-card text-foreground hover:bg-muted"
+              }`}
             >
               Repetir simulação
             </button>
             <button
               type="button"
               onClick={() => navigate({ to: "/apps" })}
-              className="h-14 rounded-2xl bg-destructive text-destructive-foreground text-lg font-extrabold hover:bg-destructive/90 transition"
+              className={`h-14 rounded-2xl text-lg font-extrabold transition ${
+                a11y
+                  ? "bg-foreground text-background border-4 border-foreground"
+                  : "bg-destructive text-destructive-foreground hover:bg-destructive/90"
+              }`}
             >
               Ver outros aplicativos
             </button>
@@ -364,7 +430,7 @@ function YouTubeSimulation() {
     <main className="min-h-screen bg-background flex flex-col">
       {/* Instruction bar */}
       <div className="sticky top-0 z-20 shadow-md">
-        <div className="bg-destructive text-destructive-foreground">
+        <div className={a11y ? "bg-foreground text-background" : "bg-destructive text-destructive-foreground"}>
           <div className="w-full max-w-md mx-auto px-4 py-2.5 flex items-center gap-2">
             <p className={`flex-1 leading-snug font-semibold min-w-0 ${a11y ? "text-base" : "text-sm"}`}>
               {tip}
@@ -372,13 +438,17 @@ function YouTubeSimulation() {
             <Link
               to="/apps"
               aria-label="Sair da simulação"
-              className="shrink-0 inline-flex items-center gap-1 h-8 px-3 rounded-full bg-white/20 hover:bg-white/30 text-sm font-bold transition"
+              className={`shrink-0 inline-flex items-center gap-1 px-3 rounded-full font-bold transition ${
+                a11y
+                  ? "h-10 bg-background text-foreground border-2 border-background text-base"
+                  : "h-8 bg-white/20 hover:bg-white/30 text-sm"
+              }`}
             >
               <X className="size-4" /> Sair
             </Link>
           </div>
         </div>
-        <div className="bg-card border-b border-border">
+        <div className={`bg-card ${a11y ? "border-b-4 border-foreground" : "border-b border-border"}`}>
           <div
             role="progressbar"
             aria-valuemin={0}
@@ -393,19 +463,41 @@ function YouTubeSimulation() {
               return (
                 <div key={s.n} className="flex items-center gap-3 flex-1 last:flex-none">
                   <div className="flex items-center gap-1.5 shrink-0">
-                    <span className={`size-6 rounded-full inline-flex items-center justify-center text-xs font-extrabold transition ${
-                      done ? "bg-success text-white" : active ? "bg-destructive text-white" : "bg-muted text-muted-foreground"
-                    }`}>
+                    <span
+                      className={`rounded-full inline-flex items-center justify-center font-extrabold transition ${
+                        a11y
+                          ? "size-8 bg-foreground text-background text-sm"
+                          : `size-6 text-xs ${
+                              done
+                                ? "bg-success text-white"
+                                : active
+                                  ? "bg-destructive text-white"
+                                  : "bg-muted text-muted-foreground"
+                            }`
+                      }`}
+                    >
                       {done ? <CheckCircle2 className="size-3.5" /> : s.n}
                     </span>
-                    <span className={`text-xs font-bold leading-none ${active ? "text-foreground" : "text-muted-foreground"}`}>
+                    <span
+                      className={`font-bold leading-none ${
+                        a11y
+                          ? "text-sm text-foreground"
+                          : `text-xs ${active ? "text-foreground" : "text-muted-foreground"}`
+                      }`}
+                    >
                       {s.label}
                     </span>
                   </div>
                   {i < steps.length - 1 && (
-                    <div className="flex-1 h-1 rounded-full bg-muted overflow-hidden">
+                    <div
+                      className={`flex-1 h-1 rounded-full overflow-hidden ${
+                        a11y ? "bg-background border border-foreground" : "bg-muted"
+                      }`}
+                    >
                       <div
-                        className="h-full bg-success transition-all duration-500"
+                        className={`h-full transition-all duration-500 ${
+                          a11y ? "bg-foreground" : "bg-success"
+                        }`}
                         style={{ width: done ? "100%" : "0%" }}
                       />
                     </div>
@@ -436,7 +528,7 @@ function YouTubeSimulation() {
               setDialog({
                 title: "Compartilhar",
                 body:
-                  "Aqui você poderia enviar esse vídeo pelo WhatsApp para um amigo, igual mandar uma indicação de programa de TV.",
+                  "Aqui você poderia enviar esse vídeo pelo WhatsApp para uma pessoa de confiança, igual mandar uma indicação de programa de TV.",
               })
             }
             onFinish={() => setStage("done")}
@@ -454,10 +546,12 @@ function YouTubeSimulation() {
           onClick={() => setDialog(null)}
         >
           <div
-            className="w-full max-w-md rounded-3xl bg-card border-2 border-border shadow-2xl p-6 flex flex-col gap-3"
+            className={`w-full max-w-md rounded-3xl bg-card shadow-2xl p-6 flex flex-col gap-3 ${
+              a11y ? "border-4 border-foreground" : "border-2 border-border"
+            }`}
             onClick={(e) => e.stopPropagation()}
           >
-            <div className="flex items-center gap-2 text-info">
+            <div className={`flex items-center gap-2 ${a11y ? "text-foreground" : "text-info"}`}>
               <Sparkles className="size-6" />
               <h3 id="exp-title" className={`font-extrabold ${a11y ? "text-2xl" : "text-xl"}`}>
                 {dialog.title}
@@ -469,19 +563,28 @@ function YouTubeSimulation() {
             <button
               type="button"
               onClick={() => setDialog(null)}
-              className="mt-2 h-12 rounded-full bg-destructive text-destructive-foreground text-base font-extrabold hover:bg-destructive/90 transition"
+              className={`mt-2 h-12 rounded-full text-base font-extrabold transition ${
+                a11y
+                  ? "bg-foreground text-background border-4 border-foreground"
+                  : "bg-destructive text-destructive-foreground hover:bg-destructive/90"
+              }`}
             >
               OK, entendi
             </button>
           </div>
         </div>
       )}
+
+      <div className="fixed right-4 bottom-4 z-30">
+        <A11yToggle compact className={a11y ? "shadow-xl" : "shadow-lg shadow-foreground/20"} />
+      </div>
     </main>
   );
 }
 
 /* ---------- Simulated YouTube Home ---------- */
 function SimHome({ onPickVideo }: { onPickVideo: () => void }) {
+  const { enabled: a11y } = useA11y();
   const chips = ["Tudo", "Receitas", "Novelas", "Crochê", "Oração", "Música"];
   const shorts = [
     { title: "Bolo de fubá cremoso da Dona Rosa", badge: "Novo", img: boloImg },
@@ -540,8 +643,15 @@ function SimHome({ onPickVideo }: { onPickVideo: () => void }) {
       {/* Top bar — YouTube style */}
       <div className="flex items-center justify-between px-4 py-3">
         <div className="flex items-center gap-1.5">
-          <span className="size-7 rounded-md bg-destructive flex items-center justify-center">
-            <Play className="size-4 text-destructive-foreground ml-0.5" fill="currentColor" />
+          <span
+            className={`size-7 rounded-md flex items-center justify-center ${
+              a11y ? "bg-foreground" : "bg-destructive"
+            }`}
+          >
+            <Play
+              className={`size-4 ml-0.5 ${a11y ? "text-background" : "text-destructive-foreground"}`}
+              fill="currentColor"
+            />
           </span>
           <span className="font-extrabold text-xl tracking-tight">
             YouTube
@@ -551,7 +661,11 @@ function SimHome({ onPickVideo }: { onPickVideo: () => void }) {
           <Cast className="size-5" />
           <div className="relative">
             <Bell className="size-5" />
-            <span className="absolute -top-1.5 -right-2 bg-destructive text-destructive-foreground text-[9px] font-extrabold px-1 rounded-full leading-tight">
+            <span
+              className={`absolute -top-1.5 -right-2 text-[9px] font-extrabold px-1 rounded-full leading-tight ${
+                a11y ? "bg-foreground text-background" : "bg-destructive text-destructive-foreground"
+              }`}
+            >
               9+
             </span>
           </div>
@@ -561,16 +675,22 @@ function SimHome({ onPickVideo }: { onPickVideo: () => void }) {
 
       {/* Chips */}
       <div className="flex gap-2 px-4 pb-3 overflow-x-auto items-center">
-        <span className="shrink-0 size-9 rounded-full bg-muted flex items-center justify-center">
+        <span
+          className={`shrink-0 size-9 rounded-full flex items-center justify-center ${
+            a11y ? "bg-background border-4 border-foreground" : "bg-muted"
+          }`}
+        >
           <Compass className="size-4 text-foreground" />
         </span>
         {chips.map((c, i) => (
           <span
             key={c}
             className={`shrink-0 px-3.5 py-1.5 rounded-full text-sm font-bold border ${
-              i === 0
-                ? "bg-foreground text-background border-foreground"
-                : "bg-muted text-foreground border-transparent"
+              a11y
+                ? "bg-background text-foreground border-foreground border-4 text-base"
+                : i === 0
+                  ? "bg-foreground text-background border-foreground"
+                  : "bg-muted text-foreground border-transparent"
             }`}
           >
             {c}
@@ -582,7 +702,7 @@ function SimHome({ onPickVideo }: { onPickVideo: () => void }) {
       <button
         type="button"
         onClick={onPickVideo}
-        className="text-left group focus:outline-none"
+        className={`text-left group focus:outline-none ${a11y ? "border-y-4 border-foreground" : ""}`}
         aria-label="Vídeo: Detalhes que você nunca ouviu em Human Nature"
       >
         <div className="relative aspect-video bg-muted flex items-center justify-center animate-pulse-ring overflow-hidden">
@@ -608,7 +728,11 @@ function SimHome({ onPickVideo }: { onPickVideo: () => void }) {
             18:42
           </span>
           {/* Toque aqui hint */}
-          <span className="absolute top-3 left-3 inline-flex items-center gap-1 bg-yellow-500 text-black text-sm font-extrabold px-2 py-1 rounded-full shadow z-10 animate-bounce">
+          <span
+            className={`absolute top-3 left-3 inline-flex items-center gap-1 font-extrabold px-2 py-1 rounded-full shadow z-10 animate-bounce ${
+              a11y ? "bg-foreground text-background text-base" : "bg-yellow-500 text-black text-sm"
+            }`}
+          >
             Toque aqui
           </span>
           {/* Progress bar with red dot */}
@@ -622,37 +746,47 @@ function SimHome({ onPickVideo }: { onPickVideo: () => void }) {
           <img
             src={avatarImg}
             alt="Foto de perfil do canal Receitas da Dona Rosa"
-            className="size-10 shrink-0 rounded-full object-cover"
+            className={`size-10 shrink-0 rounded-full object-cover ${
+              a11y ? "border-2 border-foreground" : ""
+            }`}
           />
           <div className="flex-1 min-w-0">
-            <p className="font-extrabold leading-snug text-sm">
+            <p className={`font-extrabold leading-snug ${a11y ? "text-base" : "text-sm"}`}>
               BOLO DE CHOCOLATE FÁCIL E RÁPIDO FEITO A MÃO ( SUPER FOFINHO )
             </p>
-            <p className="text-xs text-muted-foreground mt-0.5">
+            <p className={`${a11y ? "text-sm text-foreground" : "text-xs text-muted-foreground"} mt-0.5`}>
               Receitas da Dona Rosa · 468 mil visualizações · há 5 dias
             </p>
           </div>
-          <MoreVertical className="size-5 text-muted-foreground" />
+          <MoreVertical className={`size-5 ${a11y ? "text-foreground" : "text-muted-foreground"}`} />
         </div>
 
         {/* Product card */}
-        <div className="mx-4 mt-3 flex items-center gap-3 bg-muted/70 rounded-xl px-3 py-2">
+        <div
+          className={`mx-4 mt-3 flex items-center gap-3 rounded-xl px-3 py-2 ${
+            a11y ? "bg-background border-4 border-foreground" : "bg-muted/70"
+          }`}
+        >
           <span className="size-8 shrink-0 rounded bg-info/30" />
-          <span className="text-xs font-bold text-foreground">5 prod...</span>
-          <span className="text-xs text-muted-foreground flex-1 truncate">
+          <span className={`${a11y ? "text-sm" : "text-xs"} font-bold text-foreground`}>5 prod...</span>
+          <span className={`${a11y ? "text-sm text-foreground" : "text-xs text-muted-foreground"} flex-1 truncate`}>
             Forma de bolo, batedeira e mais utensílios...
           </span>
-          <ChevronDown className="size-4 text-muted-foreground shrink-0" />
+          <ChevronDown className={`size-4 shrink-0 ${a11y ? "text-foreground" : "text-muted-foreground"}`} />
         </div>
 
         {/* Comments preview */}
-        <div className="mx-4 mt-3 bg-muted/70 rounded-xl p-3">
-          <p className="text-sm font-extrabold">
+        <div
+          className={`mx-4 mt-3 rounded-xl p-3 ${
+            a11y ? "bg-background border-4 border-foreground" : "bg-muted/70"
+          }`}
+        >
+          <p className={`${a11y ? "text-base" : "text-sm"} font-extrabold`}>
             Comentários <span className="text-muted-foreground font-bold">324</span>
           </p>
           <div className="mt-2 flex items-start gap-2">
             <span className="size-7 shrink-0 rounded-full bg-success/40" />
-            <p className="text-xs leading-snug">
+            <p className={`${a11y ? "text-sm" : "text-xs"} leading-snug`}>
               Consegui fazer e foi um sucesso! Ficou super fofinho, obrigada pela receita
             </p>
           </div>
@@ -662,17 +796,23 @@ function SimHome({ onPickVideo }: { onPickVideo: () => void }) {
       {/* Shorts grid */}
       <div className="mt-5 px-4">
         <div className="flex items-center gap-2 mb-3">
-          <span className="size-6 rounded-md bg-destructive flex items-center justify-center">
-            <PlaySquare className="size-3.5 text-destructive-foreground" fill="currentColor" />
+          <span
+            className={`size-6 rounded-md flex items-center justify-center ${
+              a11y ? "bg-foreground" : "bg-destructive"
+            }`}
+          >
+            <PlaySquare className={`size-3.5 ${a11y ? "text-background" : "text-destructive-foreground"}`} fill="currentColor" />
           </span>
-          <h3 className="font-extrabold text-lg">Shorts</h3>
-          <MoreVertical className="ml-auto size-5 text-muted-foreground" />
+          <h3 className={`font-extrabold ${a11y ? "text-xl" : "text-lg"}`}>Shorts</h3>
+          <MoreVertical className={`ml-auto size-5 ${a11y ? "text-foreground" : "text-muted-foreground"}`} />
         </div>
         <div className="grid grid-cols-2 gap-2">
           {shorts.map((s) => (
             <div
               key={s.title}
-              className="relative aspect-[9/14] rounded-xl overflow-hidden border border-border bg-muted"
+              className={`relative aspect-[9/14] rounded-xl overflow-hidden bg-muted ${
+                a11y ? "border-4 border-foreground" : "border border-border"
+              }`}
             >
               <img
                 src={s.img}
@@ -682,12 +822,12 @@ function SimHome({ onPickVideo }: { onPickVideo: () => void }) {
               />
               <div className="absolute inset-0 bg-gradient-to-t from-foreground/70 via-foreground/10 to-transparent" />
               {s.badge && (
-                <span className="absolute top-2 left-2 bg-white text-foreground text-[10px] font-extrabold px-1.5 py-0.5 rounded z-10">
+                  <span className={`absolute top-2 left-2 bg-white text-foreground font-extrabold px-1.5 py-0.5 rounded z-10 ${a11y ? "text-xs border-2 border-foreground" : "text-[10px]"}`}>
                   {s.badge}
                 </span>
               )}
               <MoreVertical className="absolute top-2 right-1 size-4 text-white/90 z-10" />
-              <p className="absolute bottom-2 left-2 right-2 text-xs font-extrabold text-white leading-tight line-clamp-2 z-10">
+              <p className={`absolute bottom-2 left-2 right-2 font-extrabold text-white leading-tight line-clamp-2 z-10 ${a11y ? "text-sm" : "text-xs"}`}>
                 {s.title}
               </p>
             </div>
@@ -699,14 +839,14 @@ function SimHome({ onPickVideo }: { onPickVideo: () => void }) {
       <div className="mt-6 flex flex-col">
         {moreVideos.map((v) => (
           <div key={v.title} className="flex flex-col">
-            <div className="relative aspect-video bg-muted overflow-hidden">
+            <div className={`relative aspect-video bg-muted overflow-hidden ${a11y ? "border-y-4 border-foreground" : ""}`}>
               <img
                 src={v.img}
                 alt={v.title}
                 loading="lazy"
                 className="absolute inset-0 size-full object-cover"
               />
-              <span className="absolute bottom-2 right-2 bg-foreground/80 text-background text-xs font-bold px-1.5 py-0.5 rounded">
+              <span className={`absolute bottom-2 right-2 bg-foreground/80 text-background font-bold px-1.5 py-0.5 rounded ${a11y ? "text-sm" : "text-xs"}`}>
                 {v.duration}
               </span>
             </div>
@@ -714,15 +854,17 @@ function SimHome({ onPickVideo }: { onPickVideo: () => void }) {
               <img
                 src={avatarImg}
                 alt=""
-                className="size-10 shrink-0 rounded-full object-cover"
+                  className={`size-10 shrink-0 rounded-full object-cover ${
+                    a11y ? "border-2 border-foreground" : ""
+                  }`}
               />
               <div className="flex-1 min-w-0">
-                <p className="font-extrabold leading-snug text-sm">{v.title}</p>
-                <p className="text-xs text-muted-foreground mt-0.5">
+                <p className={`font-extrabold leading-snug ${a11y ? "text-base" : "text-sm"}`}>{v.title}</p>
+                <p className={`${a11y ? "text-sm text-foreground" : "text-xs text-muted-foreground"} mt-0.5`}>
                   {v.channel} · {v.meta}
                 </p>
               </div>
-              <MoreVertical className="size-5 text-muted-foreground" />
+              <MoreVertical className={`size-5 ${a11y ? "text-foreground" : "text-muted-foreground"}`} />
             </div>
           </div>
         ))}
@@ -730,9 +872,11 @@ function SimHome({ onPickVideo }: { onPickVideo: () => void }) {
 
       {/* Bottom nav (auto-hides on scroll down, like the real app) */}
       <div
-        className={`mt-5 border-t border-border grid grid-cols-5 py-2 text-[11px] font-medium bg-card sticky bottom-0 transition-transform duration-300 ${
-          navVisible ? "translate-y-0" : "translate-y-full"
-        }`}
+          className={`mt-5 grid grid-cols-5 py-2 font-medium bg-card sticky bottom-0 transition-transform duration-300 ${
+            a11y ? "border-t-4 border-foreground text-sm" : "border-t border-border text-[11px]"
+          } ${
+            navVisible ? "translate-y-0" : "translate-y-full"
+          }`}
       >
         {[
           { I: HomeFilledIcon, l: "Início", on: true },
@@ -741,7 +885,7 @@ function SimHome({ onPickVideo }: { onPickVideo: () => void }) {
           { I: ListVideo, l: "Inscrições", dot: true },
           { I: UserIcon, l: "Você" },
         ].map(({ I, l, on, dot }, i) => (
-          <div key={i} className={`relative flex flex-col items-center gap-0.5 ${on ? "text-foreground" : "text-muted-foreground"}`}>
+          <div key={i} className={`relative flex flex-col items-center gap-0.5 ${a11y || on ? "text-foreground" : "text-muted-foreground"}`}>
             <div className="relative">
               <I className={i === 2 ? "size-8" : "size-5"} strokeWidth={i === 0 ? 2.5 : 2} />
               {dot && <span className="absolute -top-0.5 -right-1 size-1.5 rounded-full bg-destructive" />}
@@ -766,6 +910,7 @@ function SimVideo({
   onShare: () => void;
   onFinish: () => void;
 }) {
+  const { enabled: a11y } = useA11y();
   const upNext = [
     {
       title: "Bolo de fubá cremoso da Dona Rosa",
@@ -785,13 +930,13 @@ function SimVideo({
   return (
     <div className="flex flex-col bg-background flex-1">
       {/* Player */}
-      <div className="relative aspect-video bg-black flex items-center justify-center">
+      <div className={`relative aspect-video bg-black flex items-center justify-center ${a11y ? "border-b-4 border-foreground" : ""}`}>
         <ChevronDown className="absolute top-3 left-3 size-6 text-white/90" />
         <MoreVertical className="absolute top-3 right-3 size-6 text-white/90" />
         <Play className="size-16 text-white/90" fill="currentColor" />
         {/* Progress bar */}
         <div className="absolute bottom-0 left-0 right-0 h-1 bg-white/20">
-          <div className="h-full w-1/3 bg-destructive" />
+          <div className={`h-full w-1/3 ${a11y ? "bg-white" : "bg-destructive"}`} />
         </div>
         <span className="absolute bottom-2 right-2 text-white/90 text-[11px] font-bold tabular-nums">
           9:08 / 27:32
@@ -799,23 +944,27 @@ function SimVideo({
       </div>
       {/* Title */}
       <div className="px-4 pt-3">
-        <h2 className="font-extrabold text-base leading-snug">
+        <h2 className={`font-extrabold leading-snug ${a11y ? "text-xl" : "text-base"}`}>
           BOLO DE CHOCOLATE FÁCIL E RÁPIDO FEITO A MÃO ( SUPER FOFINHO )
         </h2>
-        <p className="text-xs text-muted-foreground mt-1">
+        <p className={`${a11y ? "text-sm text-foreground" : "text-xs text-muted-foreground"} mt-1`}>
           468 mil visualizações · há 5 dias · #receita #bolo
         </p>
       </div>
       {/* Channel */}
       <div className="flex items-center justify-between px-4 py-3">
         <div className="flex items-center gap-3">
-          <span className="size-10 rounded-full bg-info/30" />
+          <span
+            className={`size-10 rounded-full ${
+              a11y ? "bg-foreground border-2 border-foreground" : "bg-info/30"
+            }`}
+          />
           <div>
-            <p className="font-extrabold text-sm">Receitas da Dona Rosa</p>
-            <p className="text-xs text-muted-foreground">1,2 mi inscritos</p>
+            <p className={`font-extrabold ${a11y ? "text-base" : "text-sm"}`}>Receitas da Dona Rosa</p>
+            <p className={a11y ? "text-sm text-foreground" : "text-xs text-muted-foreground"}>1,2 mi inscritos</p>
           </div>
         </div>
-        <button className="h-9 px-4 rounded-full bg-foreground text-background text-sm font-extrabold">
+        <button className={`h-9 px-4 rounded-full bg-foreground text-background font-extrabold ${a11y ? "text-base border-2 border-foreground" : "text-sm"}`}>
           Inscrever-se
         </button>
       </div>
@@ -823,7 +972,9 @@ function SimVideo({
       <div className="flex overflow-x-hidden gap-2 px-4 py-2 pb-3">
         {/* Like / Dislike combined pill */}
         <div
-          className={`shrink-0 inline-flex items-center h-9 rounded-full bg-muted overflow-hidden transition ${
+          className={`shrink-0 inline-flex items-center h-9 rounded-full overflow-hidden transition ${
+            a11y ? "bg-background border-4 border-foreground" : "bg-muted"
+          } ${
             liked ? "" : "animate-pulse-ring"
           }`}
         >
@@ -831,13 +982,13 @@ function SimVideo({
             type="button"
             onClick={onLike}
             className={`inline-flex items-center gap-1.5 h-full pl-3 pr-3 text-sm font-bold ${
-              liked ? "text-info" : "text-foreground"
+              a11y ? "text-foreground" : liked ? "text-info" : "text-foreground"
             }`}
           >
             <ThumbsUp className="size-4" fill={liked ? "currentColor" : "none"} />
             {liked ? "42 mil" : "42 mil"}
           </button>
-          <span className="h-5 w-px bg-border" />
+          <span className={`h-5 w-px ${a11y ? "bg-foreground" : "bg-border"}`} />
           <button
             type="button"
             className="inline-flex items-center h-full px-3 text-foreground"
@@ -849,21 +1000,27 @@ function SimVideo({
         <button
           type="button"
           onClick={onShare}
-          className="shrink-0 inline-flex items-center gap-1.5 h-9 px-3 rounded-full bg-muted text-foreground text-sm font-bold animate-pulse-ring"
+            className={`shrink-0 inline-flex items-center gap-1.5 h-9 px-3 rounded-full text-foreground font-bold animate-pulse-ring ${
+              a11y ? "bg-background border-4 border-foreground text-base" : "bg-muted text-sm"
+            }`}
         >
           <Share2 className="size-4" />
           Compartilhar
         </button>
         <button
           type="button"
-          className="shrink-0 inline-flex items-center gap-1.5 h-9 px-3 rounded-full bg-muted text-foreground text-sm font-bold"
+            className={`shrink-0 inline-flex items-center gap-1.5 h-9 px-3 rounded-full text-foreground font-bold ${
+              a11y ? "bg-background border-4 border-foreground text-base" : "bg-muted text-sm"
+            }`}
         >
           <Download className="size-4" />
           Download
         </button>
         <button
           type="button"
-          className="shrink-0 inline-flex items-center gap-1.5 h-9 px-3 rounded-full bg-muted text-foreground text-sm font-bold"
+            className={`shrink-0 inline-flex items-center gap-1.5 h-9 px-3 rounded-full text-foreground font-bold ${
+              a11y ? "bg-background border-4 border-foreground text-base" : "bg-muted text-sm"
+            }`}
         >
           <Scissors className="size-4" />
           Cortar
@@ -871,14 +1028,18 @@ function SimVideo({
       </div>
 
       {/* Comments preview */}
-      <div className="mx-4 rounded-xl bg-muted/60 p-3">
+      <div
+        className={`mx-4 rounded-xl p-3 ${
+          a11y ? "bg-background border-4 border-foreground" : "bg-muted/60"
+        }`}
+      >
         <div className="flex items-center justify-between">
-          <p className="text-sm font-extrabold">Comentários · 1.234</p>
-          <ChevronDown className="size-4 text-muted-foreground" />
+          <p className={`${a11y ? "text-base" : "text-sm"} font-extrabold`}>Comentários · 1.234</p>
+          <ChevronDown className={`size-4 ${a11y ? "text-foreground" : "text-muted-foreground"}`} />
         </div>
         <div className="mt-2 flex items-start gap-2">
-          <span className="size-7 shrink-0 rounded-full bg-success/40" />
-          <p className="text-xs leading-snug">
+          <span className={`size-7 shrink-0 rounded-full ${a11y ? "bg-foreground" : "bg-success/40"}`} />
+          <p className={`${a11y ? "text-sm" : "text-xs"} leading-snug`}>
             <span className="font-extrabold">@mariaclara</span> Ficou maravilhoso! Já fiz 3 vezes 🍰
           </p>
         </div>
@@ -886,35 +1047,45 @@ function SimVideo({
 
       {/* Up next */}
       <div className="mt-3">
-        <p className="px-4 text-xs font-extrabold text-muted-foreground uppercase tracking-wide">
+        <p className={`px-4 font-extrabold uppercase tracking-wide ${a11y ? "text-sm text-foreground" : "text-xs text-muted-foreground"}`}>
           A seguir
         </p>
         {upNext.map((v) => (
           <div key={v.title} className="flex gap-3 px-4 py-2">
             <div
-              className={`relative w-32 aspect-video shrink-0 rounded-lg bg-gradient-to-br ${v.gradient} flex items-center justify-center overflow-hidden`}
+              className={`relative w-32 aspect-video shrink-0 rounded-lg flex items-center justify-center overflow-hidden ${
+                a11y ? "bg-background border-4 border-foreground" : `bg-gradient-to-br ${v.gradient}`
+              }`}
             >
-              <Play className="size-7 text-foreground/70" fill="currentColor" />
-              <span className="absolute bottom-1 right-1 bg-foreground/80 text-background text-[10px] font-bold px-1 rounded">
+              <Play className={`size-7 ${a11y ? "text-foreground" : "text-foreground/70"}`} fill="currentColor" />
+              <span className={`absolute bottom-1 right-1 bg-foreground/80 text-background font-bold px-1 rounded ${a11y ? "text-xs" : "text-[10px]"}`}>
                 {v.duration}
               </span>
             </div>
             <div className="flex-1 min-w-0">
-              <p className="font-extrabold text-sm leading-snug line-clamp-2">{v.title}</p>
-              <p className="text-xs text-muted-foreground mt-1">{v.channel}</p>
-              <p className="text-xs text-muted-foreground">{v.meta}</p>
+              <p className={`font-extrabold leading-snug line-clamp-2 ${a11y ? "text-base" : "text-sm"}`}>{v.title}</p>
+              <p className={`${a11y ? "text-sm text-foreground" : "text-xs text-muted-foreground"} mt-1`}>{v.channel}</p>
+              <p className={a11y ? "text-sm text-foreground" : "text-xs text-muted-foreground"}>{v.meta}</p>
             </div>
           </div>
         ))}
       </div>
 
       {/* Finish bar */}
-      <div className="mt-auto p-4 border-t border-border bg-card sticky bottom-0">
+      <div
+        className={`mt-auto p-4 bg-card sticky bottom-0 ${
+          a11y ? "border-t-4 border-foreground" : "border-t border-border"
+        }`}
+      >
         <button
           type="button"
           onClick={onFinish}
           disabled={!liked}
-          className="w-full h-14 rounded-2xl bg-success text-white text-lg font-extrabold disabled:opacity-50 disabled:cursor-not-allowed hover:opacity-90 transition"
+          className={`w-full h-14 rounded-2xl text-lg font-extrabold disabled:opacity-50 disabled:cursor-not-allowed hover:opacity-90 transition ${
+            a11y
+              ? "bg-foreground text-background border-4 border-foreground"
+              : "bg-success text-white"
+          }`}
         >
           {liked ? "Concluir simulação" : "Dê um 'Joinha' para concluir"}
         </button>
